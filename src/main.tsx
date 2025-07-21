@@ -1,13 +1,27 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import {WebStorageStateStore} from 'oidc-client-ts';
+import {WebStorageStateStore} from 'oidc-client-ts'
 import './index.css'
+import '../src/styles/general.css'
 import {AuthProvider} from "react-oidc-context";  // auth context provided by 3rd party function
 import {RouterProvider} from 'react-router-dom';
 import "../styles.css"
 import router from './routes/routes.tsx'
 import {UnitOfMeasureProvider} from "./contexts/UnitOfMeasureContext.tsx";
 import {IngredientProvider} from "./contexts/ingredientContext.tsx";
+import {FlashProvider} from "./contexts/FlashContext.tsx";
+
+import {pdfjs} from 'react-pdf';
+
+// Import required CSS for react-pdf pages
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+
+// Set the worker source path
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url,
+).toString();
 
 // todo - update redirect for deployment
 const cognitoAuthConfig = {
@@ -25,12 +39,14 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
     <React.StrictMode>
-        <AuthProvider {...cognitoAuthConfig}>
-            <UnitOfMeasureProvider>
-                <IngredientProvider>
-            <RouterProvider router={router}/>
-                </IngredientProvider>
-            </UnitOfMeasureProvider>
-        </AuthProvider>
+        <FlashProvider>
+            <AuthProvider {...cognitoAuthConfig}>
+                <UnitOfMeasureProvider>
+                    <IngredientProvider>
+                        <RouterProvider router={router}/>
+                    </IngredientProvider>
+                </UnitOfMeasureProvider>
+            </AuthProvider>
+        </FlashProvider>
     </React.StrictMode>
 );

@@ -449,6 +449,125 @@ function IngredientForm({ prop_ingredient_id = null }: IngredientFormProps) {
                 )}
             </div>
         </div>
+        // <section className="hero is-light is-fullheight">
+        //     <div className="hero-body">
+        //         <div className="container">
+        //             <div className="columns is-centered">
+        //                 <div className="column is-two-thirds-desktop">
+        //                     <div className="box">
+        //                         {/* Header */}
+        //                         <div className="level is-mobile mb-5">
+        //                             <div className="level-left">
+        //                                 <h1 className="title is-4 has-text-grey-light">
+        //                                     {isNewIngredient ? 'Create New Ingredient' : 'Ingredient Details'}
+        //                                 </h1>
+        //                             </div>
+        //                             <div className="level-right">
+        //                                 {!isEditing ? (
+        //                                     <button onClick={handleEditClick} className="button is-link">
+        //                                         <span className="icon"><EditIcon style={{ fontSize: 20 }}/></span>
+        //                                         <span className="is-hidden-mobile">Edit</span>
+        //                                     </button>
+        //                                 ) : (
+        //                                     <div className="buttons has-addons">
+        //                                         <button onClick={handleSaveClick} className="button is-info">
+        //                                             <span className="icon"><SaveIcon style={{ fontSize: 20 }}/></span>
+        //                                             <span className="is-hidden-mobile">Save</span>
+        //                                         </button>
+        //                                         <button onClick={handleCancelClick} className="button is-danger is-light">
+        //                                             <span className="icon"><CancelIcon style={{ fontSize: 20 }}/></span>
+        //                                             <span className="is-hidden-mobile">Cancel</span>
+        //                                         </button>
+        //                                     </div>
+        //                                 )}
+        //                             </div>
+        //                         </div>
+        //
+        //                         {/* Form Fields */}
+        //                         <div className="columns is-multiline">
+        //                             <div className="column is-half">
+        //                                 <div className="field">
+        //                                     <label htmlFor="ingredient_name" className="label">Ingredient Name:</label>
+        //                                     <div className="control">
+        //                                         {isEditing ? (
+        //                                             <input type="text" id="ingredient_name" name="ingredient_name" value={formData.ingredient_name || ''} onChange={handleChange} className="input" maxLength={50} />
+        //                                         ) : (
+        //                                             <p className="is-size-5">{ingredient?.ingredient_name || 'N/A'}</p>
+        //                                         )}
+        //                                     </div>
+        //                                 </div>
+        //                             </div>
+        //                             <div className="column is-half">
+        //                                 <div className="field">
+        //                                     <label htmlFor="standard_uom_id" className="label">Standard Unit of Measure:</label>
+        //                                     <div className="control">
+        //                                         {isEditing ? (
+        //                                             <div className="select is-fullwidth">
+        //                                                 <select id="standard_uom_id" name="standard_uom_id" value={formData.standard_uom_id || ''} onChange={handleChange}>
+        //                                                     <option value="">Select UOM</option>
+        //                                                     {/* map options here */}
+        //                                                 </select>
+        //                                             </div>
+        //                                         ) : (
+        //                                             <p className="is-size-5">{ingredient?.standard_uom ? `${ingredient.standard_uom.name} (${ingredient.standard_uom.abbreviation})` : 'N/A'}</p>
+        //                                         )}
+        //                                     </div>
+        //                                 </div>
+        //                             </div>
+        //                             <div className="column is-half">
+        //                                 <div className="field">
+        //                                     <label htmlFor="density" className="label">Density:</label>
+        //                                     <div className="control">
+        //                                         {isEditing ? (
+        //                                             <input type="number" id="density" name="density" value={formData.density === null ? '' : formData.density} onChange={handleChange} step="0.1" className="input" />
+        //                                         ) : (
+        //                                             <p className="is-size-5">{ingredient?.density !== null ? ingredient?.density : 'N/A'}</p>
+        //                                         )}
+        //                                     </div>
+        //                                 </div>
+        //                             </div>
+        //                             <div className="column is-full">
+        //                                 <div className="field">
+        //                                     <label htmlFor="notes" className="label">Notes:</label>
+        //                                     <div className="control">
+        //                                         {isEditing ? (
+        //                                             <textarea id="notes" name="notes" value={formData.notes || ''} onChange={handleChange} rows={3} className="textarea"></textarea>
+        //                                         ) : (
+        //                                             <p className="is-size-5" style={{ whiteSpace: 'pre-wrap' }}>{ingredient?.notes || 'N/A'}</p>
+        //                                         )}
+        //                                     </div>
+        //                                 </div>
+        //                             </div>
+        //                         </div>
+        //
+        //                         {/* Images Section */}
+        //                         {(!isNewIngredient || isEditing) && (
+        //                             <div className="mt-5 pt-5 content-section-separator">
+        //                                 <h2 className="title is-5 mb-4">Images</h2>
+        //                                 {/* Image rendering logic */}
+        //                             </div>
+        //                         )}
+        //
+        //                         {/* Footer */}
+        //                         {!isNewIngredient && ingredient && (
+        //                             <div className="mt-5 pt-5 content-section-separator">
+        //                                 <div className="level is-mobile">
+        //                                     <div className="level-left">
+        //                                         <p className="is-size-7 has-text-grey">Created: {new Date(ingredient.created_timestamp).toLocaleString()}</p>
+        //                                     </div>
+        //                                     <div className="level-right">
+        //                                         <p className="is-size-7 has-text-grey">Last Modified: {new Date(ingredient.modified_timestamp).toLocaleString()}</p>
+        //                                     </div>
+        //                                 </div>
+        //                             </div>
+        //                         )}
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     </div>
+        // </section>
+
     );
 }
 

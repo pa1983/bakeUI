@@ -24,7 +24,9 @@ const Navbar = () => {
     };
 
     return (
+
         <nav className="bg-gradient-to-r from-blue-600 to-indigo-700 p-4 shadow-lg rounded-b-lg">
+            {/*Start Navbar.tsx*/}
             <div className="container mx-auto flex justify-between items-center flex-wrap">
                 {/* Logo/Brand Name */}
                 <div
@@ -75,7 +77,7 @@ const Navbar = () => {
                         {/* Home link */}
                         <li>
                             <a
-                                href="#"
+                                href="/"
                                 className="text-white hover:text-blue-200 transition duration-300 py-2 px-3 rounded-md hover:bg-blue-700"
                             >
                                 Home
@@ -213,6 +215,7 @@ const Navbar = () => {
                     </div>
                 </div>
             </div>
+        {/*    End Navbar.tst */}
         </nav>
     );
 };

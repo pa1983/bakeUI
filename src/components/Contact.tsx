@@ -1,48 +1,53 @@
 import React from 'react';
-import { Container, Typography, Box, Link } from '@mui/material';
-import PhoneIcon from '@mui/icons-material/Phone';
-import EmailIcon from '@mui/icons-material/Email';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import GitHubIcon from '@mui/icons-material/GitHub';
 
 function Contact() {
     return (
-        <Container maxWidth="sm" sx={{ mt: 4, textAlign: 'center' }}>
-            <Typography variant="h4" component="h1" gutterBottom>
-                Paul Anderson
-            </Typography>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-                Contact Information
-            </Typography>
+        <section className="section">
+            <div className="container">
+                <div className="columns is-centered">
+                    <div className="column is-half has-text-centered">
 
-            <Box sx={{ mt: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
-                    <PhoneIcon sx={{ mr: 1 }} />
-                    <Typography variant="body1">(123) 456-7890</Typography>
-                </Box>
+                        <h1 className="title is-4">Paul Anderson</h1>
+                        <h2 className="subtitle is-6 has-text-grey">Contact Information</h2>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
-                    <EmailIcon sx={{ mr: 1 }} />
-                    <Link href="mailto:pa1983@gmail.com" variant="body1" color="inherit" underline="hover">
-                        pa1983@gmail.com
-                    </Link>
-                </Box>
+                        <div className="mt-5">
+                            <div className="icon-text mb-3 is-justify-content-center">
+                                <span className="icon">
+                                    <i className="fas fa-phone" aria-hidden="true"></i>
+                                </span>
+                                <span>+44 7841 903012</span>
+                            </div>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
-                    <LinkedInIcon sx={{ mr: 1 }} />
-                    <Link href="https://www.linkedin.com/in/panderson83" target="_blank" rel="noopener" variant="body1" color="inherit" underline="hover">
-                        linkedin.com/in/panderson83
-                    </Link>
-                </Box>
+                            <div className="icon-text mb-3 is-justify-content-center">
+                                <span className="icon">
+                                    <i className="fas fa-envelope" aria-hidden="true"></i>
+                                </span>
+                                <a href="mailto:pa1983@gmail.com">pa1983@gmail.com</a>
+                            </div>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
-                    <GitHubIcon sx={{ mr: 1 }} />
-                    <Link href="https://github.com/pa1983" target="_blank" rel="noopener" variant="body1" color="inherit" underline="hover">
-                        github.com/pa1983
-                    </Link>
-                </Box>
-            </Box>
-        </Container>
+                            <div className="icon-text mb-3 is-justify-content-center">
+                                <span className="icon">
+                                    <i className="fab fa-linkedin" aria-hidden="true"></i>
+                                </span>
+                                <a href="https://www.linkedin.com/in/panderson83" target="_blank" rel="noopener noreferrer">
+                                    linkedin.com/in/panderson83
+                                </a>
+                            </div>
+
+                            <div className="icon-text mb-3 is-justify-content-center">
+                                <span className="icon">
+                                    <i className="fab fa-github" aria-hidden="true"></i>
+                                </span>
+                                <a href="https://github.com/pa1983" target="_blank" rel="noopener noreferrer">
+                                    github.com/pa1983
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 }
 

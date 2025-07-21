@@ -1,40 +1,51 @@
 import React from 'react';
-import { Container, Typography, Box, Button } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
+
+
 
 function Home() {
     return (
-        <Container maxWidth="md" sx={{ mt: 8, textAlign: 'center' }}>
-            <Box sx={{ mb: 4 }}>
-                <HomeIcon sx={{ fontSize: 100, color: 'primary.main' }} />
-            </Box>
-            <Typography variant="h3" component="h1" gutterBottom>
-                Welcome to Our Project!
-            </Typography>
-            <Typography variant="h6" color="text.secondary" gutterBottom sx={{ mb: 3 }}>
-                A brief overview of what we do.
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 4, lineHeight: 1.8 }}>
-                This project is a demonstration of building modern web applications using React and Material-UI. We aim to create
-                responsive, user-friendly interfaces with a clean and consistent design. Through this application, you can see
-                examples of basic page layouts, component usage, and responsive design patterns. Our goal is to provide
-                a solid foundation for developing scalable and maintainable front-end solutions.
-            </Typography>
-            <Button variant="contained" color="primary" href="/contact">
-                Learn More
-            </Button>
+        <section className="hero is-fullheight-with-navbar">
+            <div className="hero-body">
+                <div className="container has-text-centered">
+                    <div className="columns is-centered">
+                        <div className="column is-three-quarters">
 
-            <Typography variant="h4">
-                Shortcuts
-            </Typography>
+                            <span className="icon is-large has-text-info mb-5">
+                                <i className="fas fa-home fa-7x" aria-hidden="true"></i>
+                            </span>
 
-                <ul>
-                <li>CTRL+Enter to save changes</li>
-                <li>CTRL+E to edit and cancel an edit</li>
-                </ul>
+                            <h1 className="title is-2">
+                                Welcome to Bake
+                            </h1>
 
+                            <h2 className="subtitle is-5 has-text-light">
+                                Bringing efficiency to artisan bakers
+                            </h2>
 
-        </Container>
+                            <p className="is-size-5 has-text-grey-light mb-5" style={{ lineHeight: 1.6 }}>
+                                Bake helps artisanal bakers improve operational efficiency by tracking costs at every stage of the production process.
+                                It helps owners keep all production data in one place, logging invoices, ingredients, recipes and menu items.
+                            </p>
+
+                            <a className="button is-info is-large" href="/contact">
+                                Learn More
+                            </a>
+
+                            <div className="mt-6">
+                                <h4 className="title is-4">Shortcuts</h4>
+                                <div className="content is-medium">
+                                    <ul className="no-dots">
+                                        <li><kbd>CTRL</kbd>+<kbd>Enter</kbd> to save changes</li>
+                                        <li><kbd>CTRL</kbd>+<kbd>E</kbd> to edit and cancel an edit</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 }
 

@@ -6,8 +6,10 @@ import Contact from '../components/Contact';
 import NotFound from '../components/NotFound';
 import IngredientForm from "../components/IngredientForm.tsx";
 import Layout from "../components/layout.tsx";
-import IngredientsList from "../components/ingredients.tsx";
+import IngredientsList from "../components/ingredientsList.tsx";
 import InvoiceList from "../components/invoiceList.tsx";
+import InvoiceViewer from "../components/invoiceViewer.tsx";
+import Dashboard from '../components/dashboard';
 
 
 const router = createBrowserRouter([
@@ -17,7 +19,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,  // the default component for the '/' route
-                element: <Home/>,
+                element: <Dashboard/>,
                 errorElement: <NotFound/>
             },
             {
@@ -51,6 +53,9 @@ const router = createBrowserRouter([
             {
                 path: '/invoice/invoices',
                 element: <InvoiceList/>
+            }, {
+                path: '/invoice/:invoice_id',
+                element: <InvoiceViewer/>
             }
         ]
     },

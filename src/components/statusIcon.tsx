@@ -10,14 +10,16 @@ const StatusIcon = ({status}) => {
         'validated': "fa-solid fa-check",
         'default': "fa-solid fa-questione"
     };
-    const icon_name = statusMap[status] || statusMap['default'];
+    const icon_name = statusMap[status.name] || statusMap['default'];
 
 
     return (
         //  todo - pass in onhover text to explain meaning of statuses
-        <>
+        // todo - pass in invoice ID to allow for changing the status
+        <div title={status.description} key={status.name}>
             <i className={`${icon_name} fa-2x`}></i>
-        </>
+            <p>{status.display_name}</p>
+        </div>
     )
 }
 

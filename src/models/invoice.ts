@@ -112,3 +112,101 @@ export interface InvoiceListResponse {
     status: InvoiceStatus;
     image: Image;
 }
+
+
+/**
+ * Based on the Python ImageBase SQLModel.
+ * Represents common metadata for files stored in S3.
+ */
+export interface ImageBase {
+    file_name: string;
+    file_ext: string;
+    mime_type: string;
+    file_size: number;
+    alt_text: string | null;
+    caption: string | null;
+    created_timestamp: string; // Corresponds to Python's datetime
+    modified_timestamp: string; // Corresponds to Python's datetime
+    organisation_id: number | null;
+    s3_key: string;
+}
+
+/**
+ * Based on the Python ImageInvoiceRead Pydantic model.
+ * Represents image data for an invoice.
+ */
+export interface ImageInvoiceRead extends ImageBase {
+    image_id: number;
+}
+
+/**
+ * Based on the Python OrganisationRead Pydantic model.
+ */
+export interface OrganisationRead {
+    organisation_id: number;
+    organisation_name: string;
+}
+
+/**
+ * Based on the Python InvoiceStatus SQLModel.
+ */
+export interface InvoiceStatus {
+    name: string;
+    display_name: string;
+    description: string;
+    sort_order: number;
+}
+
+/**
+ * Based on the Python LineItemRead Pydantic model.
+ */
+export interface LineItemRead {
+    id: number | null;
+    cases: number | null;
+    units: number | null;
+    description: string;
+    size: string | null;
+    code: string | null;
+    value_ex_vat: number;
+    value_inc_vat: number;
+    vat_percentage: number;
+    is_delivery: boolean;
+}
+
+/**
+ * Based on the Python ParsedInvoiceDetails SQLModel.
+ * Contains fields extracted directly from the invoice document.
+ */
+export interface ParsedInvoiceDetails {
+    supplier_name: string | null;
+    supplier_id: number | null;
+    customer_account_number: string | null;
+    invoice_number: string | null;
+    user_reference: string | null;
+    supplier_reference: string | null;
+    calculated_total: number | null;
+    invoice_total: number | null;
+    delivery_cost: number | null;
+    currency: string | null;
+    document_type: string;
+    invoice_date: string | null; // Corresponds to Python's datetime
+    confidence_score: number;
+}
+
+/**
+ * The main interface for an incoming invoice data transfer object (DTO).
+ * Based on the Python InvoiceRead Pydantic model.
+ */
+export interface InvoiceRead extends ParsedInvoiceDetails {
+    id: number;
+    date_added: string | null; // Corresponds to Python's datetime
+    date_modified: string | null; // Corresponds to Python's datetime
+    parse_duration_ms: number | null;
+    parse_ai_tokens: number | null;
+    received_date: string | null; // Corresponds to Python's datetime
+    notes: string | null;
+    organisation: OrganisationRead | null;
+    invoice_status: InvoiceStatus | null;
+    invoice_image: ImageInvoiceRead | null;
+    line_items: LineItemRead[];
+}

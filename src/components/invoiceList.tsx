@@ -35,11 +35,12 @@ function InvoiceList() {
             dropzone here
             <UploadInvoice></UploadInvoice>
 
-            <div className="container">
+            <div className="container is-fluid">
+
                 <h1 className="title">Invoices</h1>
                 <h2>Invoices</h2>
 
-
+                <div className="columns is-multiline pd-5">
                 {invoices.map(invoice => (
                     <InvoiceListElementCard
                         invoice={invoice}
@@ -47,7 +48,7 @@ function InvoiceList() {
                     />
 
                 ))}
-
+                </div>
 
             </div>
         </>
