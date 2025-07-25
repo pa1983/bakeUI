@@ -10,6 +10,7 @@ import InvoiceLineItemsList from "./InvoiceLineItemsList.tsx";
 import StatusIcon from "./statusIcon.tsx";
 import DeleteInvoice from "./DeleteInvoice.tsx";
 import useFlash from "../contexts/FlashContext.tsx";
+import MoreInfo from "./MoreInfo.tsx";
 
 function InvoiceViewer() {
     const {showFlashMessage} = useFlash();
@@ -22,6 +23,7 @@ function InvoiceViewer() {
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
+
         if (!invoice_id || !auth.user?.access_token) {
             setLoading(false);
             setError("Authentication token or Invoice ID is missing.");
@@ -66,6 +68,15 @@ function InvoiceViewer() {
         return <div>No invoice data found.</div>;
     }
 
+    const moreInfo = (event) => {
+    // when element is clicked for more info, display a modal containing the description text.
+        // todo - build the modal and include in all forms to allow use of moreInfo function.  Maybe get working from hover rather than click?
+
+        const description: string = event.currentTarget.title;
+        console.log(description);
+        showAlert(description);
+    }
+
     // Now, render the properties of the invoice object
     return (
 <>
@@ -97,12 +108,14 @@ function InvoiceViewer() {
 
                             <div className="box mb-4">
                                 Actions
-                                <StatusIcon status={invoice.invoice_status}/>
+                                <StatusIcon status={invoice.invoice_status}
+                                            id={invoice.id}/>
                                 {/*<DeleteInvoice invoice_id={invoice.id}/>*/}
                             </div>
 
                             <div className="box  mb-4">
-                                <h2 className="title is-5 has-text-grey-light">Details</h2>
+                                <h2 className="title is-5 has-text-grey-light">Details     <MoreInfo message="check the details below match the invoice, correct as necessary. No need to save."/></h2>
+
                                 <div className="content">
                                     <InvoiceMeta
                                     invoice_details={invoice}/>
@@ -111,9 +124,9 @@ function InvoiceViewer() {
 
 
                             <div className="box ">
-                                <h2 className="title is-5 has-text-grey-light">Line Items</h2>
+                                <h2 className="title is-5 has-text-grey-light">Line Items <MoreInfo message="Check content of each line item matches invoice. Correct as required. Make sure each line item matches a buyable item."/></h2>
                                 <div className="content">
-                                    {invoice.line_items[0].description}
+                                    {invoice.line_items[0]?.description}
                                     <InvoiceLineItemsList
                                     line_items={invoice.line_items}/>
                                 </div>
@@ -138,7 +151,7 @@ function InvoiceViewer() {
             Invoice Total: ${invoice?.invoice_total}<br />
             Calculated Total: ${invoice?.calculated_total}<br />
             Delivery Cost: ${invoice?.delivery_cost}<br />
-            Currency: ${invoice?.currency}<br />
+            Currency: ${invoice?.parsed_currency}<br />
             <br />
             // --- Dates ---<br />
             Invoice Date: ${invoice?.invoice_date}<br />

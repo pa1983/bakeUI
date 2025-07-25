@@ -63,7 +63,8 @@ const InvoiceListElementCard = ({invoice}: InvoiceListResponse) => {
                     <i className="fa-solid fa-file-pdf fa-2x"/>
                 </div>
                 <div className="card-footer-item">
-                    <StatusIcon status={invoice.status}/>
+                    <StatusIcon status={invoice.status}
+                    id={invoice.id}/>
                 </div>
             </div>
 

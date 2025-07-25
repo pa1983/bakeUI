@@ -10,8 +10,9 @@ import router from './routes/routes.tsx'
 import {UnitOfMeasureProvider} from "./contexts/UnitOfMeasureContext.tsx";
 import {IngredientProvider} from "./contexts/ingredientContext.tsx";
 import {FlashProvider} from "./contexts/FlashContext.tsx";
-
+import {CustomAlertProvider} from "./contexts/CustomAlertContext.tsx";
 import {pdfjs} from 'react-pdf';
+import {InvoiceProvider} from "./contexts/InvoiceContext.tsx";
 
 // Import required CSS for react-pdf pages
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -40,13 +41,17 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
         <FlashProvider>
-            <AuthProvider {...cognitoAuthConfig}>
-                <UnitOfMeasureProvider>
-                    <IngredientProvider>
-                        <RouterProvider router={router}/>
-                    </IngredientProvider>
-                </UnitOfMeasureProvider>
-            </AuthProvider>
+            <CustomAlertProvider>
+                <AuthProvider {...cognitoAuthConfig}>
+                    <UnitOfMeasureProvider>
+                        <IngredientProvider>
+                            <InvoiceProvider>
+                            <RouterProvider router={router}/>
+                            </InvoiceProvider>
+                        </IngredientProvider>
+                    </UnitOfMeasureProvider>
+                </AuthProvider>
+            </CustomAlertProvider>
         </FlashProvider>
     </React.StrictMode>
 );

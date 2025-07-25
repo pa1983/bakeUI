@@ -76,7 +76,6 @@ function IngredientsList() {
                 </div>
             </div>
 
-            {/* Conditional Rendering Logic (remains the same) */}
             {filteredIngredients.length === 0 && searchTerm === '' && !loadingIngredients ? (
                 <p className="is-size-5 has-text-grey">No ingredients found. Try creating one!</p>
             ) : filteredIngredients.length === 0 && searchTerm !== '' ? (

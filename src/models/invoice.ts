@@ -1,15 +1,13 @@
 // These are placeholder interfaces for models imported in your Python code
 // but not fully defined. They are also in snake_case for consistency.
+
+import type { Currency } from './currency.ts';
+import type {OrganisationRead} from "./organisation.ts";
+
 export interface Image {
     image_id: number;
     url: string;
     // ... other image properties
-}
-
-export interface Organisation {
-    organisation_id: number;
-    name: string;
-    // ... other organisation properties
 }
 
 /**
@@ -53,7 +51,7 @@ export interface ParsedInvoiceDetails {
     calculated_total: number;
     invoice_total: number;
     delivery_cost: number;
-    currency: string;
+    parsed_currency: string;
     document_type: string;
     invoice_date: string; // ISO 8601 date string
     confidence_score: number;
@@ -86,7 +84,7 @@ export interface Invoice extends ParsedInvoiceDetails {
     id?: number;
     date_added: string; // ISO 8601 date string
     organisation_id?: number;
-    organisation?: Organisation;
+    organisation?: OrganisationRead;
     date_modified: string; // ISO 8601 date string
     parse_duration_ms: number;
     parse_ai_tokens: number;
@@ -140,14 +138,6 @@ export interface ImageInvoiceRead extends ImageBase {
 }
 
 /**
- * Based on the Python OrganisationRead Pydantic model.
- */
-export interface OrganisationRead {
-    organisation_id: number;
-    organisation_name: string;
-}
-
-/**
  * Based on the Python InvoiceStatus SQLModel.
  */
 export interface InvoiceStatus {
@@ -179,7 +169,6 @@ export interface LineItemRead {
  */
 export interface ParsedInvoiceDetails {
     supplier_name: string | null;
-    supplier_id: number | null;
     customer_account_number: string | null;
     invoice_number: string | null;
     user_reference: string | null;
@@ -187,7 +176,7 @@ export interface ParsedInvoiceDetails {
     calculated_total: number | null;
     invoice_total: number | null;
     delivery_cost: number | null;
-    currency: string | null;
+    parsed_currency: string | null;
     document_type: string;
     invoice_date: string | null; // Corresponds to Python's datetime
     confidence_score: number;
@@ -205,8 +194,10 @@ export interface InvoiceRead extends ParsedInvoiceDetails {
     parse_ai_tokens: number | null;
     received_date: string | null; // Corresponds to Python's datetime
     notes: string | null;
-    organisation: OrganisationRead | null;
+    supplier: Supplier | null;
     invoice_status: InvoiceStatus | null;
     invoice_image: ImageInvoiceRead | null;
     line_items: LineItemRead[];
+    currency: Currency | null;
 }
+// todo - check for duplication of interface definitions
