@@ -1,4 +1,4 @@
-import useAlert from "../contexts/CustomAlertContext.tsx"
+import useAlert from "../../contexts/CustomAlertContext.tsx"
 
 function MoreInfo({message}) {
     // todo - add a default prop for type == info, use to colour an icon in the message.

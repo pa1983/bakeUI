@@ -107,7 +107,7 @@ export interface InvoiceListResponse {
     date_modified: string; // ISO 8601 date string
     supplier_name?: string;
     invoice_number?: string;
-    status: InvoiceStatus;
+    status: InvoiceStatus;  // could change this to status code and use the status contect to get the display name?
     image: Image;
 }
 
@@ -194,10 +194,10 @@ export interface InvoiceRead extends ParsedInvoiceDetails {
     parse_ai_tokens: number | null;
     received_date: string | null; // Corresponds to Python's datetime
     notes: string | null;
-    supplier: Supplier | null;
-    invoice_status: InvoiceStatus | null;
+    supplier_id: number | null;
     invoice_image: ImageInvoiceRead | null;
     line_items: LineItemRead[];
-    currency: Currency | null;
+    currency_code: string | null;
+    status: string | null;
 }
 // todo - check for duplication of interface definitions

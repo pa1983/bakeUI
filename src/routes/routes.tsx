@@ -1,14 +1,14 @@
 import React from 'react';
 import {createBrowserRouter} from "react-router-dom";
 
-import Home from '../components/Home';
-import Contact from '../components/Contact';
-import NotFound from '../components/NotFound';
+import Home from '../components/Home/Home.tsx';
+import Contact from '../components/Home/Contact.tsx';
+import NotFound from '../components/Home/NotFound.tsx';
 import IngredientForm from "../components/IngredientForm.tsx";
 import Layout from "../components/layout.tsx";
 import IngredientsList from "../components/ingredientsList.tsx";
-import InvoiceList from "../components/invoiceList.tsx";
-import InvoiceViewer from "../components/invoiceViewer.tsx";
+import InvoiceList from "../components/Invoice/invoiceList.tsx";
+import InvoiceViewer from "../components/Invoice/InvoiceViewer.tsx";
 import Dashboard from '../components/dashboard';
 
 

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import UploadInvoice from './file_uploader.tsx';
-import {fetchInvoices} from "../services/InvoiceServices.ts";
-import type {InvoiceListResponse} from "../models/invoice.ts";
+import UploadInvoice from '../Utility/file_uploader.tsx';
+import {fetchInvoices} from "../../services/InvoiceServices.ts";
+import type {InvoiceListResponse} from "../../models/invoice.ts";
 import {useAuth} from "react-oidc-context";
 import InvoiceListElementCard from "./InvoiceListItem.tsx";
 

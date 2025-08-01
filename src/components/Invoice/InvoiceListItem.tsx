@@ -1,7 +1,7 @@
 import React from "react";
-import type {InvoiceListResponse} from "../models/invoice.ts";
+import type {InvoiceListResponse} from "../../models/invoice.ts";
 import StatusIcon from "./statusIcon.tsx";  // model interface for invoice list item
-import FriendlyDate from "./friendlyDate.tsx";
+import FriendlyDate from "../Utility/FriendlyDate.tsx";
 import DeleteInvoice from "./DeleteInvoice.tsx";
 const InvoiceListElementCard = ({invoice}: InvoiceListResponse) => {
 

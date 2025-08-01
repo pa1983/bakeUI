@@ -1,4 +1,4 @@
-import {useFlashState} from '../contexts/FlashContext.tsx'
+import {useFlashState} from '../../contexts/FlashContext.tsx'
 import React from "react";
 
 export const FlashMessage = () => {

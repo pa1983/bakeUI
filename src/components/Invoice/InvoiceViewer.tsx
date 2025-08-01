@@ -1,16 +1,16 @@
 import {useEffect, useState} from "react";
 import {useAuth} from "react-oidc-context";
 import {useParams} from "react-router-dom";
-import {getInvoiceFull} from "../services/InvoiceServices.ts";
+import {getInvoiceFull} from "../../services/InvoiceServices.ts";
 // I noticed you previously asked for this interface, so let's use it!
-import {type InvoiceRead} from "../models/invoice.ts";
+import {type InvoiceRead} from "../../models/invoice.ts";
 import InvoiceMeta from "./InvoiceMeta.tsx";
 import ViewInvoicePDF from "./viewInvoicePDF.tsx"; // Adjust the path as needed
 import InvoiceLineItemsList from "./InvoiceLineItemsList.tsx";
 import StatusIcon from "./statusIcon.tsx";
 import DeleteInvoice from "./DeleteInvoice.tsx";
-import useFlash from "../contexts/FlashContext.tsx";
-import MoreInfo from "./MoreInfo.tsx";
+import useFlash from "../../contexts/FlashContext.tsx";
+import MoreInfo from "../Home/MoreInfo.tsx";
 
 function InvoiceViewer() {
     const {showFlashMessage} = useFlash();

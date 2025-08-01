@@ -29,7 +29,7 @@ export const getInvoiceURL = async (access_token: string, invoice_id: number) =>
     return response.data;
 }
 
-export const getInvoiceFull = async (access_token: string, invoice_id: number) => {
+export const getInvoiceFull = async (access_token: string, invoice_id: number):InvoiceRead|null =>  {
 
     console.log(`attempting to retrieve doc full for invoice_id: ${invoice_id}`);
     if (invoice_id === null || invoice_id === undefined) {

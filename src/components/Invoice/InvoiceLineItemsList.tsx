@@ -1,5 +1,5 @@
 import React from 'react';
-import InvoiceLineItem from './InvoiceLineItem';
+import InvoiceLineItem from './InvoiceLineItem.tsx';
 
 // Based on the 'LineItemRead' interface from our previous discussions
 interface LineItem {

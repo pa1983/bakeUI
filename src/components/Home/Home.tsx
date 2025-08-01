@@ -27,7 +27,7 @@ function Home() {
                                 It helps owners keep all production data in one place, logging invoices, ingredients, recipes and menu items.
                             </p>
 
-                            <a className="button is-info is-large" href="/contact">
+                            <a className="button is-info is-large" href="/src/components/Home/Contact">
                                 Learn More
                             </a>
 

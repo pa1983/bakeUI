@@ -32,29 +32,15 @@ function PickerModal({
 
     // filter the array against the searchterm, looking in both the title and description
     const filteredPickerArray = pickerArray.filter(item =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.subtitle.toLowerCase().includes(searchTerm.toLowerCase())
+        item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.subtitle?.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    // function to combine the onSelect and onClose, so when an element is clicked it updates the selected value into the grandparent and closes down the picker modal
-
-    // const handleOnSelect = useCallback(()=> {
-    //     on
-    // })
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         // value of the search bar has changed - set newSearchTerm to the new search value
         const newSearchTerm = event.target.value;
         setSearchTerm(newSearchTerm);
-        // if (newSearchTerm) {
-        //     setSearchParams({searchterm: newSearchTerm});  // was this just to change the value in the address bar to match the search ?  don't need this?  // todo - do i just need an arrow function on the search bar to apply setSearchterm?
-        // } else {
-        //     setSearchParams({}); // Clear the search term
-        // }
     };
-
-    // const handleCreateNewClick = () => {
-    //     navigate('/ingredient/new'); // Navigate to the new ingredient creation page  // todo - do I want to keep this for adding a new pickerElement?  too complex to make generic?
-    // };
 
     if (!isActive) {
         return null;

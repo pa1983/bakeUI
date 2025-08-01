@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from './navbar';
-import {FlashMessage} from "./FlashMessage.tsx";
+import Navbar from './Home/navbar.tsx';
+import {FlashMessage} from "./Utility/FlashMessage.tsx";
 
 const Layout = () => {
 

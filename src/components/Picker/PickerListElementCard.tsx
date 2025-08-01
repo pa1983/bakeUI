@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import imageNotFound from '.././assets/image-not-found.png'  // todo - replace this with a logo or plain colour so that no image doesn't look like missing data
+import imageNotFound from '../../assets/Image-not-found.png'  // todo - replace this with a logo or plain colour so that no image doesn't look like missing data
 
 // Define the types for the props of ImageTextCard
 export interface PickerElementProp {

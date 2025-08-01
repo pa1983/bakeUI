@@ -1,8 +1,8 @@
-import {deleteInvoice} from "../services/InvoiceServices.ts";
+import {deleteInvoice} from "../../services/InvoiceServices.ts";
 import {useAuth} from "react-oidc-context";
-import ConfirmationModal from "./ConfirmationModal.tsx";
+import ConfirmationModal from "../Utility/ConfirmationModal.tsx";
 import React from "react";
-import useFlash from "../contexts/FlashContext.tsx";
+import useFlash from "../../contexts/FlashContext.tsx";
 
 const DeleteInvoice = ({invoice_id}) => {
     const auth = useAuth();

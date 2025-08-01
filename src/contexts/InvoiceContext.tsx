@@ -4,11 +4,15 @@ import { useAuth } from 'react-oidc-context';
 
 import {type Currency} from "../models/currency.ts";
 import {type Supplier} from "../models/supplier.ts";
+import type {Brand} from "../models/brand.ts";
 
 interface InvoiceContextType {
     currencies: Currency[];
     suppliers: Supplier[];
-    refetchInvoiceContext: () => void; // Function to manually trigger a refresh
+    brands: Brand[];
+    invoiceFormDataError: string|null;
+    loadingInvoiceFormData: boolean;
+    refetchInvoiceFormData: () => void; // Function to manually trigger a refresh
 }
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
@@ -27,6 +31,7 @@ export const InvoiceProvider = ({ children }: { children: ReactNode }) => {
     const auth = useAuth();
     const [currencies, setCurrencies] = useState<Currency[]>([]);
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+    const [brands, setBrands] = useState<Brand[]>([]);
     const [loadingInvoiceFormData, setLoadingInvoiceFormData] = useState<boolean>(true);
     const [invoiceFormDataError, setInvoiceFormDataError] = useState<string | null>(null);
     const [fetchTrigger, setFetchTrigger] = useState<number>(0); // To manually re-trigger fetch
@@ -38,7 +43,7 @@ export const InvoiceProvider = ({ children }: { children: ReactNode }) => {
             if (!auth.isAuthenticated || !auth.user?.access_token) {
                 console.warn("Authentication token not available. Waiting for auth.");
                 // If not authenticated, don't set error, just wait.
-                setLoadingInvoiceData(false);
+                setLoadingInvoiceFormData(false);
                 return;
             }
 
@@ -48,12 +53,14 @@ export const InvoiceProvider = ({ children }: { children: ReactNode }) => {
             });
             setCurrencies(response.data.data.currencies);
             setSuppliers(response.data.data.suppliers);
+            setBrands(response.data.data.brands);
             console.log("Invoice form data fetched successfully.");
         } catch (err: any) {
             console.error('Failed to fetch invoiceFormData:', err);
-            setInvoiceForDataError("Failed to fetch invoiceFormData: " + (err.response?.data?.detail || err.message));
+            setInvoiceFormDataError("Failed to fetch invoiceFormData: " + (err.response?.data?.detail || err.message));
             setCurrencies([]); // Clear variable on error
             setSuppliers([]);
+            setBrands([]);
         } finally {
             setLoadingInvoiceFormData(false);
         }
@@ -72,9 +79,10 @@ export const InvoiceProvider = ({ children }: { children: ReactNode }) => {
         setFetchTrigger(prev => prev + 1); // Increment to trigger useEffect
     };
 
-    const contextValue: InvoiceFormDataContextType = {
+    const contextValue: InvoiceContextType = {
         currencies,
         suppliers,
+        brands,
         invoiceFormDataError,
         loadingInvoiceFormData,
         refetchInvoiceFormData

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Document, Page } from 'react-pdf';
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
-import { getInvoiceURL } from "../services/InvoiceServices.ts";
+import { getInvoiceURL } from "../../services/InvoiceServices.ts";
 import { useAuth } from "react-oidc-context";
 
 function ViewInvoicePDF({invoice_id: invoice_id_from_prop}) {

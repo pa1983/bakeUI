@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import useFlash from '../contexts/FlashContext'; // Assuming this is your flash message hook
+import useFlash from '../../contexts/FlashContext.tsx'; // Assuming this is your flash message hook
 // import { updateInvoiceLineItemField } from '../services/InvoiceServices'; // You would have a service for this
 // import { useAuth } from 'react-oidc-context';
 
