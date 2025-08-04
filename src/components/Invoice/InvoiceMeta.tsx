@@ -1,28 +1,22 @@
 // display form containing all the invoice's meta data
 import React, {useState, useEffect, useCallback, useMemo} from 'react';
-import useFlash from '../../contexts/FlashContext.tsx'; ``
+import useFlash from '../../contexts/FlashContext.tsx';
 import useAlert from "../../contexts/CustomAlertContext.tsx";
-import {patchInvoiceField} from '../../services/InvoiceServices.ts';
+import {patchField} from '../../services/commonService.ts';
 import {useAuth} from 'react-oidc-context';
 import {useInvoice} from "../../contexts/InvoiceContext.tsx";
 import {type Currency} from "../../models/currency.ts";
 import {type Supplier} from "../../models/supplier.ts";
 import PickerModal from "../Picker/PickerModal.tsx";
 import FormFieldWithPicker from "../Picker/FormFieldWithPicker.tsx";
+import {type PickerElement} from "../../models/picker.ts";
 
 
-interface PickerElement {
-    id: string | number;
-    title: string;
-    subtitle: string;
-    imageUrl: string | null;
-}
-
-// display form containing all the invoice's meta data
-function InvoiceMeta({invoice_details, auth_token}: { invoice_details: any, auth_token: string }) {
-    const [formData, setFormData] = useState(invoice_details);
+// display form containing all the invoice's meta data - use generic name for initialFormDetails so can reuse code snippets in other forms without refactoring
+function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
+    const [formData, setFormData] = useState(initialFormDetails);
     const [isSaving, setIsSaving] = useState(false); // State to disable form during save
-
+    const api_endpoint = `invoice`;
     // picker controls
     const [isPickerModalActive, setIsPickerModalActive] = useState<boolean>(false);
     const [pickerArray, setPickerArray] = useState<[] | PickerElement[]>([]);  // array to be passed to picker to make selections from
@@ -36,7 +30,7 @@ function InvoiceMeta({invoice_details, auth_token}: { invoice_details: any, auth
     }, []);
 
     // get context data for use in form and pickers
-    const {currencies, suppliers, refetchInvoiceContext} = useInvoice();
+    const {currencies, suppliers, refetchInvoiceFormData} = useInvoice();
 
     // now map the currency and supplier arrays into correct shape for picker.
     // Memoize the calc'd array to avoid recalculation on every render of InvoiceMeta.
@@ -80,13 +74,13 @@ function InvoiceMeta({invoice_details, auth_token}: { invoice_details: any, auth
         // onselect needs to be set to update the currency id value in the form; the picker modal will inject the necessary logic to close itself so
         // that doesn't need duplicated here
         updateCurrency(newCurrencyCode);  // to update the value as displayed in the form
-        await handleSaveField('currency_code', newCurrencyCode);  // to check if the value has changed and push to DB if required
+        await handlePatchField('currency_code', newCurrencyCode, api_endpoint);  // to check if the value has changed and push to DB if required
         setIsPickerModalActive(false);  // then finally close down the modal
     };
 
     const supplierPickerOnSelect = async (newSupplierId: number): PickerElement[] => {
         updateSupplier(newSupplierId);  // update supplier ID in the local formData object
-        await handleSaveField('supplier_id', newSupplierId);  // persist the new supplier id to the database
+        await handlePatchField('supplier_id', newSupplierId, api_endpoint);  // persist the new supplier id to the database
         setIsPickerModalActive(false);  // close the modal
 
     }
@@ -121,10 +115,10 @@ function InvoiceMeta({invoice_details, auth_token}: { invoice_details: any, auth
 
     // Reset form state if a new invoice is passed in
     useEffect(() => {
-        setFormData(invoice_details);
-    }, [invoice_details]);
+        setFormData(initialFormDetails);
+    }, [initialFormDetails]);
 
-    // Handles live typing in the form
+    // Handles live typing in the form and updates the state of FormData to match current form values
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
         console.log('handleChange fired');
@@ -135,11 +129,12 @@ function InvoiceMeta({invoice_details, auth_token}: { invoice_details: any, auth
     };
 
 
-    const handleSaveField = async (name: string, value: any) => {
+    const handlePatchField = async (name: string, value: any, api_endpoint:string) => {
+        // when reusing this function, need to set the correct endpoint here so can reuse the patchField function for all forms
         // decoupled from handleBlur to allow same save logic to be called by picker's onSelect callback (on blur not called by a JS function updating the function)
         // 1. Check if the value has actually changed. Convert all values to string before comparison since form values are always string.
-        console.log(`comparing ${String(invoice_details[name] ?? '')} to ${value} for field: ${name}`);
-        if (String(invoice_details[name] ?? '') === value) {
+        console.log(`comparing ${String(initialFormDetails[name] ?? '')} to ${value} for field: ${name}`);
+        if (String(initialFormDetails[name] ?? '') === value) {
             console.log("No change detected, skipping save.");
             return; // Exit if there's no change
         }
@@ -149,7 +144,7 @@ function InvoiceMeta({invoice_details, auth_token}: { invoice_details: any, auth
             if (!auth.user) {
                 showFlashMessage("You must log in to proceed", "danger");
             } else {
-                const res = await patchInvoiceField(auth.user.access_token, invoice_details.id, name, value);
+                const res = await patchField(auth.user.access_token, initialFormDetails.id, name, value, api_endpoint);
                 showFlashMessage(res.message, 'success');
             }
 
@@ -157,9 +152,11 @@ function InvoiceMeta({invoice_details, auth_token}: { invoice_details: any, auth
             console.error("Failed to update field:", error);
             showFlashMessage(`Error saving ${name}. Please try again.`, 'danger');
             // todo: Revert the field to its original value on error
-            setFormData(invoice_details);
+            setFormData(initialFormDetails);
         } finally {
+            console.log('trying to set is saving to false to reactivate the form after a change has been saved');
             setIsSaving(false);
+            console.log(`is saving? ${isSaving}`);
         }
 
     }
@@ -168,13 +165,9 @@ function InvoiceMeta({invoice_details, auth_token}: { invoice_details: any, auth
     // Handle saving when a field loses focus
     const handleBlur = async (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
-
-        await handleSaveField(name, value);
-
-        setIsSaving(true);
         console.log(`Saving field: ${name} with value: ${value}`);
-
-
+        setIsSaving(true);
+        await handlePatchField(name, value, api_endpoint);
     };
 
     const formatDateForInput = (dateString: string) => {
@@ -216,7 +209,6 @@ function InvoiceMeta({invoice_details, auth_token}: { invoice_details: any, auth
 
                                 <FormFieldWithPicker
                                     label="Supplier"
-                                    fieldName="supplier_id"
                                     fieldValue={formData.supplier_id}
                                     onLaunch={handleSupplierPickerClick}
                                     pickerArray={PickerSupplierArray}
@@ -295,7 +287,6 @@ function InvoiceMeta({invoice_details, auth_token}: { invoice_details: any, auth
 
 
                             </div>
-
 
 
                             {/* --- Row 5: Notes --- */}

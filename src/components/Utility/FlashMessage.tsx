@@ -11,7 +11,7 @@ export const FlashMessage = () => {
     // Using Bulma classes for styling
     return (
 
-        <div className={`notification is-${type}`}>
+        <div className={`notification is-${type} flash-message`}>
             {message}
         </div>
 

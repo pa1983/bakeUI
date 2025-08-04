@@ -11,6 +11,7 @@ import StatusIcon from "./statusIcon.tsx";
 import DeleteInvoice from "./DeleteInvoice.tsx";
 import useFlash from "../../contexts/FlashContext.tsx";
 import MoreInfo from "../Home/MoreInfo.tsx";
+import LoadingSpinner from "../Utility/LoadingSpinner.tsx";
 
 function InvoiceViewer() {
     const {showFlashMessage} = useFlash();
@@ -57,7 +58,12 @@ function InvoiceViewer() {
     // --- Corrected Return Block ---
 
     if (loading) {
-        return <div>Loading invoice...</div>;
+        return (<div>
+            <LoadingSpinner
+                size='is-large'
+                text='Loading invoice...'
+        />
+        </div>)
     }
 
     if (error) {
@@ -80,6 +86,7 @@ function InvoiceViewer() {
     // Now, render the properties of the invoice object
     return (
 <>
+        {/*todo - try alternative styling to hero class - it seems to be throwing out the zindex layering and causing this form to appear over the top of the flash messages*/}
         <section className="hero is-fullheight is-light">
             <div className="hero-body">
                 <div className="container is-fluid">
@@ -118,7 +125,7 @@ function InvoiceViewer() {
 
                                 <div className="content">
                                     <InvoiceMeta
-                                    invoice_details={invoice}/>
+                                    initialFormDetails={invoice}/>
                                 </div>
                             </div>
 

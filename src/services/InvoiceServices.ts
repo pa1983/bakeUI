@@ -52,24 +52,3 @@ export const deleteInvoice = async (access_token: string, invoice_id: number) =>
     return response.data;
 }
 
-export const patchInvoiceField = async (access_token: string, invoice_id: number, field_name: string, field_value: any) => {
-
-    console.log(`attempting to patch invoice_id: ${invoice_id} with field: ${field_name} and value: ${field_value}`);
-    if (invoice_id === null || invoice_id === undefined) {
-        return 'error';
-    }
-    try {
-        const response = await axios.patch(`${config.API_URL}/invoice/${invoice_id}`,
-            {
-                "field_name": field_name,
-                "new_value": field_value
-            },
-            {headers: {Authorization: `Bearer ${access_token}`}});
-        return response.data;
-
-    }catch (error) {
-        console.log(error);
-          // todo - improve this - flash error to user and revert form to previous value
-        return error;
-    }
-}

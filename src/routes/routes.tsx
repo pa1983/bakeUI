@@ -10,6 +10,9 @@ import IngredientsList from "../components/ingredientsList.tsx";
 import InvoiceList from "../components/Invoice/invoiceList.tsx";
 import InvoiceViewer from "../components/Invoice/InvoiceViewer.tsx";
 import Dashboard from '../components/dashboard';
+import BrandList from "../components/Brand/BrandList.tsx";
+import SupplierList from "../components/supplier/SupplierList.tsx";
+import ViewBrandForm from "../components/Brand/ViewBrandForm.tsx";
 
 
 const router = createBrowserRouter([
@@ -53,10 +56,25 @@ const router = createBrowserRouter([
             {
                 path: '/invoice/invoices',
                 element: <InvoiceList/>
-            }, {
+            },
+            {
                 path: '/invoice/:invoice_id',
                 element: <InvoiceViewer/>
+            },
+            {
+                path: '/buyable/brand/brands',
+                element: <BrandList/>
+            },
+            {
+                path: '/buyable/brand/:brand_id',
+                element: <ViewBrandForm/>
+            },
+
+            {
+                path: '/supplier/suppliers',
+                element: <SupplierList/>
             }
+
         ]
     },
 

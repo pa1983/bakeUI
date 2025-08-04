@@ -4,6 +4,7 @@ import {useAuth} from 'react-oidc-context';
 import {VerifiedUser, ExpandCircleDown} from '@mui/icons-material';
 
 import {Login, Logout, Info, Person} from '@mui/icons-material';
+import FriendlyDate from "../Utility/FriendlyDate.tsx";
 
 
 // Navbar Component
@@ -84,6 +85,50 @@ const Navbar = () => {
                             </a>
                         </li>
 
+
+                        {/*General dropdown menu
+                        */}
+                        <li className="relative">
+
+                            <button
+                                onClick={() => handleDropdownToggle('general')}
+                                className="flex items-center text-white hover:text-blue-200 transition duration-300 py-2 px-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-white"
+                                aria-haspopup="true"
+                                aria-expanded={openDropdown === 'general'}
+                            >
+
+                                General
+                                <ExpandCircleDown
+                                    className={`ml-1 w-4 h-4 transform transition-transform duration-200 ${
+                                        openDropdown === 'general' ? 'rotate-180' : 'rotate-0'
+                                    }`}
+                                />
+                            </button>
+                            {openDropdown === 'general' && (
+                                <ul className="absolute md:top-full left-0 md:left-auto mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg py-2 z-10 transition-all duration-300 ease-in-out transform origin-top md:origin-top-right scale-y-100 opacity-100">
+                                    <li>
+                                        <Link to="/buyable/brand/brands"
+                                              className="block px-4 py-2 hover:bg-gray-100 rounded-md transition duration-200">Brands</Link>
+                                    </li>
+
+
+                                    <li>
+                                        <Link to="/buyable/buyables"
+                                              className="block px-4 py-2 hover:bg-gray-100 rounded-md transition duration-200">Buyables
+                                        </Link>
+                                    </li>
+
+                                    <li>
+                                        <Link to="/supplier/suppliers"
+                                              className="block px-4 py-2 hover:bg-gray-100 rounded-md transition duration-200">Suppliers
+                                        </Link>
+                                    </li>
+
+                                </ul>
+                            )}
+                        </li>
+
+
                         {/* Ingredients Dropdown */}
                         <li className="relative">
 
@@ -156,8 +201,6 @@ const Navbar = () => {
                         </li>
 
 
-
-
                         {/* About link */}
                         <li>
 
@@ -190,6 +233,7 @@ const Navbar = () => {
                                     <Person className="w-4 h-4 mr-1 text-blue-200"/>
                                     {/*todo - add an onclick to open user's profile page*/}
                                     {auth.user?.profile.email}
+
                                 </span>
                                 {/* Sign Out Button */}
                                 <button
@@ -215,7 +259,7 @@ const Navbar = () => {
                     </div>
                 </div>
             </div>
-        {/*    End Navbar.tst */}
+            {/*    End Navbar.tst */}
         </nav>
     );
 };

@@ -1,0 +1,48 @@
+import axios, { type AxiosError } from "axios";
+import config from "./api.js";
+import type { Brand } from "../models/brand.ts";
+import type { ApiResponse } from "../models/api.ts";
+
+export async function postNewBrand(brand: Brand, access_token: string): Promise<ApiResponse<Brand>> {
+    const url = `${config.API_URL}/buyable/brand`;
+    try {
+        const response = await axios.post<ApiResponse<Brand>>(url, brand, {
+            headers: { Authorization: `Bearer ${access_token}` }
+        });
+
+        // Return the entire ApiResponse object
+        return response.data;
+
+    } catch (error) {
+        console.error("Error posting new brand in brandService:", error);
+
+        if (axios.isAxiosError(error)) {
+            const axiosError = error as AxiosError;
+            const status = axiosError.response?.status;
+            // Attempt to get the error message from the API response, otherwise use the default
+            const message = (axiosError.response?.data as { detail?: string })?.detail || axiosError.message;
+
+            throw new Error(`Failed to create brand. Status: ${status}. Reason: ${message}`);
+        }
+
+        throw new Error("An unexpected error occurred while creating the brand.");
+    }
+}
+
+export async function fetchBrand(brand_id: number, access_token: string): Promise<ApiResponse<Brand>> {
+    const url = `${config.API_URL}/buyable/brand/${brand_id}`;
+    try {
+        const response = await axios.get<ApiResponse<Brand>>(url, {
+            headers: { Authorization: `Bearer ${access_token}` }
+        });
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            const axiosError = error as AxiosError;
+            const status = axiosError.response?.status;
+            const message = (axiosError.response?.data as { detail?: string })?.detail || axiosError.message;
+            throw new Error(`Failed to fetch brand. Status: ${status}. Reason: ${message}`);
+        }
+        throw new Error("An unexpected error occurred while fetching the brand.");
+    }
+}

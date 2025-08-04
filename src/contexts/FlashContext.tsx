@@ -34,9 +34,8 @@ export const FlashProvider = ({children}: { children: ReactNode }) => {
         // Set up the timer to hide the message after a delay.
         const timerId = setTimeout(() => {
             setFlashState((prevState) => ({...prevState, visible: false}));
-        }, 2000); // Message disappears after 2 seconds
+        }, 3000); // Message disappears after 3 seconds
 
-        // ✨ Return a cleanup function.
         // This runs if the component unmounts or if the effect runs again.
         return () => {
             clearTimeout(timerId);

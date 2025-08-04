@@ -42,7 +42,7 @@ function IngredientForm({ prop_ingredient_id = null }: IngredientFormProps) {
     const [formData, setFormData] = useState<IngredientFormData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [isNewIngredient, setIsNewIngredient] = useState<boolean>(false); // New state to track if it's a new entry
+    const [isNewIngredient, setIsNewIngredient] = useState<boolean>(false); // state to track if it's a new entry
 
     // Function to create a new ingredient
     const createIngredient = async (newData: IngredientFormData) => {

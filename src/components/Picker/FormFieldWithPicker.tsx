@@ -2,8 +2,8 @@ import React from 'react';
 
 interface FormFieldWithPickerProps {
     label: string;
-    fieldValue: any;        // The current value to find
-    pickerArray: any[];     // The array to search in
+    fieldValue: string | number;        // The current value to find - can be any database table id type
+    pickerArray: any[];     // The array to search
     onLaunch: () => void;   // The callback to open the modal
 }
 

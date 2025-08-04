@@ -1,12 +1,8 @@
 import React, {useCallback} from 'react';
-import imageNotFound from '../../assets/Image-not-found.png'  // todo - replace this with a logo or plain colour so that no image doesn't look like missing data
+import imageNotFound from '../../assets/Image-not-found.png'
+import type {PickerElement} from "../../models/picker.ts";  // todo - replace this with a logo or plain colour so that no image doesn't look like missing data
 
-// Define the types for the props of ImageTextCard
-export interface PickerElementProp {
-    imageUrl: string | null,
-    title: string,
-    subtitle: string,
-    id: number,
+export interface PickerElementProp extends PickerElement {
     onSelect: () => void,
     onClose: () => void
 }
@@ -18,6 +14,8 @@ export interface PickerElementProp {
  * @param title
  * @param subtitle
  * @param id
+ * @param onSelect
+ * @param onClose
  * @constructor
  */
 
@@ -25,10 +23,10 @@ export interface PickerElementProp {
 const PickerListElementCard = ({imageUrl, title, subtitle, id, onSelect, onClose}: PickerElementProp) => {
 
     const handleClick = useCallback(() => {
-        console.log(`handling click on element card in picker modal for element id ${id}`);
-        console.log(`type of onSelect: ${typeof onSelect}`);
+            console.log(`handling click on element card in picker modal for element id ${id}`);
+            console.log(`type of onSelect: ${typeof onSelect}`);
             onSelect(id);  // should apply the id value to the grandparent's formdata for the field
-            onClose();  // just closes down the modal
+            onClose();  // if the picker is called in a modal ,just closes down the modal, otherwise run custom onClose function
         }
     )
 
@@ -65,9 +63,11 @@ const PickerListElementCard = ({imageUrl, title, subtitle, id, onSelect, onClose
                     <h2 className="title is-6">
                         {title}
                     </h2>
-                    <p className="is-7">
-                        {subtitle}
-                    </p>
+                    {!subtitle ? null : (
+                        <p className="is-7">
+                            {subtitle}
+                        </p>
+                    )}
                 </div>
             </div>
         </div>
