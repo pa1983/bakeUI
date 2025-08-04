@@ -16,10 +16,14 @@ interface BrandFormProps {
 }
 
 
-const BrandForm = ({formData, onSave, onChange, onCancel, onEdit, onFocus, isSaving}: BrandFormProps) => {
-    // Use local state to manage form data, initialized with the prop
-
-
+const BrandForm = ({
+                       formData,
+                       onSave,
+                       onChange,
+                       onCancel,
+                       onEdit,
+                       onFocus,
+                       isSaving}: BrandFormProps) => {
 
     // Handle form submission - button hidden if ID exists and handle blur takes care of saving individual field changes
     const handleSubmit = (e: React.FormEvent) => {
@@ -29,8 +33,6 @@ const BrandForm = ({formData, onSave, onChange, onCancel, onEdit, onFocus, isSav
 
 
     return (
-
-        //
         <form onSubmit={handleSubmit}>
             {/* Brand Name Input */}
             <div className="field">
@@ -78,7 +80,10 @@ const BrandForm = ({formData, onSave, onChange, onCancel, onEdit, onFocus, isSav
                         id="added_date"
                         className="input is-static"
                         type="text"
-                        value={formData.added_date ? new Date(formData.added_date).toLocaleDateString() : 'Will be set upon creation'}
+                        value={
+                        formData.added_date ?
+                            new Date(formData.added_date).toLocaleDateString() :
+                            'Will be set upon creation'}
                         readOnly
                     />
                 </div>
@@ -107,7 +112,7 @@ const BrandForm = ({formData, onSave, onChange, onCancel, onEdit, onFocus, isSav
                 {/*conditionally display a save new button.  if not a new entry, changes will be saved each time a field is blurred */}
                 <div className="field is-grouped">
                     {formData.brand_id === 0 ? (
-                        // Case for a NEW brand (ID is 0)
+                        // Case for a NEW brand (default ID for new element is 0)
                         <>
                             <div className="control">
                                 <button type="submit" className="button is-primary">
