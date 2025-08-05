@@ -62,11 +62,11 @@ const router = createBrowserRouter([
                 element: <InvoiceViewer/>
             },
             {
-                path: '/buyable/brand/brands',
+                path: '/buyable/brand/all',
                 element: <BrandList/>
             },
             {
-                path: '/buyable/brand/:brand_id',
+                path: '/buyable/brand/:id',
                 element: <ViewBrandForm/>
             },
 

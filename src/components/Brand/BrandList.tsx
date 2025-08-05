@@ -9,7 +9,7 @@ import {useNavigate} from "react-router-dom";
 function BrandList() {
     // thin layer over picker to display brand list.  This component simply reshapes the data array and defines the
     // callbacks
-    //  will be called from router /brand/brands
+    //  will be called from router /brand/all
     const {brands} = useInvoice();
     const navigate = useNavigate();
     const endpoint = 'buyable/brand';
@@ -19,7 +19,7 @@ function BrandList() {
         return brands.map((brand: Brand): PickerElement => ({
             id: brand.brand_id,
             title: brand.brand_name,
-            subtitle: brand.notes && '',
+            subtitle: `${brand.notes || '      \n\n'}`,
             imageUrl: null
         }))
     }, [brands]);

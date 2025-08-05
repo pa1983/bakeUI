@@ -47,7 +47,7 @@ export const InvoiceProvider = ({ children }: { children: ReactNode }) => {
                 return;
             }
 
-            console.log("Fetching invoice data from API...");
+            console.log("Fetching invoice data (currencies, brands, suppliers)  from API...");
             const response = await axios.get('http://localhost:8000/invoice/formdata', {
                 headers: { Authorization: `Bearer ${auth.user?.access_token}` }
             });

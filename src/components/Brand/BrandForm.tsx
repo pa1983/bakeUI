@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {type Brand} from '../../models/brand.ts';
-import useFlash from "../../contexts/FlashContext.tsx";
-import {patchField} from "../../services/commonService.ts";
-import {useAuth} from "react-oidc-context";
+import {useShortcut} from "../../contexts/ShortcutContext.tsx";
+import DeleteElement from "../Utility/DeleteElement.tsx";
+import {useNavigate} from "react-router-dom";
 
-// Props for our component
+
 interface BrandFormProps {
     formData: Brand;
     onSave: (updatedBrand: Brand) => void;
@@ -13,6 +13,7 @@ interface BrandFormProps {
     onEdit: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
     onFocus: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
     isSaving: boolean;
+    onDelete: ()=> void;
 }
 
 
@@ -23,13 +24,38 @@ const BrandForm = ({
                        onCancel,
                        onEdit,
                        onFocus,
-                       isSaving}: BrandFormProps) => {
+                       isSaving,
+                        onDelete
 
-    // Handle form submission - button hidden if ID exists and handle blur takes care of saving individual field changes
+                   }: BrandFormProps) => {
+
+    const isNew = formData.brand_id === 0;
+    const navigate = useNavigate();
+    // SET FOCUS ELEMENT
+    //create a ref for the input element to be focussed on first render
+    const focusInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        // On first render, focus on the element with ref = focusInputRef
+        focusInputRef.current?.focus();
+    }, []);
+    //
+
+    // handle save - decoupled from handle submit, for use both in submit button click and keyboard shortcut
+    const handleSave = useCallback(() => {
+        onSave(formData);
+    }, [formData, onSave]);
+
+    // The form's submit handler, which prevents default browser behavior.
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSave(formData);
+        handleSave();
     };
+
+
+    // Conditionally register the shortcut only when creating a new brand - don't want to trigger a handleSave event
+    // if it's a form edit rather than create new
+    useShortcut('Enter', isNew ? handleSave : null, {ctrl: true});
 
 
     return (
@@ -39,6 +65,7 @@ const BrandForm = ({
                 <label className="label" htmlFor="brand_name">Brand Name</label>
                 <div className="control">
                     <input
+                        ref={focusInputRef}// set the focus ref
                         id="brand_name"
                         className="input"
                         type="text"
@@ -72,7 +99,7 @@ const BrandForm = ({
                 </div>
             </div>
 
-            {/* Date Added (Read-Only) - This one does not need a name attribute */}
+            {/* Date Added (Read-Only) */}
             <div className="field">
                 <label className="label" htmlFor="added_date">Date Added</label>
                 <div className="control">
@@ -81,59 +108,58 @@ const BrandForm = ({
                         className="input is-static"
                         type="text"
                         value={
-                        formData.added_date ?
-                            new Date(formData.added_date).toLocaleDateString() :
-                            'Will be set upon creation'}
+                            formData.added_date ?
+                                new Date(formData.added_date).toLocaleDateString() :
+                                'Will be set upon creation'}
                         readOnly
                     />
                 </div>
             </div>
 
+            {/* Action Buttons */}
+            <div className="field is-grouped">
+                {isNew ? (
+                    // Case for a NEW brand
+                    <>
+                        <div className="control">
+                            <button
+                                type="submit"
+                                className={`button is-primary ${isSaving ? 'is-loading' : ''}`}
+                                disabled={isSaving}
+                            >
+                                Create Brand (CTRL+Enter)
+                            </button>
+                        </div>
+                        <div className="control">
+                            <button type="button" className="button is-light" onClick={onCancel} disabled={isSaving}>
+                                Cancel
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    // Case for an EXISTING brand
 
-                {/*todo - add an image uploader component to associate an image with the item.  Could the component also display a primary image?  Feed it an image Id or a url?  Image ID would be easier, but would require more api calls*/}
-                {/*<div className="field">*/}
-                {/*    <label className="label" htmlFor="image_url">Image URL</label>*/}
-                {/*    <div className="control">*/}
-                {/*        <input*/}
-                {/*            id="image_url"*/}
-                {/*            name="image_url"*/}
-                {/*            className="input"*/}
-                {/*            type="url"*/}
-                {/*            placeholder="https://example.com/image.png"*/}
-                {/*            value={formData.image_url || ''}*/}
-                {/*            onChange={handleChange}*/}
-                {/*        />*/}
-                {/*    </div>*/}
-                {/*</div>*/}
 
-                {/* Action Buttons */}
-
-
-                {/*conditionally display a save new button.  if not a new entry, changes will be saved each time a field is blurred */}
-                <div className="field is-grouped">
-                    {formData.brand_id === 0 ? (
-                        // Case for a NEW brand (default ID for new element is 0)
-                        <>
-                            <div className="control">
-                                <button type="submit" className="button is-primary">
-                                    Create Brand
-                                </button>
-                            </div>
-                            <div className="control">
-                                <button type="button" className="button is-light" onClick={onCancel}>
-                                    Cancel
-                                </button>
-                            </div>
-                        </>
-                    ) : (
-                        // Case for an EXISTING brand (ID is not 0)
+                    // Case for an EXISTING brand
+                    <>
                         <div className="control">
                             <p className="is-italic has-text-grey">Changes are saved automatically.</p>
                         </div>
-                    )}
-                </div>
+
+                        <DeleteElement
+                            element_id={formData.brand_id}
+                            endpoint='buyable/brand'
+                            elementName={formData.brand_name}
+                            onDelete= {onDelete}
+                        />
+                    </>
+                )}
+            </div>
+
+
         </form>
-    );
+    )
+        ;
 };
 
 export default BrandForm;

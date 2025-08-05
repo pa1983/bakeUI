@@ -3,9 +3,11 @@ import config from "./api.js";
 import type { Brand } from "../models/brand.ts";
 import type { ApiResponse } from "../models/api.ts";
 
-export async function postNewBrand(brand: Brand, access_token: string): Promise<ApiResponse<Brand>> {
+export async function postNewElement(brand: Brand, access_token: string): Promise<ApiResponse<Brand>> {
     const url = `${config.API_URL}/buyable/brand`;
+
     try {
+        console.log(`creating new brand in brandService ${brand.brand_id}`);
         const response = await axios.post<ApiResponse<Brand>>(url, brand, {
             headers: { Authorization: `Bearer ${access_token}` }
         });
@@ -46,3 +48,4 @@ export async function fetchBrand(brand_id: number, access_token: string): Promis
         throw new Error("An unexpected error occurred while fetching the brand.");
     }
 }
+

@@ -3,12 +3,16 @@ import Picker from "../Picker/Picker.tsx";
 import {useInvoice} from "../../contexts/InvoiceContext.tsx";
 import type {PickerElement} from '../../models/picker.ts';
 import type { Supplier } from '../../models/supplier.ts';
+import {useNavigate} from "react-router-dom";
 
 
 function SupplierList() {
     //  will be called from router /supplier/suppliers
-    const {suppliers} = useInvoice();
 
+
+    const {suppliers} = useInvoice();
+    const navigate = useNavigate();
+    const endpoint = 'supplier';
     // todo - can i add friendly date component to the subtitle to extract the text output so it renders nicely?
     const pickerArray = useMemo(() => {
         return suppliers.map((supplier: Supplier): PickerElement => ({

@@ -1,5 +1,5 @@
 import PickerListElementCard, {type PickerElementProp} from "./PickerListElementCard.tsx";
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import type {PickerElement} from "../../models/picker.ts";
 
@@ -26,6 +26,17 @@ function Picker({
 
     const [searchTerm, setSearchTerm] = useState('');  // search variable
 
+
+    // SET FOCUS ELEMENT
+    //create a ref for the input element to be focussed on first render
+    const focusInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        // On first render, focus on the element with ref = focusInputRef
+        focusInputRef.current?.focus();
+    }, []);
+    //
+
     // filter the array against the searchterm, looking in both the title and description
     const filteredPickerArray = pickerArray.filter(item =>
         item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,6 +61,7 @@ function Picker({
                     <div className="field">
                         <p className="control has-icons-left">
                             <input
+                                ref={focusInputRef}  // set initial focus so can start typing without clicking into search bar
                                 type="text"
                                 placeholder="Search name and description ..."
                                 value={searchTerm}

@@ -107,7 +107,7 @@ const Navbar = () => {
                             {openDropdown === 'general' && (
                                 <ul className="absolute md:top-full left-0 md:left-auto mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg py-2 z-10 transition-all duration-300 ease-in-out transform origin-top md:origin-top-right scale-y-100 opacity-100">
                                     <li>
-                                        <Link to="/buyable/brand/brands"
+                                        <Link to="/buyable/brand/all"
                                               className="block px-4 py-2 hover:bg-gray-100 rounded-md transition duration-200">Brands</Link>
                                     </li>
 

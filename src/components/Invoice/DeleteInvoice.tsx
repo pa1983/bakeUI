@@ -38,7 +38,7 @@ const DeleteInvoice = ({invoice_id}) => {
             onClose={() => setIsDeleteConfirmationModalOpen(false)}
             onConfirm={handleConfirmDelete}
             >
-            Are you sure you want to delete this invoice?  This action cannot be undone.
+            Are you sure you want to delete this item?  This action cannot be undone.
         </ConfirmationModal>
         </>
     )

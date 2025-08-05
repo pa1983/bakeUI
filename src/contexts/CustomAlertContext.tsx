@@ -1,8 +1,7 @@
-// src/context/AlertContext.jsx
 import React, { createContext, useState, useContext } from 'react';
 import CustomAlert from '../components/Utility/CustomAlert.tsx';
 
-// 1. Create the context
+//  Create the context
 const AlertContext = createContext();
 
 // 2. Create the Provider component

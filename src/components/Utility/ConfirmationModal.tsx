@@ -32,11 +32,11 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, title, on
                     {children}
                 </section>
                 <footer className="modal-card-foot" style={{ justifyContent: 'flex-end' }}>
-                    {/* The action buttons */}
-                    <button className="button" onClick={onClose}>
+                    {/* Add type="button" to prevent form submission - was creating new record every time hit delete */}
+                    <button type="button" className="button" onClick={onClose}>
                         Cancel
                     </button>
-                    <button className="button is-danger" onClick={onConfirm}>
+                    <button type="button" className="button is-danger" onClick={onConfirm}>
                         Confirm
                     </button>
                 </footer>
