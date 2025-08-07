@@ -1,8 +1,8 @@
 import React, {useCallback} from 'react';
 import imageNotFound from '../../assets/Image-not-found.png'
-import type {PickerElement} from "../../models/picker.ts";  // todo - replace this with a logo or plain colour so that no image doesn't look like missing data
+import type {IPickerElement} from "../../models/picker.ts";  // todo - replace this with a logo or plain colour so that no image doesn't look like missing data
 
-export interface PickerElementProp extends PickerElement {
+export interface PickerElementProp extends IPickerElement {
     onSelect: () => void,
     onClose: () => void
 }
@@ -25,7 +25,7 @@ const PickerListElementCard = ({imageUrl, title, subtitle, id, onSelect, onClose
     const handleClick = useCallback(() => {
             console.log(`handling click on element card in picker modal for element id ${id}`);
             console.log(`type of onSelect: ${typeof onSelect}`);
-            onSelect(id);  // should apply the id value to the grandparent's formdata for the field
+            onSelect(id);  // should apply the id value to the grandparent's formdata for the field, or trigger a navigate redirect to the edit form
             onClose();  // if the picker is called in a modal ,just closes down the modal, otherwise run custom onClose function
         }
     )

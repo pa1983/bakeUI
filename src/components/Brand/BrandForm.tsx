@@ -1,8 +1,7 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 import {type Brand} from '../../models/brand.ts';
-import {useShortcut} from "../../contexts/ShortcutContext.tsx";
+import {useShortcut} from "../../contexts/KeyboardShortcutContext.tsx";
 import DeleteElement from "../Utility/DeleteElement.tsx";
-import {useNavigate} from "react-router-dom";
 
 
 interface BrandFormProps {
@@ -14,6 +13,7 @@ interface BrandFormProps {
     onFocus: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
     isSaving: boolean;
     onDelete: ()=> void;
+    isModal: boolean;
 }
 
 
@@ -25,12 +25,12 @@ const BrandForm = ({
                        onEdit,
                        onFocus,
                        isSaving,
-                        onDelete
+                        onDelete,
+    isModal=false
 
                    }: BrandFormProps) => {
 
     const isNew = formData.brand_id === 0;
-    const navigate = useNavigate();
     // SET FOCUS ELEMENT
     //create a ref for the input element to be focussed on first render
     const focusInputRef = useRef<HTMLInputElement>(null);
@@ -41,8 +41,11 @@ const BrandForm = ({
     }, []);
     //
 
-    // handle save - decoupled from handle submit, for use both in submit button click and keyboard shortcut
+    /** handle save - decoupled from handle submit, for use both in submit button click and keyboard shortcut
+     *
+     */
     const handleSave = useCallback(() => {
+        console.log('handleSave triggered');
         onSave(formData);
     }, [formData, onSave]);
 
@@ -55,8 +58,9 @@ const BrandForm = ({
 
     // Conditionally register the shortcut only when creating a new brand - don't want to trigger a handleSave event
     // if it's a form edit rather than create new
-    useShortcut('Enter', isNew ? handleSave : null, {ctrl: true});
-
+    if (!isModal) {
+        useShortcut('Enter', isNew ? handleSave : null, {ctrl: true});
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -127,7 +131,8 @@ const BrandForm = ({
                                 className={`button is-primary ${isSaving ? 'is-loading' : ''}`}
                                 disabled={isSaving}
                             >
-                                Create Brand (CTRL+Enter)
+                                {/*can't have a shortcut in the modal or it'll interfere with the parent form's shortcuts */}
+                                {isModal ? 'Create Brand' : 'Create Brand (CTRL+Enter)'}
                             </button>
                         </div>
                         <div className="control">

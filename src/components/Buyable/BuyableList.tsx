@@ -1,18 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import Picker from "../Picker/Picker.tsx";
+import { createListView } from '../ListView/createListView';
+import type { ListViewConfig } from '../../config/listViewConfig';
 
-function BrandList() {
-// layer over picker to display brand list.
-    //  will be called from router /brand/all
+// 1. Define the configuration for the Buyable list
+const buyableListConfig: ListViewConfig = {
+    title: 'Buyable Item',
+    endpoint: 'buyable',
+    pickerArraySelector: (data) => data.PickerBuyableArray,
+};
 
-    return (
-        <Picker
-            pickerArray={}
-            pickerTitle={}
-            onSelect={}  // to be passed on to the picker elements to allow it to update the grandparent function from where the picker list is called
-            onClose={}
-        />
-    )
-}
+// 2. Create the component by calling the factory
+const BuyableList = createListView(buyableListConfig);
 
-export default BrandList;
+// 3. Export the resulting component
+export default BuyableList;

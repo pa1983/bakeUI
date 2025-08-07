@@ -1,23 +1,15 @@
-import PickerListElementCard, {type PickerElementProp} from "./PickerListElementCard.tsx";
+import PickerListElementCard from "./PickerListElementCard.tsx";
 import React, {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import type {PickerElement} from "../../models/picker.ts";
+import type {PickerProps} from "../../models/picker.ts";
 
-
-export interface PickerProps {
-    pickerArray: PickerElement[];  // todo change this to an array of PickerElementProps once get it working
-    pickerTitle: string;
-    onSelect: (id: number | string) => void;  // callback function when an element is selected that doesn't have a return
-    onClose: () => void;
-    addNewLink: string | null;
-}
 
 function Picker({
                     pickerArray,
                     pickerTitle,
-                    onSelect,  // to be passed on to the picker elements to allow it to update the grandparent function from where the picker list is called
+                    pickerOnSelect,  // to be passed on to the picker elements to allow it to update the grandparent function from where the picker list is called
                     onClose,
-                    addNewLink
+                    pickerOnAddNewClicked  // callback for preferred method of triggering an add new form to load.
                 }: PickerProps) {
 
 
@@ -49,7 +41,6 @@ function Picker({
         setSearchTerm(newSearchTerm);
     };
 
-    const navigate = useNavigate();
 
     return (
         <div className="section">
@@ -74,27 +65,18 @@ function Picker({
                         </p>
                     </div>
                 </div>
-                <div className={`column is-3 ${addNewLink ? '' : 'is-hidden'}`}>
-                <button
-                    className="button is-info is-medium is-fullwidth"
-                    onClick={() => navigate(addNewLink)}
-                >
-                    Add New
-                </button>
+                 {/*conditionally render the add new button only if a callback has been defined */}
+                {pickerOnAddNewClicked && (
+                <div className={`column is-3`}>
+                    <button
+                        className="button is-info is-medium is-fullwidth"
+                        onClick={pickerOnAddNewClicked}  // trigger the onAddNew callback to apply the preferred method of triggering an add new form to load
+                    >
+                        Add New
+                    </button>
                 </div>
+                    )}
             </div>
-
-            {/*todo - consider conditionally allowing the inclusion of an add new button to create a new element, if suitable.  e.g. not suitable for currency, may be suitable for ingredient*/}
-            {/*ntodo - need to pass in an add new component that returns the id of the created element once it's created by user - can then be passed back to the calling form or list*/}
-
-            {/*<div className="column is-narrow">*/}
-            {/*    <button*/}
-            {/*        onClick={handleCreateNewClick}*/}
-            {/*        className="button is-info is-medium is-fullwidth"*/}
-            {/*    >*/}
-            {/*        Create New Ingredient*/}
-            {/*    </button>*/}
-            {/*</div>*/}
 
 
             {filteredPickerArray.length === 0 && searchTerm === '' && !loading ? (
@@ -106,14 +88,13 @@ function Picker({
                 <div className="columns is-multiline">
                     {filteredPickerArray.map(item => (
                         <div key={item.id} className="column is-one-third-desktop is-half-tablet">
-                            {/*// is this the corect place to have the item id?*/}
                             <PickerListElementCard
 
                                 imageUrl={item.imageUrl}
                                 title={item.title}
                                 subtitle={item.subtitle}
                                 id={item.id}
-                                onSelect={onSelect}
+                                onSelect={pickerOnSelect}
                                 onClose={onClose}
 
                             />

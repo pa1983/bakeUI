@@ -12,8 +12,8 @@ import {IngredientProvider} from "./contexts/ingredientContext.tsx";
 import {FlashProvider} from "./contexts/FlashContext.tsx";
 import {CustomAlertProvider} from "./contexts/CustomAlertContext.tsx";
 import {pdfjs} from 'react-pdf';
-import {InvoiceProvider} from "./contexts/InvoiceContext.tsx";
-import {ShortcutProvider} from './contexts/ShortcutContext.tsx';
+import {DataProvider} from "./contexts/DataContext.tsx";
+import {KeyboardShortcutProvider} from './contexts/KeyboardShortcutContext.tsx';
 
 // Import required CSS for react-pdf pages
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -44,15 +44,15 @@ root.render(
         <FlashProvider>
             <CustomAlertProvider>
                 <AuthProvider {...cognitoAuthConfig}>
-                    <ShortcutProvider>
+                    <KeyboardShortcutProvider>
                     <UnitOfMeasureProvider>
                         <IngredientProvider>
-                            <InvoiceProvider>
+                            <DataProvider>
                             <RouterProvider router={router}/>
-                            </InvoiceProvider>
+                            </DataProvider>
                         </IngredientProvider>
                     </UnitOfMeasureProvider>
-                    </ShortcutProvider>
+                    </KeyboardShortcutProvider>
                 </AuthProvider>
             </CustomAlertProvider>
         </FlashProvider>

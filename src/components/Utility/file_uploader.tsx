@@ -65,8 +65,8 @@ function UploadInvoice() {
                         <input {...getInputProps()} />
                     {
                         isDragActive ?
-                            <p>Drop the files here ...</p> :
-                            <p>Drag not active?</p>
+                            <p>Let go to upload!</p> :
+                            <p>Drag file here here ...</p>
                     }
                     </div>
                     <span className="file-label"> Drop an invoice here to let AI input it for you </span>

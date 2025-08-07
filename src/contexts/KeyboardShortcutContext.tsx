@@ -13,10 +13,10 @@ interface ShortcutContextType {
     removeShortcut: (id: symbol) => void;
 }
 
-const ShortcutContext = createContext<ShortcutContextType | null>(null);
+const KeyboardShortcutContext = createContext<ShortcutContextType | null>(null);
 
 // The Provider component that will wrap the application
-export const ShortcutProvider = ({children}: { children: ReactNode }) => {
+export const KeyboardShortcutProvider = ({children}: { children: ReactNode }) => {
     const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
 
     const addShortcut = useCallback((shortcut: Omit<Shortcut, 'id'>): symbol => {
@@ -33,7 +33,7 @@ export const ShortcutProvider = ({children}: { children: ReactNode }) => {
         const handleKeyDown = (event: KeyboardEvent) => {
             // Find a matching shortcut
             const shortcut = shortcuts.find(s =>
-                s.key.toLowerCase() === event.key.toLowerCase() &&
+                s.key?.toLowerCase() === event.key?.toLowerCase() &&
                 s.ctrl === (event.ctrlKey || event.metaKey) // Handle Ctrl (Win) and Cmd (Mac)
             );
 
@@ -50,42 +50,55 @@ export const ShortcutProvider = ({children}: { children: ReactNode }) => {
     }, [shortcuts]); // Rerun if the list of shortcuts changes
 
     return (
-        <ShortcutContext.Provider value={{addShortcut, removeShortcut}}>
+        <KeyboardShortcutContext.Provider value={{addShortcut, removeShortcut}}>
             {children}
-        </ShortcutContext.Provider>
+        </KeyboardShortcutContext.Provider>
     );
 };
-
 //  custom hook that components will use
 export const useShortcut = (
-    key: string,
-                            callback: () => void,
-                            options: { ctrl?: boolean } = {}) => {
-    const context = useContext(ShortcutContext);
+    // Allow key and callback to be null to disable the hook
+    key: string | null,
+    callback: (() => void) | null,
+    options: { ctrl?: boolean } = {}
+) => {
+    const context = useContext(KeyboardShortcutContext);
     if (!context) {
-        throw new Error('useShortcut must be used within a ShortcutProvider');
+        throw new Error('useShortcut must be used within ShortcutProvider');
     }
 
-    const {addShortcut, removeShortcut} = context;
-    const shortcutIdRef = useRef<symbol | null>(null);
+    const { addShortcut, removeShortcut } = context;
+
+    //  Use a ref to store the callback. This prevents the effect from re-running
+    //    every time the parent re-renders if the callback is an inline function.
+    const savedCallback = useRef(callback);
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
+
 
     useEffect(() => {
-        // Memoize the callback to prevent re-registering on every render
-        const memoizedCallback = callback;
+        // Guard clause - If key or callback is missing, do nothing.
+        if (!key || !savedCallback.current) {
+            return;
+        }
 
-        // Register the shortcut and store its ID
-        const id = addShortcut({
-            key,
-            callback: memoizedCallback,
-            ctrl: options.ctrl || false,
-        });
-        shortcutIdRef.current = id;
-
-        // Cleanup - remove the shortcut when the component unmounts or dependencies change
-        return () => {
-            if (shortcutIdRef.current) {
-                removeShortcut(shortcutIdRef.current);
+        const handler = () => {
+            if (savedCallback.current) {
+                savedCallback.current();
             }
         };
-    }, [key, callback, options.ctrl, addShortcut, removeShortcut]);
+
+        const id = addShortcut({
+            key,
+            callback: handler,
+            ctrl: options.ctrl || false,
+        });
+
+        // Cleanup function
+        return () => {
+            removeShortcut(id);
+        };
+
+    }, [key, options.ctrl, addShortcut, removeShortcut]);
 };

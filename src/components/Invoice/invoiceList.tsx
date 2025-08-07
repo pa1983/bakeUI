@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import UploadInvoice from '../Utility/file_uploader.tsx';
 import {fetchInvoices} from "../../services/InvoiceServices.ts";
 import type {InvoiceListResponse} from "../../models/invoice.ts";
@@ -8,7 +8,7 @@ import InvoiceListElementCard from "./InvoiceListItem.tsx";
 function InvoiceList() {
     const auth = useAuth();
     const [invoices, setInvoices] = useState<InvoiceListResponse[]>([]);
-
+    const [refreshContextData, setRefreshContextData] = useState(1);
 
     useEffect(() => {
 
@@ -27,12 +27,15 @@ function InvoiceList() {
         }
 
         loadInvoices();
-    }, [auth.user?.access_token])
+    }, [auth.user?.access_token, refreshContextData])
 
+    const triggerInvoiceReload = useCallback(() => {
+        console.log('triggering an invoice list reload');
+        setRefreshContextData(prev => prev + 1);
+    }, []);
 
     return (
         <>
-            dropzone here
             <UploadInvoice></UploadInvoice>
 
             <div className="container is-fluid">
@@ -45,6 +48,7 @@ function InvoiceList() {
                     <InvoiceListElementCard
                         invoice={invoice}
                         key={invoice.id}
+                        onUpdate={triggerInvoiceReload}  // increment the RefreshContextData state to trigger a reload of the invoice list from the API
                     />
 
                 ))}

@@ -113,13 +113,13 @@ const Navbar = () => {
 
 
                                     <li>
-                                        <Link to="/buyable/buyables"
+                                        <Link to="/buyable/all"
                                               className="block px-4 py-2 hover:bg-gray-100 rounded-md transition duration-200">Buyables
                                         </Link>
                                     </li>
 
                                     <li>
-                                        <Link to="/supplier/suppliers"
+                                        <Link to="/supplier/all"
                                               className="block px-4 py-2 hover:bg-gray-100 rounded-md transition duration-200">Suppliers
                                         </Link>
                                     </li>

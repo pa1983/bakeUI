@@ -2,23 +2,27 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {useParams, useNavigate} from "react-router-dom";
 import {useAuth} from "react-oidc-context";
 import {type Brand, createEmptyBrand} from '../../models/brand.ts';
-import {fetchBrand, postNewElement} from "../../services/brandService.ts";
+import {fetchBrand, postNewBrand} from "../../services/brandService.ts";
 import BrandForm from './BrandForm.tsx';
 import LoadingSpinner from "../Utility/LoadingSpinner.tsx";
 import useFlash from "../../contexts/FlashContext.tsx";
 import {patchField} from "../../services/commonService.ts";
-import {useInvoice} from "../../contexts/InvoiceContext.tsx";
+import {useData} from "../../contexts/DataContext.tsx";
 
 
-interface ViewElementFormProps {
+interface ViewBrandFormProps {
     prop_element_id?: number | string;
+    onSuccess?: (id: number) => void | null;
+    isModal: boolean;  // if a form is a modal it can't use shortcuts or it'll risk affecting state of parent form
 }
 const api_endpoint = 'buyable/brand';  // base endpoint; will be appended with /all for full list retrieval, {id} for element, etc
 const elementName = 'Brand';  // For use in messages, titles etc
 const getElement = fetchBrand;  // define the function to call to get a single element
+const createEmptyElement = createEmptyBrand;
+const primary_key_name = 'brand_id';
 
 
-const ViewBrandForm = ({prop_element_id}: ViewElementFormProps) => {
+const ViewBrandForm = ({prop_element_id, onSuccess, isModal=false}: ViewBrandFormProps) => {
     // to be populated
     const {id: param_element_id} = useParams();
     const [element, setElement] = useState<Brand | null>(null);
@@ -27,7 +31,7 @@ const ViewBrandForm = ({prop_element_id}: ViewElementFormProps) => {
     const auth = useAuth();
     const navigate = useNavigate();
 
-    const {refetchInvoiceFormData} = useInvoice();
+    const {refetchBrands} = useData();
 
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -73,7 +77,7 @@ const ViewBrandForm = ({prop_element_id}: ViewElementFormProps) => {
         };
 
         if (isNew) {
-            setElement(createEmptyBrand());
+            setElement(createEmptyElement());
             setIsLoading(false);
         } else {
             const idToFetch = prop_element_id ? Number(prop_element_id) : (param_element_id ? parseInt(param_element_id, 10) : null);
@@ -92,18 +96,27 @@ const ViewBrandForm = ({prop_element_id}: ViewElementFormProps) => {
 
 
     const handleSave = async (formData: Brand) => {
+        // called only when creating a new element from scratch - not for saving changes
         if (!auth.user?.access_token) {
             showFlashMessage("Authentication error. Please log in again.", 'danger');
             return;
         }
         try {
             setIsSaving(true);
-            const apiResponse = await postNewElement(formData, auth.user.access_token);
+            const apiResponse = await postNewBrand(formData, auth.user.access_token);
             showFlashMessage(apiResponse.message, 'success');
             if (apiResponse.data) {
                 // trigger the element list in the invoice context to repopulate
-                refetchInvoiceFormData();
-                navigate(`/${api_endpoint}/${apiResponse.data.brand_id}`);
+                refetchBrands();
+
+                // todo - change this - want to replace this with a callback so that the caller can decide what should happen when a save is successful
+                if (onSuccess) {
+                    onSuccess(apiResponse.data[primary_key_name]);
+                } else {
+                    navigate(`/${api_endpoint}/${apiResponse.data[primary_key_name]}`
+                    )
+                }
+
             }
         } catch (error) {
             console.error(error);
@@ -129,10 +142,10 @@ const ViewBrandForm = ({prop_element_id}: ViewElementFormProps) => {
 
 
     const handleDelete = async () => {
-        // trigger a reload of data arrays in the invoice context and redirect to list
+        // trigger a reload of brands arrays in the data context and redirect to list
 
-        refetchInvoiceFormData();
-        navigate(`${api_endpoint}/all`);
+        refetchBrands();
+        navigate(`/${api_endpoint}/all`);
 
 
 
@@ -140,7 +153,7 @@ const ViewBrandForm = ({prop_element_id}: ViewElementFormProps) => {
 
 
     const handleEdit = async (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        if (!element || element.brand_id === 0) {
+        if (!element || element[primary_key_name] === 0) {
             return;
         }
         if (!auth.user?.access_token) {
@@ -157,8 +170,11 @@ const ViewBrandForm = ({prop_element_id}: ViewElementFormProps) => {
 
         try {
             setIsSaving(true);
-            const response = await patchField(auth.user.access_token, element.brand_id, name, value, api_endpoint);
+            const response = await patchField(auth.user.access_token, element[primary_key_name], name, value, api_endpoint);
             showFlashMessage(response.message, 'success');
+            // trigger a refresh of the brand context data to update the list view
+            refetchBrands();
+
 
             if (response.data) {
                 setElement(response.data);
@@ -197,6 +213,7 @@ const ViewBrandForm = ({prop_element_id}: ViewElementFormProps) => {
                     onFocus={handleFocus}
                     isSaving={isSaving}
                     onDelete={handleDelete}
+                    isModal={isModal}
                 />
             </div>
         </div>

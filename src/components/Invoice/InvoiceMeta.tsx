@@ -4,12 +4,12 @@ import useFlash from '../../contexts/FlashContext.tsx';
 import useAlert from "../../contexts/CustomAlertContext.tsx";
 import {patchField} from '../../services/commonService.ts';
 import {useAuth} from 'react-oidc-context';
-import {useInvoice} from "../../contexts/InvoiceContext.tsx";
+import {useData} from "../../contexts/DataContext.tsx";
 import {type Currency} from "../../models/currency.ts";
 import {type Supplier} from "../../models/supplier.ts";
 import PickerModal from "../Picker/PickerModal.tsx";
 import FormFieldWithPicker from "../Picker/FormFieldWithPicker.tsx";
-import {type PickerElement} from "../../models/picker.ts";
+import {type IPickerElement} from "../../models/picker.ts";
 
 
 // display form containing all the invoice's meta data - use generic name for initialFormDetails so can reuse code snippets in other forms without refactoring
@@ -19,44 +19,26 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
     const api_endpoint = `invoice`;
     // picker controls
     const [isPickerModalActive, setIsPickerModalActive] = useState<boolean>(false);
-    const [pickerArray, setPickerArray] = useState<[] | PickerElement[]>([]);  // array to be passed to picker to make selections from
+    const [pickerArray, setPickerArray] = useState<[] | IPickerElement[]>([]);  // array to be passed to picker to make selections from
     const [pickerTitle, setPickerTitle] = useState<string>('');  // text descriptor for the picker popup
     const [pickerOnSelect, setPickerOnSelect] = useState(() => () => {
     }); // A no-op function as default- better than null as unexpected call to pickerOnSelect here will have no effect; call to null() would throw an error
-
+    const [PickerAddNewLink, setPickerAddNewLink] = useState(null);
     // same function for picker close can be used by all possible instances of picker being called - other fields do need to change
     const handlePickerClose = useCallback(() => {
         setIsPickerModalActive(false);
     }, []);
 
     // get context data for use in form and pickers
-    const {currencies, suppliers, refetchInvoiceFormData} = useInvoice();
+    const {currencies, suppliers, PickerSupplierArray, pickerCurrencyArray} = useData();
 
     // now map the currency and supplier arrays into correct shape for picker.
     // Memoize the calc'd array to avoid recalculation on every render of InvoiceMeta.
     // Make depandent on currencies - only re-create the array if currencies changes
     // use this format for all other utilisations of Picker component
-    const pickerCurrencyArray = useMemo(() => {
 
-        return currencies.map((currency: Currency): PickerElement[] => ({
-            id: currency.currency_code,
-            title: `${currency.symbol} - ${currency.currency_name}`,
-            subtitle: currency.currency_code,
-            imageUrl: ''  // todo - create image icons for currencies and make them callable by the currency code so no need to for a link saved in currency table
 
-        }))
-    }, [currencies]);
 
-    const PickerSupplierArray = useMemo(() => {
-
-        return suppliers.map((supplier: Supplier): PickerElement[] => ({
-            id: supplier.supplier_id,
-            title: supplier.supplier_name,
-            subtitle: supplier.account_number,
-            imageUrl: ''  // todo - add images for supplier
-
-        }))
-    }, [currencies]);
 
     const updateCurrency = (newCurrencyValue: string) => {
         // take a shallow copy of the exisitng state, then overwrite the changed element.
@@ -64,13 +46,11 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
         setFormData((prevState: any) => ({...prevState, currency_code: newCurrencyValue}));
     }
 
-    const updateSupplier = (newSupplierValue: number) => {
-        setFormData((prevState: any) => ({...prevState, supplier_id: newSupplierValue}));
-    }
+
 
     // FUNCTIONS LINKED TO CURRENCY PICKER SETUP - will be similar for supplier picker
 
-    const currencyPickerOnSelect = async (newCurrencyCode: string): PickerElement[] => {
+    const currencyPickerOnSelect = async (newCurrencyCode: string): IPickerElement[] => {
         // onselect needs to be set to update the currency id value in the form; the picker modal will inject the necessary logic to close itself so
         // that doesn't need duplicated here
         updateCurrency(newCurrencyCode);  // to update the value as displayed in the form
@@ -78,7 +58,12 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
         setIsPickerModalActive(false);  // then finally close down the modal
     };
 
-    const supplierPickerOnSelect = async (newSupplierId: number): PickerElement[] => {
+    const updateSupplier = (newSupplierValue: number) => {
+        setFormData((prevState: any) => ({...prevState, supplier_id: newSupplierValue}));
+    }
+
+
+    const supplierPickerOnSelect = async (newSupplierId: number): IPickerElement[] => {
         updateSupplier(newSupplierId);  // update supplier ID in the local formData object
         await handlePatchField('supplier_id', newSupplierId, api_endpoint);  // persist the new supplier id to the database
         setIsPickerModalActive(false);  // close the modal
@@ -97,6 +82,7 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
             setIsPickerModalActive(true);
             setPickerOnSelect(() => currencyPickerOnSelect);
 
+
         }
         , [pickerCurrencyArray, currencyPickerOnSelect]);
 
@@ -107,6 +93,7 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
         setPickerArray(PickerSupplierArray);
         setIsPickerModalActive(true);
         setPickerOnSelect(() => supplierPickerOnSelect);
+        // setPickerAddNewLink()  // todo - populate this - currnetly no suplier form to link to
     })
 
     const {showFlashMessage} = useFlash();
@@ -350,12 +337,13 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
             </form>
 
             <PickerModal
-                isActive={isPickerModalActive}
+                isPickerModalActive={isPickerModalActive}
                 pickerArray={pickerArray}
                 pickerTitle={pickerTitle}
-                onSelect={pickerOnSelect}
+                pickerOnSelect={pickerOnSelect}
                 // onClose={pickerOnClose}
                 onClose={handlePickerClose}
+                addNewLink={PickerAddNewLink}
             />
         </div>
     );

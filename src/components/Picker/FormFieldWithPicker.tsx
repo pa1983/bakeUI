@@ -1,12 +1,23 @@
 import React from 'react';
+import type {IPickerElement} from "../../models/picker.ts";
 
 interface FormFieldWithPickerProps {
     label: string;
     fieldValue: string | number;        // The current value to find - can be any database table id type
-    pickerArray: any[];     // The array to search
-    onLaunch: () => void;   // The callback to open the modal
+    pickerArray: IPickerElement[];     // The array to search
+    onLaunch: () => void;   // The callback to open the modal - will be defined in the parent component and contain specific details for setting up a particular array
 }
 
+/**
+ * Component to display the currently selected element from the picker array, and provide logic to handle
+ * clicking of the edit button to trigger the population and opening of the picker modal.
+ *
+ * @param label
+ * @param fieldValue
+ * @param pickerArray
+ * @param onLaunch
+ * @constructor
+ */
 const FormFieldWithPicker = ({
                                  label,
                                  fieldValue,
@@ -36,7 +47,7 @@ const FormFieldWithPicker = ({
             </div>
         </div>
     );
-//      todo - add an optional thumbnail image where available in pickerArray
+//      todo - add an optional thumbnail image where available in pickerArray - simple conditional display if the imageUrl in element is defined
 }
 
 export default FormFieldWithPicker;

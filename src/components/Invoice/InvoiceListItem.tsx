@@ -3,7 +3,14 @@ import type {InvoiceListResponse} from "../../models/invoice.ts";
 import StatusIcon from "./statusIcon.tsx";  // model interface for invoice list item
 import FriendlyDate from "../Utility/FriendlyDate.tsx";
 import DeleteInvoice from "./DeleteInvoice.tsx";
-const InvoiceListElementCard = ({invoice}: InvoiceListResponse) => {
+
+
+interface InvoiceListElementCardProps {
+    invoice: InvoiceListResponse;
+    onUpdate: () => void;
+}
+
+const InvoiceListElementCard = ({invoice, onUpdate}:InvoiceListElementCardProps) => {
 
 
     return (
@@ -57,7 +64,10 @@ const InvoiceListElementCard = ({invoice}: InvoiceListResponse) => {
 
 
                 <div className="card-footer-item">
-                    <DeleteInvoice invoice_id={parseInt(invoice.id,10)}/>
+                    <DeleteInvoice
+                        invoice_id={parseInt(invoice.id,10)}
+                        onUpdate={onUpdate}
+                    />
                 </div>
                 <div className="card-footer-item">
                     <i className="fa-solid fa-file-pdf fa-2x"/>

@@ -3,7 +3,7 @@ import config from "./api.js";
 import type { Brand } from "../models/brand.ts";
 import type { ApiResponse } from "../models/api.ts";
 
-export async function postNewElement(brand: Brand, access_token: string): Promise<ApiResponse<Brand>> {
+export async function postNewBrand(brand: Brand, access_token: string): Promise<ApiResponse<Brand>> {
     const url = `${config.API_URL}/buyable/brand`;
 
     try {
@@ -30,6 +30,8 @@ export async function postNewElement(brand: Brand, access_token: string): Promis
         throw new Error("An unexpected error occurred while creating the brand.");
     }
 }
+
+// todo - make this info a factory function - fetch element, pass in element api endpoint, make errors dynaic using type name.  api responses already dynamic.
 
 export async function fetchBrand(brand_id: number, access_token: string): Promise<ApiResponse<Brand>> {
     const url = `${config.API_URL}/buyable/brand/${brand_id}`;

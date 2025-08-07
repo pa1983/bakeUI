@@ -59,7 +59,7 @@ const DeleteElement = ({element_id, endpoint, elementName = 'this item', onDelet
     // Use the isLoading state to provide visual feedback and prevent double clicks
     return (
         <>
-            <button className="button is-danger"
+            <button className="button is-danger" type="button"
                     onClick={isLoading ? undefined : handleClick}
                     style={{pointerEvents: isLoading ? 'none' : 'auto', opacity: isLoading ? 0.5 : 1}}
                     title="Delete"

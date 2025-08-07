@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import Picker from "../Picker/Picker.tsx";
-import {useInvoice} from "../../contexts/InvoiceContext.tsx";
-import type {PickerElement} from '../../models/picker.ts';
+import {useData} from "../../contexts/DataContext.tsx";
+import type {IPickerElement} from '../../models/picker.ts';
 import type { Supplier } from '../../models/supplier.ts';
 import {useNavigate} from "react-router-dom";
 
@@ -10,12 +10,12 @@ function SupplierList() {
     //  will be called from router /supplier/suppliers
 
 
-    const {suppliers} = useInvoice();
+    const {suppliers} = useData();
     const navigate = useNavigate();
     const endpoint = 'supplier';
     // todo - can i add friendly date component to the subtitle to extract the text output so it renders nicely?
     const pickerArray = useMemo(() => {
-        return suppliers.map((supplier: Supplier): PickerElement => ({
+        return suppliers.map((supplier: Supplier): IPickerElement => ({
             id: supplier.supplier_id,
             title: supplier.supplier_name,
             subtitle: supplier.notes || '',
@@ -40,7 +40,7 @@ function SupplierList() {
             <Picker
                 pickerArray={pickerArray}
                 pickerTitle='Suppliers'
-                onSelect={ElementOnSelect}  // to be passed on to the picker elements to allow it to update the grandparent function from where the picker list is called
+                pickerOnSelect={ElementOnSelect}  // to be passed on to the picker elements to allow it to update the grandparent function from where the picker list is called
                 onClose={pickerOnClose}
             />
         </>

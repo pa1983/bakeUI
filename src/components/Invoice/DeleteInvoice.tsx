@@ -4,7 +4,12 @@ import ConfirmationModal from "../Utility/ConfirmationModal.tsx";
 import React from "react";
 import useFlash from "../../contexts/FlashContext.tsx";
 
-const DeleteInvoice = ({invoice_id}) => {
+interface DeleteInvoiceProps {
+    invoice_id: number | string;
+    onUpdate: () => void;
+}
+
+const DeleteInvoice = ({ invoice_id, onUpdate }: DeleteInvoiceProps) => {
     const auth = useAuth();
     const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = React.useState(false);
     const {showFlashMessage} = useFlash();
@@ -16,6 +21,7 @@ const DeleteInvoice = ({invoice_id}) => {
         console.log(`${res.message}`);
         setIsDeleteConfirmationModalOpen(false);
         showFlashMessage("Invoice Deleted successfully", "success");
+        onUpdate();  // callback to update the invoice list data to refresh the list with the deleted invoice removed
     }
 
 

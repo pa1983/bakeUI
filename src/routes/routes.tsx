@@ -12,7 +12,9 @@ import InvoiceViewer from "../components/Invoice/InvoiceViewer.tsx";
 import Dashboard from '../components/dashboard';
 import BrandList from "../components/Brand/BrandList.tsx";
 import SupplierList from "../components/supplier/SupplierList.tsx";
-import ViewBrandForm from "../components/Brand/ViewBrandForm.tsx";
+import ViewBrandForm from "../components/Brand/ViewBrandForm.tsx";  // todo - needs to be specifically a brand form - create factory function called ViewBrandForm to encapsulate the factory element
+import BuyableList from "../components/Buyable/BuyableList.tsx";
+import ViewBuyableForm from "../components/Buyable/ViewBuyableForm.tsx";
 
 
 const router = createBrowserRouter([
@@ -61,6 +63,19 @@ const router = createBrowserRouter([
                 path: '/invoice/:invoice_id',
                 element: <InvoiceViewer/>
             },
+
+
+            {
+                path: '/buyable/all',
+                element: <BuyableList/>
+            },
+
+            {
+                path: '/buyable/:id',
+                element: <ViewBuyableForm/>
+            },
+
+
             {
                 path: '/buyable/brand/all',
                 element: <BrandList/>
@@ -68,6 +83,15 @@ const router = createBrowserRouter([
             {
                 path: '/buyable/brand/:id',
                 element: <ViewBrandForm/>
+            },
+
+            {
+                path: '/buyable/all',
+                element: <ViewBrandForm/>
+            },
+            {
+                path: '/buyable/:id',
+                element: <ViewBuyableForm/>
             },
 
             {
