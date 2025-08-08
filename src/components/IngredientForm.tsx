@@ -170,7 +170,7 @@ function IngredientForm({ prop_ingredient_id = null }: IngredientFormProps) {
     const handleCancelClick = () => {
         if (isNewIngredient) {
             // If cancelling a new ingredient, navigate away (e.g., to the list page)
-            navigate('/ingredients');
+            navigate('/all');
         } else {
             setIsEditing(false);
             // Reset form data to the original ingredient state if it exists

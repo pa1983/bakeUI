@@ -38,7 +38,7 @@ const router = createBrowserRouter([
                 errorElement: <NotFound/>
             },
             {
-                path: '/ingredient/ingredients',
+                path: '/ingredient/all',
                 element: <IngredientsList/>,
             },
             {
@@ -48,11 +48,6 @@ const router = createBrowserRouter([
             {
                 path: '/ingredient/:ingredient_id',
                 element: <IngredientForm/>,
-            },
-
-            {
-                path: '/ingredient/ingredients',
-                element: <IngredientsList/>
             },
 
             {

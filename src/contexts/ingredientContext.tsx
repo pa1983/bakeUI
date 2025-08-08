@@ -45,7 +45,7 @@ export const IngredientProvider = ({ children }: { children: ReactNode }) => {
             }
 
             console.log("Fetching ingredients from API...");
-            const response = await axios.get('http://localhost:8000/ingredient/ingredients?own_organisation=False', {
+            const response = await axios.get('http://localhost:8000/ingredient/all?own_organisation=False', {
                 headers: { Authorization: `Bearer ${auth.user?.access_token}` }
             });
             setIngredients(response.data.items);

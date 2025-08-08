@@ -9,7 +9,7 @@ import useFlash from "../../contexts/FlashContext.tsx";
 import {patchField} from "../../services/commonService.ts";
 import {useData} from "../../contexts/DataContext.tsx";
 
-
+// todo - move brand form over to the factory approach for more cincise editing
 interface ViewBrandFormProps {
     prop_element_id?: number | string;
     onSuccess?: (id: number) => void | null;
