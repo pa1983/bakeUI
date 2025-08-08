@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useAuth } from 'react-oidc-context'; // Assuming you still use this for auth
 
 // Define your UnitOfMeasure interface
-interface UnitOfMeasure {
+interface IUnitOfMeasure {
     uom_id: number;
     name: string;
     abbreviation: string;
@@ -16,7 +16,7 @@ interface UnitOfMeasure {
 
 // Define the shape of your context value
 interface UnitOfMeasureContextType {
-    units: UnitOfMeasure[];
+    units: IUnitOfMeasure[];
     loading: boolean;
     error: string | null;
 }
@@ -36,8 +36,8 @@ interface UnitOfMeasureProviderProps {
     children: ReactNode;
 }
 
-export const UnitOfMeasureProvider: React.FC<UnitOfMeasureProviderProps> = ({ children }) => {
-    const [units, setUnits] = useState<UnitOfMeasure[]>([]);
+export const UnitOfMeasureProvider = ({ children }: UnitOfMeasureProviderProps) => {
+    const [units, setUnits] = useState<IUnitOfMeasure[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const auth = useAuth(); // Access auth from within the provider
@@ -65,7 +65,7 @@ export const UnitOfMeasureProvider: React.FC<UnitOfMeasureProviderProps> = ({ ch
                 const res = await axios.get('http://localhost:8000/common/uom', {
                     headers: { Authorization: `Bearer ${auth.user?.access_token}` }
                 });
-                const fetchedUnits: UnitOfMeasure[] = res.data;
+                const fetchedUnits: IUnitOfMeasure[] = res.data;
                 setUnits(fetchedUnits);
                 localStorage.setItem('unitOfMeasureOptions', JSON.stringify(fetchedUnits)); // Store in localStorage
                 console.log("Fetched and stored UOMs from API.");

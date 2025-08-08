@@ -1,7 +1,7 @@
-export interface Buyable {
+export interface IBuyable {
     id: number;
     brand_id: number | null;
-    sku: string;  // supplier's sku, or user-generated if none is provided
+    sku: string;  // Supplier's sku, or user-generated if none is provided
     item_name: string;  // simple user-friendly description of the buyable item
     uom_id: number;
     quantity: string; // Using string is safest for Decimal types
@@ -12,7 +12,7 @@ export interface Buyable {
 }
 
 
-export const createEmptyBuyable = (): Buyable => {
+export const createEmptyBuyable = (): IBuyable => {
     return {
         id: 0,
         brand_id: null, // Should be updated by the user to a valid ID - restrict in front end to prevent submission of default value

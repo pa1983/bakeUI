@@ -1,8 +1,6 @@
 import {postNewElement, fetchElement} from "./factoryService.ts";
 import type {ApiResponse} from "../models/api.ts";
-import type {Buyable} from "../models/buyable.ts";
-import {deleteElement} from "./commonService.ts";
-
+import type {IBuyable} from "../models/IBuyable.ts";
 
 const BUYABLE_FRIENDLY_NAME = 'Buyable';
 const BUYABLE_API_ENDPOINT = 'buyable';
@@ -15,8 +13,8 @@ const BUYABLE_API_ENDPOINT = 'buyable';
 export async function fetchBuyable(
     element_id: number | string,
     access_token: string
-): Promise<ApiResponse<Buyable>> {
-    return fetchElement<Buyable>(element_id, access_token, BUYABLE_FRIENDLY_NAME, BUYABLE_API_ENDPOINT);
+): Promise<ApiResponse<IBuyable>> {
+    return fetchElement<IBuyable>(element_id, access_token, BUYABLE_FRIENDLY_NAME, BUYABLE_API_ENDPOINT);
 }
 
 /**
@@ -24,10 +22,10 @@ export async function fetchBuyable(
  * @param formData The Buyable object to create.
  * @param access_token The user's JWT.
  */
-// FIX: The function is not generic. It uses the concrete `Buyable` type.
+// todo: The function is not generic. It uses the concrete `Buyable` type.  Should be useing TypeVar<T> syntax for reusability
 export async function postNewBuyable(
-    formData: Buyable,
+    formData: IBuyable,
     access_token: string
-): Promise<ApiResponse<Buyable>> {
-    return postNewElement<Buyable>(formData, access_token, BUYABLE_FRIENDLY_NAME, BUYABLE_API_ENDPOINT);
+): Promise<ApiResponse<IBuyable>> {
+    return postNewElement<IBuyable>(formData, access_token, BUYABLE_FRIENDLY_NAME, BUYABLE_API_ENDPOINT);
 }

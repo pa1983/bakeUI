@@ -49,10 +49,14 @@ export async function fetchElement<T>(
     api_endpoint: string
 ): Promise<ApiResponse<T>> {
     const url = `${config.API_URL}/${api_endpoint}/${element_id}`;
+
+    console.log(`fetching from url ${url} with element ID ${element_id}, friendly name ${friendly_name}, api endpoint ${api_endpoint}. Response.data: `);
+
     try {
         const response = await axios.get<ApiResponse<T>>(url, {
             headers: {Authorization: `Bearer ${access_token}`}
         });
+        console.log(response.data);
         return response.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {

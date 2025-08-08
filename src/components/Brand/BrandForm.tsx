@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useRef} from 'react';
-import {type Brand} from '../../models/brand.ts';
+import {type IBrand} from '../../models/IBrand.ts';
 import {useShortcut} from "../../contexts/KeyboardShortcutContext.tsx";
 import DeleteElement from "../Utility/DeleteElement.tsx";
 
 
 interface BrandFormProps {
-    formData: Brand;
-    onSave: (updatedBrand: Brand) => void;
+    formData: IBrand;
+    onSave: (updatedBrand: IBrand) => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     onCancel: () => void;
     onEdit: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;

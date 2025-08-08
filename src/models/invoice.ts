@@ -1,7 +1,7 @@
 // These are placeholder interfaces for models imported in your Python code
 // but not fully defined. They are also in snake_case for consistency.
 
-import type { Currency } from './currency.ts';
+import type { ICurrency } from './ICurrency.ts';
 import type {OrganisationRead} from "./organisation.ts";
 
 export interface Image {

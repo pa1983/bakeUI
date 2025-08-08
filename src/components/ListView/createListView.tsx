@@ -6,7 +6,7 @@ import type { ListViewConfig } from '../../config/listViewConfig';
 
 /**
  * A factory function that creates a configured list view component, for use in simple list views such as brands,
- * buyable, supplier, ingredients etc.
+ * buyable, Supplier, ingredients etc.
  * @param {ListViewConfig} config - The configuration for the specific list view.
  * @returns A React component that renders a configured Picker.
  */

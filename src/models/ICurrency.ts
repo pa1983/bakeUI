@@ -1,4 +1,4 @@
-export interface Currency {
+export interface ICurrency {
     currency_code: string;
     currency_name: string;
     is_base_currency?: boolean;

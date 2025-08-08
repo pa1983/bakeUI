@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {useParams, useNavigate} from "react-router-dom";
 import {useAuth} from "react-oidc-context";
-import {type Brand, createEmptyBrand} from '../../models/brand.ts';
+import {type IBrand, createEmptyBrand} from '../../models/IBrand.ts';
 import {fetchBrand, postNewBrand} from "../../services/brandService.ts";
 import BrandForm from './BrandForm.tsx';
 import LoadingSpinner from "../Utility/LoadingSpinner.tsx";
@@ -25,7 +25,7 @@ const primary_key_name = 'brand_id';
 const ViewBrandForm = ({prop_element_id, onSuccess, isModal=false}: ViewBrandFormProps) => {
     // to be populated
     const {id: param_element_id} = useParams();
-    const [element, setElement] = useState<Brand | null>(null);
+    const [element, setElement] = useState<IBrand | null>(null);
 
     const {showFlashMessage} = useFlash();
     const auth = useAuth();
@@ -95,7 +95,7 @@ const ViewBrandForm = ({prop_element_id, onSuccess, isModal=false}: ViewBrandFor
     // triggering a pull of the old id when the deletion was being confirmed, before the invoices array was updated
 
 
-    const handleSave = async (formData: Brand) => {
+    const handleSave = async (formData: IBrand) => {
         // called only when creating a new element from scratch - not for saving changes
         if (!auth.user?.access_token) {
             showFlashMessage("Authentication error. Please log in again.", 'danger');

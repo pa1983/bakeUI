@@ -5,8 +5,8 @@ import useAlert from "../../contexts/CustomAlertContext.tsx";
 import {patchField} from '../../services/commonService.ts';
 import {useAuth} from 'react-oidc-context';
 import {useData} from "../../contexts/DataContext.tsx";
-import {type Currency} from "../../models/currency.ts";
-import {type Supplier} from "../../models/supplier.ts";
+import {type ICurrency} from "../../models/ICurrency.ts";
+import {type Supplier} from "../../models/ISupplier.ts";
 import PickerModal from "../Picker/PickerModal.tsx";
 import FormFieldWithPicker from "../Picker/FormFieldWithPicker.tsx";
 import {type IPickerElement} from "../../models/picker.ts";
@@ -32,7 +32,7 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
     // get context data for use in form and pickers
     const {currencies, suppliers, PickerSupplierArray, pickerCurrencyArray} = useData();
 
-    // now map the currency and supplier arrays into correct shape for picker.
+    // now map the currency and Supplier arrays into correct shape for picker.
     // Memoize the calc'd array to avoid recalculation on every render of InvoiceMeta.
     // Make depandent on currencies - only re-create the array if currencies changes
     // use this format for all other utilisations of Picker component
@@ -48,7 +48,7 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
 
 
 
-    // FUNCTIONS LINKED TO CURRENCY PICKER SETUP - will be similar for supplier picker
+    // FUNCTIONS LINKED TO CURRENCY PICKER SETUP - will be similar for Supplier picker
 
     const currencyPickerOnSelect = async (newCurrencyCode: string): IPickerElement[] => {
         // onselect needs to be set to update the currency id value in the form; the picker modal will inject the necessary logic to close itself so
@@ -64,8 +64,8 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
 
 
     const supplierPickerOnSelect = async (newSupplierId: number): IPickerElement[] => {
-        updateSupplier(newSupplierId);  // update supplier ID in the local formData object
-        await handlePatchField('supplier_id', newSupplierId, api_endpoint);  // persist the new supplier id to the database
+        updateSupplier(newSupplierId);  // update Supplier ID in the local formData object
+        await handlePatchField('supplier_id', newSupplierId, api_endpoint);  // persist the new Supplier id to the database
         setIsPickerModalActive(false);  // close the modal
 
     }
@@ -88,7 +88,7 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
 
 
     const handleSupplierPickerClick = useCallback(() => {
-        console.log("supplier picker clicked");
+        console.log("Supplier picker clicked");
         setPickerTitle("Supplier");
         setPickerArray(PickerSupplierArray);
         setIsPickerModalActive(true);

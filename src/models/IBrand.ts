@@ -1,4 +1,4 @@
-export interface Brand {
+export interface IBrand {
     brand_id: number;
     added_date: string;
     brand_name: string;
@@ -8,7 +8,7 @@ export interface Brand {
 
 }
 
-export function createEmptyBrand(): Brand {
+export function createEmptyBrand(): IBrand {
     return {
         brand_id: 0,
         added_date: '',

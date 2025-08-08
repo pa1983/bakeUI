@@ -119,7 +119,7 @@ const Navbar = () => {
                                     </li>
 
                                     <li>
-                                        <Link to="/supplier/all"
+                                        <Link to="/buyable/supplier/all"
                                               className="block px-4 py-2 hover:bg-gray-100 rounded-md transition duration-200">Suppliers
                                         </Link>
                                     </li>

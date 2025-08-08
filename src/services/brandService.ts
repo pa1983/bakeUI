@@ -1,14 +1,14 @@
 import axios, { type AxiosError } from "axios";
 import config from "./api.js";
-import type { Brand } from "../models/brand.ts";
+import type { IBrand } from "../models/IBrand.ts";
 import type { ApiResponse } from "../models/api.ts";
 
-export async function postNewBrand(brand: Brand, access_token: string): Promise<ApiResponse<Brand>> {
+export async function postNewBrand(brand: IBrand, access_token: string): Promise<ApiResponse<IBrand>> {
     const url = `${config.API_URL}/buyable/brand`;
 
     try {
         console.log(`creating new brand in brandService ${brand.brand_id}`);
-        const response = await axios.post<ApiResponse<Brand>>(url, brand, {
+        const response = await axios.post<ApiResponse<IBrand>>(url, brand, {
             headers: { Authorization: `Bearer ${access_token}` }
         });
 
@@ -33,10 +33,10 @@ export async function postNewBrand(brand: Brand, access_token: string): Promise<
 
 // todo - make this info a factory function - fetch element, pass in element api endpoint, make errors dynaic using type name.  api responses already dynamic.
 
-export async function fetchBrand(brand_id: number, access_token: string): Promise<ApiResponse<Brand>> {
+export async function fetchBrand(brand_id: number, access_token: string): Promise<ApiResponse<IBrand>> {
     const url = `${config.API_URL}/buyable/brand/${brand_id}`;
     try {
-        const response = await axios.get<ApiResponse<Brand>>(url, {
+        const response = await axios.get<ApiResponse<IBrand>>(url, {
             headers: { Authorization: `Bearer ${access_token}` }
         });
         return response.data;

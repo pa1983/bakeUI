@@ -1,19 +1,19 @@
 import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
 
-import { type Currency } from "../models/currency.ts";
-import { type Supplier } from "../models/supplier.ts";
-import type { Brand } from "../models/brand.ts";
-import type { Buyable } from "../models/buyable.ts";
+import { type ICurrency } from "../models/ICurrency.ts";
+import { type ISupplier } from "../models/ISupplier.ts";
+import type { IBrand } from "../models/IBrand.ts";
+import type { IBuyable } from "../models/IBuyable.ts";
 import type { IPickerElement } from "../models/picker.ts";
 import { useDataFetcher } from '../hooks/useDataFetcher'; // Import the new hook
 
 // --- Updated Context Type ---
 // Reflects the new granular loading/error states and refetch functions
 interface DataContextType {
-    currencies: Currency[];
-    suppliers: Supplier[];
-    brands: Brand[];
-    buyables: Buyable[];
+    currencies: ICurrency[];
+    suppliers: ISupplier[];
+    brands: IBrand[];
+    buyables: IBuyable[];
 
     PickerSupplierArray: IPickerElement[],
     PickerBrandArray: IPickerElement[],
@@ -56,10 +56,10 @@ export const useData = () => {
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
 
-    const { data: currencies, loading: loadingCurrencies, error: errorCurrencies, refetch: refetchCurrencies } = useDataFetcher<Currency>('/common/currency');
-    const { data: suppliers, loading: loadingSuppliers, error: errorSuppliers, refetch: refetchSuppliers } = useDataFetcher<Supplier>('/common/supplier');
-    const { data: brands, loading: loadingBrands, error: errorBrands, refetch: refetchBrands } = useDataFetcher<Brand>('/buyable/brand/all');
-    const { data: buyables, loading: loadingBuyables, error: errorBuyables, refetch: refetchBuyables } = useDataFetcher<Buyable>('/buyable/all');
+    const { data: currencies, loading: loadingCurrencies, error: errorCurrencies, refetch: refetchCurrencies } = useDataFetcher<ICurrency>('/common/currency');
+    const { data: suppliers, loading: loadingSuppliers, error: errorSuppliers, refetch: refetchSuppliers } = useDataFetcher<ISupplier>('/buyable/supplier/all');
+    const { data: brands, loading: loadingBrands, error: errorBrands, refetch: refetchBrands } = useDataFetcher<IBrand>('/buyable/brand/all');
+    const { data: buyables, loading: loadingBuyables, error: errorBuyables, refetch: refetchBuyables } = useDataFetcher<IBuyable>('/buyable/all');
 
     // --- Memoized Picker Arrays  ---
     const PickerSupplierArray = useMemo((): IPickerElement[] => {
@@ -67,7 +67,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
             id: supplier.supplier_id,
             title: supplier.supplier_name,
             subtitle: supplier.account_number,
-            imageUrl: '' // todo - add images for supplier
+            imageUrl: '' // todo - add images for Supplier
         }));
     }, [suppliers]);
 
@@ -91,7 +91,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
 
 
     const PickerBuyableArray = useMemo((): IPickerElement[] => {
-            return buyables.map((buyable: Buyable): IPickerElement => ({
+            return buyables.map((buyable: IBuyable): IPickerElement => ({
                 id: buyable.id,
                 title: `${buyable.sku} - ${ brands.find(brand => brand.brand_id === buyable.brand_id)?.brand_name || '      \n\n'}  -  ${buyable.item_name}`,
                 subtitle: buyable.notes,
