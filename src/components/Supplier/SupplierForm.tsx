@@ -9,7 +9,7 @@ const SupplierForm = (props: IGenericFormProps<ISupplier>) => {
     // No changes needed here
     const {formData, onSave, onChange, onEdit, onCancel, isSaving, onDelete, isModal = false} = props;
     const {
-        isNew, focusInputRef, handleFocus, handleChange, handleEdit, handleSubmit,
+        isNew, focusInputRef, handleFocus, handleChange, handleValueChange, handleEdit, handleSubmit,
     } = useFormLogic({...props, primaryKeyName: 'supplier_id'});
     const api_endpoint = 'buyable/supplier';
     const {pickerCurrencyArray, currencies, loading} = useData();

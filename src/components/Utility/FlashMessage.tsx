@@ -1,19 +1,19 @@
-import {useFlashState} from '../../contexts/FlashContext.tsx'
+import { useFlashState } from '../../contexts/FlashContext.tsx';
 import React from "react";
 
 export const FlashMessage = () => {
-    const {message, type, visible} = useFlashState(null, 'success', true);
-    console.log(`Flash type: ${type}`);
+    // Note: I'm assuming your useFlashState hook works as intended.
+    // The default values here might not be active if the context provides others.
+    const { message, type, visible, setVisible } = useFlashState();
+
+    // The component is not rendered at all if not visible, which is perfect.
     if (!visible) {
         return null;
     }
 
-    // Using Bulma classes for styling
     return (
-
-        <div className={`notification is-${type} flash-message`}>
+        <div className={`notification is-${type}`} onClick={() => setVisible(false)}>
             {message}
         </div>
-
     );
 };

@@ -25,6 +25,7 @@ const PickerListElementCard = ({imageUrl, title, subtitle, id, onSelect, onClose
     const handleClick = useCallback(() => {
             console.log(`handling click on element card in picker modal for element id ${id}`);
             console.log(`type of onSelect: ${typeof onSelect}`);
+            console.log(`ID being passed to the onSelect callback: ${id}`);
             onSelect(id);  // should apply the id value to the grandparent's formdata for the field, or trigger a navigate redirect to the edit form
             onClose();  // if the picker is called in a modal ,just closes down the modal, otherwise run custom onClose function
         }

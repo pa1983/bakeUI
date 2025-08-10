@@ -6,7 +6,7 @@ import { useAuth } from 'react-oidc-context';
 const API_BASE_URL = 'http://localhost:8000';  // todo - move this to a config file to all for global change of api base
 
 /**
- * A generic hook to fetch data from API endpoint.
+ * A generic hook to fetch data from API endpoint, used in the DataContext provider.
  * It manages its own loading, error, and data states.
  * @param endpointPath The API path to fetch data from (e.g., '/common/currency').
  * @param initialData The initial state for the data array.

@@ -7,8 +7,10 @@ const Layout = () => {
 
     return (
         <div>
-            <Navbar />
             <FlashMessage />
+            {/*float flash message above all other content */}
+            <Navbar />
+
             <main>
                 {/* The Outlet renders the matched child route element */}
                 <Outlet />

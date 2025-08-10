@@ -16,6 +16,7 @@ export interface PickerProps {
     onClose: () => void | null;
     // Callback function executed when the "Add New" button is clicked. IN a modal it will flip the addNewFormActive boolean, in a page view it can trigger a navigation to the new item form
     pickerOnAddNewClicked?: () => void | null;
+    pickerSubtitle?: string | null;
 }
 
 
@@ -50,5 +51,6 @@ export const createDefaultPickerModalConfig = (): IPickerModalConfig => {
             console.warn('pickerOnAddNewClicked was called, but no handler was provided.');
         },
         addNewComponent: null,  // default of null will cause conditional logic to show nothing
+        pickerSubtitle: null
     };
 };

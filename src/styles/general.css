@@ -12,22 +12,38 @@ height: 100%;
     flex-grow: 1; /* Makes the box fill the available vertical space */
 }
 
+
 .notification {
     position: fixed;
-    top: 20px;
+    top: 50px;       /* Increased top margin to clear the navbar */
     right: 20px;
-    zIndex: 2000;
-    minWidth: '300px';
-    opacity: 1; /* Start visible */
-    transition: opacity 2s ease-in-out; /* Smooth fade */
+    width: auto;     /* Let the content define the width */
+    min-width: 300px;
+    max-width: 500px;/* Prevent it from getting too wide */
+    z-index: 9999;   /* Ensure it's on top of other content */
+
+    /* For animations later */
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
 }
 
-.flash-message {
-    position: fixed;
-    top: 20px;
-    left: 90%;
-    /*transform: translateX(-50%);*/
-    zIndex: 99999;
-    minWidth: 750px;
-    textAlign: center;
-}
+
+/*.notification {*/
+/*    position: fixed;*/
+/*    top: 20px;*/
+/*    right: 20px;*/
+/*    zIndex: 2000;*/
+/*    minWidth: '300px';*/
+/*    opacity: 1; !* Start visible *!*/
+/*    transition: opacity 2s ease-in-out; !* Smooth fade *!*/
+/*}*/
+
+/*.flash-message {*/
+/*    position: fixed;*/
+/*    top: 20px;*/
+/*    left: 90%;*/
+/*    !*transform: translateX(-50%);*!*/
+/*    zIndex: 99999;*/
+/*    minWidth: 750px;*/
+/*    textAlign: center;*/
+/*}*/

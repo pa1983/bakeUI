@@ -2,17 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { useShortcut } from '../contexts/KeyboardShortcutContext.tsx';
 import { createDefaultPickerModalConfig, type IPickerModalConfig } from '../models/picker.ts';
-import { type IGenericFormProps } from '../models/IFormProps.ts'
+import { type IGenericFormProps } from '../models/IFormProps.ts';
 
-// Define the props that custom form hook will need - same as generic props plus the name of the primary key field
 interface UseFormLogicProps<T extends { id?: number | string }> extends IGenericFormProps<T> {
     primaryKeyName: keyof T;
 }
 
-/**
- * A custom hook to encapsulate common form logic including handlers for
- * inputs, edits, focus, submission, picker modals, and keyboard shortcuts.
- */
 export const useFormLogic = <T extends { id?: number | string }>({
                                                                      formData,
                                                                      onSave,
@@ -22,6 +17,7 @@ export const useFormLogic = <T extends { id?: number | string }>({
                                                                      isModal,
                                                                      primaryKeyName
                                                                  }: UseFormLogicProps<T>) => {
+
 
     const isNew = !formData?.[primaryKeyName] || formData[primaryKeyName] === 0;
     const focusInputRef = useRef<HTMLInputElement>(null);
@@ -33,6 +29,7 @@ export const useFormLogic = <T extends { id?: number | string }>({
         setOriginalValueOnFocus(e.target.value);
     }, []);
 
+    // This handler is for standard DOM change events
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, type } = e.target;
         const value = type === 'checkbox'
@@ -41,7 +38,17 @@ export const useFormLogic = <T extends { id?: number | string }>({
         onChange(name as keyof T, value);
     }, [onChange]);
 
+    // A dedicated handler for programmatic value changes, i.e, from a picker - named explicitly for now; can make generic if find use cases other than in picker callbacks
+    const handlePickerValueChange = useCallback((name: keyof T, value: any) => {
+        onChange(name, value);  // always update the parent formData attribute
+        if (!isNew){
+            onEdit(name, value);  // if it's not a new entry form, push the change to the API
+        }
+    }, [onChange]);
+
+
     const handleEdit = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        // ... (handleEdit logic remains the same)
         if (isNew || !auth.user?.access_token) {
             return;
         }
@@ -50,20 +57,13 @@ export const useFormLogic = <T extends { id?: number | string }>({
             ? (e.target as HTMLInputElement).checked
             : e.target.value;
 
-        const originalStringValue = String(originalValueOnFocus);
-        if (originalStringValue === String(value)) {
-            console.log(`No change detected for field '${name}'. Skipping PATCH.`);
+        if (String(originalValueOnFocus) === String(value)) {
             return;
         }
-
-        try {
-            onEdit(name as keyof T, value);
-        } catch (error) {
-            console.error(error);
-            // showFlashMessage(...) would go here if you pass it in
-        }
+        onEdit(name as keyof T, value);
     }, [isNew, auth.user, originalValueOnFocus, onEdit]);
 
+    // ... (other handlers like closePickerModal, handleSubmit, etc. remain the same) ...
     const closePickerModal = useCallback(() => {
         setPickerModalConfig(createDefaultPickerModalConfig());
     }, []);
@@ -85,11 +85,8 @@ export const useFormLogic = <T extends { id?: number | string }>({
         focusInputRef.current?.focus();
     }, []);
 
-    // todo - should I keep this here, or make it specific to the form for more control?
-
     useShortcut('Enter', isNew ? handleSave : null, { ctrl: true, disabled: isModal });
 
-    // Return everything the component's JSX needs
     return {
         isNew,
         focusInputRef,
@@ -98,7 +95,8 @@ export const useFormLogic = <T extends { id?: number | string }>({
         closePickerModal,
         toggleNewItemView,
         handleFocus,
-        handleChange,
+        handleChange, // For standard inputs
+        handleValueChange: handlePickerValueChange, // For pickers and other custom components
         handleEdit,
         handleSubmit,
     };

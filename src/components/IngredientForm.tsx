@@ -8,7 +8,7 @@ import { useUnitOfMeasures } from "../contexts/UnitOfMeasureContext.tsx";
 import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
 
 
-import type { IngredientRead, ImageRead } from '../models/ingredients.ts'; // Assuming you moved this to models/ingredient.ts
+import type { IngredientRead, ImageRead } from '../models/IIngredient.ts'; // Assuming you moved this to models/ingredient.ts
 import { mapIngredientReadToFormData, type IngredientFormData } from "../utils/ingredientsUtils.tsx"; // Assuming you moved this to utils/ingredientUtils.ts
 
 

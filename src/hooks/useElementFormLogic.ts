@@ -85,8 +85,17 @@ export const useElementFormLogic = <T extends { [key: string]: any }>(config: El
         setIsSaving(true);
         try {
             const response = await postNewElement(formData, auth.user.access_token);
-            showFlashMessage(response.message, 'success');
-            if (response.data) {
+
+            // Determine the flash message type based on the status code
+            const flashType = response.status_code >= 200 && response.status_code < 300
+                ? 'success'
+                : 'danger';
+
+            // Show the message from the API response
+            showFlashMessage(response.message, flashType);
+
+            //  Only perform success actions (like refetching and navigating) if the call was successful
+            if (flashType === 'success' && response.data) {
                 refetchDataList();
                 navigate(`/${apiEndpoint}/${response.data[primaryKeyName]}`);
             }

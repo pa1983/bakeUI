@@ -16,6 +16,8 @@ import ViewBrandForm from "../components/Brand/ViewBrandForm.tsx";  // todo - ne
 import BuyableList from "../components/Buyable/BuyableList.tsx";
 import ViewBuyableForm from "../components/Buyable/ViewBuyableForm.tsx";
 import ViewSupplierForm from "../components/Supplier/ViewSupplierForm.tsx";
+import IngredientList from "../components/Ingredient/IngredientList.tsx";
+import ViewIngredientForm from "../components/Ingredient/ViewIngredientForm.tsx";
 
 const router = createBrowserRouter([
     {
@@ -39,15 +41,11 @@ const router = createBrowserRouter([
             },
             {
                 path: '/ingredient/all',
-                element: <IngredientsList/>,
+                element: <IngredientList/>,
             },
             {
-                path: '/ingredient/new',
-                element: <IngredientForm/>,
-            },
-            {
-                path: '/ingredient/:ingredient_id',
-                element: <IngredientForm/>,
+                path: '/ingredient/:id',
+                element: <ViewIngredientForm/>,
             },
 
             {

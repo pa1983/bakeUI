@@ -23,7 +23,6 @@ const primary_key_name = 'brand_id';
 
 
 const ViewBrandForm = ({prop_element_id, onSuccess, isModal=false}: ViewBrandFormProps) => {
-    // to be populated
     const {id: param_element_id} = useParams();
     const [element, setElement] = useState<IBrand | null>(null);
 

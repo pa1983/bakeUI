@@ -23,6 +23,7 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
             toggleNewItemView,
             handleFocus,
             handleChange,
+            handleValueChange,  // for programatic changes, primarily triggered by picker
             handleEdit,
             handleSubmit,
         } = useFormLogic({...props, primaryKeyName: 'id'});
@@ -32,14 +33,19 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
         const {PickerBrandArray} = useData();
         const {units} = useUnitOfMeasures();
 
-        const brandPickerOnSelect = async (newBrandId: number) => {
+        const brandPickerOnSelect = async (selectedBrandId: number) => {
             // persist the new brand id to the database.  This isn't part of the useFormLogic hook as it deviates from
             // from the standard handling of change to a form field.
             // It IS common to all pickers - todo - consider a way of building this into the useFormLogic hook?
-            console.log(`brandPickerOnSelect called with value ${newBrandId}`);
+            console.log(`brandPickerOnSelect called with value ${selectedBrandId}`);
             // added guard clause - when the form is for a new element, can't PATCH the update,
             // so just save the data to the formData, it will then persist once the save form is done
-            onEdit('brand_id', newBrandId);  // this should push the new id to the database and update the form with the returned data
+            handleValueChange('brand_id', selectedBrandId);
+            // onChange('brand_id', selectedBrandId)
+            // if (!isNew) {
+            //     // if form is not for a new entry, also push the change to the db
+            //     onEdit('brand_id', selectedBrandId);  // this should push the new id to the database and update the form with the returned data
+            // };  // todo - this works, but hints that perhaps i've got some logic error in useFormLogic.
             closePickerModal();
         }
 

@@ -4,8 +4,8 @@ import { useAuth } from 'react-oidc-context';
 // import type {UnitOfMeasure} from "../models/uom.ts";
 // import {OrganisationRead} from "../models/organisation.ts";
 // import {ImageRead} from "../models/image.ts";
-// import {IngredientImageRead} from "../models/ingredients.ts";
-import {type IngredientRead} from "../models/ingredients.ts";
+// import {IngredientImageRead} from "../models/IIngredient.ts";
+import {type IngredientRead} from "../models/IIngredient.ts";
 
 interface IngredientContextType {
     ingredients: IngredientRead[];
