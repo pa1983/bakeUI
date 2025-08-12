@@ -4,6 +4,7 @@ import axios, {type AxiosResponse} from "axios";
 import {useAuth} from "react-oidc-context";
 
 // todo - move this to services.invoice to keep the component tidy
+// todo - refactor UploadInvoice to use the generic FIleUploader function - just need to refactor callbacks and titles
 function UploadInvoice() {
     const [error, setError] = useState<string | null>(null);
     const auth = useAuth();
@@ -56,7 +57,6 @@ function UploadInvoice() {
 
         <div className="file is-boxed">
             <label className="file-label">
-                {/*<input className="file-input" type="file" name="resume"/>*/}
                 <span className="file-cta">
       <span className="file-icon">
         <i className="fas fa-upload"></i>
@@ -65,7 +65,7 @@ function UploadInvoice() {
                         <input {...getInputProps()} />
                     {
                         isDragActive ?
-                            <p>Let go to upload!</p> :
+                            <p>Drop to upload!</p> :
                             <p>Drag file here here ...</p>
                     }
                     </div>

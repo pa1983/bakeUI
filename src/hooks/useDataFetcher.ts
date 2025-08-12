@@ -37,6 +37,8 @@ export const useDataFetcher = <T>(endpointPath: string, initialData: T[] = []) =
                     headers: { Authorization: `Bearer ${auth.user.access_token}` },
                 });
                 setData(response.data.data || []);
+                console.log(`data in useDataFetcher: `);
+                console.log(response);
             } catch (err: any) {
                 const errorMessage = err.response?.data?.detail || err.message || 'An unknown error occurred';
                 console.error(`Failed to fetch from ${endpointPath}:`, err);

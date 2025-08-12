@@ -1,4 +1,4 @@
-export interface ImageRead {
+export interface IImage {
     image_id: number;
     image_url: string;
     file_name: string;

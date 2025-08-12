@@ -1,6 +1,6 @@
 import type {OrganisationRead} from './organisation.ts'
 import type {UnitOfMeasure} from './uom.ts';
-import type {ImageRead} from './image.ts';
+import type {IImage} from './IImage.ts';
 
 
 export interface IngredientImageRead {
@@ -8,7 +8,7 @@ export interface IngredientImageRead {
     ingredient_id: number;
     image_id: number;
     sort_order: number;
-    image: ImageRead; // Nested ImageRead object
+    image: IImage; // Nested ImageRead object
 }
 
 
@@ -40,7 +40,7 @@ export interface IIngredient {
     modified_timestamp: string; // ISO string
     standard_uom: UnitOfMeasure|null; // Nested UOM object
     image_links: IngredientImageRead[];
-    images: ImageRead[]; // Computed property from Pydantic
+    images: IImage[]; // Computed property from Pydantic
 }
 
 /**

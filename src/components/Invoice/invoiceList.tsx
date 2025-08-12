@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import UploadInvoice from '../Utility/file_uploader.tsx';
+import UploadInvoice from '../Utility/invoice_uploader.tsx';
 import {fetchInvoices} from "../../services/InvoiceServices.ts";
 import type {InvoiceListResponse} from "../../models/invoice.ts";
 import {useAuth} from "react-oidc-context";

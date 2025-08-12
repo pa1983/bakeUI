@@ -4,6 +4,9 @@ import {useFormLogic} from "../../hooks/useFormLogic.ts";
 import {useUnitOfMeasures} from "../../contexts/UnitOfMeasureContext.tsx";
 import DeleteElement from '../Utility/DeleteElement.tsx';
 import IngredientBuyablesList from "../IngredientBuyable/IngredientBuyablesList.tsx";
+import ImageMaster from "../Image/ImageMaster.tsx";
+
+import config from "../../services/api.js";
 
 const IngredientForm = (props: IGenericFormProps<IIngredient>) => {
     const {formData, onSave, onChange, onEdit, onCancel, isSaving, onDelete, isModal = false} = props;
@@ -105,7 +108,6 @@ const IngredientForm = (props: IGenericFormProps<IIngredient>) => {
                 </div>
 
 
-
                 {/* Notes Textarea */}
                 <div className="field">
                     <label className="label" htmlFor="notes">Notes</label>
@@ -124,35 +126,12 @@ const IngredientForm = (props: IGenericFormProps<IIngredient>) => {
                     </div>
                 </div>
 
-
-                {/* Image Management  TODO - IMPLEMENT - create an image manager component - displays images and offers options to add/remove images */}
-                <div className="field">
-                    <label className="label">Images</label>
-                    <div className="control">
-                        {/*
-          Conditionally render the first image as a thumbnail.
-          The <figure> with the "image" and "is-96x96" classes from Bulma
-          restricts the container size.
-        */}
-                        {formData.images?.[0]?.image_url && (
-                            <figure className="image is-96x96 mb-3">
-                                <img
-                                    src={formData.images[0].image_url}
-                                    alt={formData.ingredient_name || 'Ingredient'}
-                                    style={{ objectFit: 'cover', width: '100%', height: '100%' }} // Ensures the image fills the container without distortion
-                                />
-                            </figure>
-                        )}
-                    </div>
-                </div>
-
-
                 {/* Timestamps (Read-Only) */}
                 <div className="field">
                     <label className="label">Timestamps</label>
                     <p className="is-size-7">
                         Created: {formData.created_timestamp ? new Date(formData.created_timestamp).toLocaleString() : 'N/A'}
-                        <br />
+                        <br/>
                         Modified: {formData.modified_timestamp ? new Date(formData.modified_timestamp).toLocaleString() : 'N/A'}
                     </p>
                 </div>
@@ -171,7 +150,8 @@ const IngredientForm = (props: IGenericFormProps<IIngredient>) => {
                                 </button>
                             </div>
                             <div className="control">
-                                <button type="button" className="button is-light" onClick={onCancel} disabled={isSaving}>
+                                <button type="button" className="button is-light" onClick={onCancel}
+                                        disabled={isSaving}>
                                     Cancel
                                 </button>
                             </div>
@@ -192,11 +172,24 @@ const IngredientForm = (props: IGenericFormProps<IIngredient>) => {
                 </div>
             </form>
             <hr></hr>
-            {/* can't link buyables in a new form - needs to save first to get an ID from database to which links can be made */}
-            {formData.ingredient_id!==0 &&
-            <IngredientBuyablesList ingredient_id={formData.ingredient_id}/>
+            {/* can't link buyables or images in a new form - needs to save first to get an ID from database to which links can be made */}
+            {formData.ingredient_id !== 0 &&
+                (<>
+                    <IngredientBuyablesList ingredient_id={formData.ingredient_id}/>
+
+                    {/*todo - add a wrapper on image master to include the formatting of the endpoints? */}
+                    <ImageMaster
+                        title='Ingredient Images'
+                        getEndpoint={`/ingredient_image/all?ingredient_id=${formData.ingredient_id}`}
+                        postEndpoint={`/ingredient/${formData.ingredient_id}/image/upload`}
+
+                    />
+                </>)
+
             }
+            {/*     todo - onSuccess - refresh
+        onDelete - fire delete of image and refresh  */}
         </>
     );
-    };
+};
 export default IngredientForm;

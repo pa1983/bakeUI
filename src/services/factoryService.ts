@@ -71,6 +71,34 @@ export async function fetchElement<T>(
     }
 }
 
+
+export async function deleteElement<T>(
+    element_id: number | string,
+    access_token: string,
+    friendly_name: string,
+    api_endpoint: string  // just the endpoint - function will build full url from API URL in config and element ID passed in
+): Promise<ApiResponse<T>> {
+    const url = `${config.API_URL}/${api_endpoint}/${element_id}`;
+
+    console.log(`DELETE sent to url ${url} with element ID ${element_id}, friendly name ${friendly_name}, api endpoint ${api_endpoint}. Response.data: `);
+
+    try {
+        const response = await axios.delete<ApiResponse<T>>(url, {
+            headers: {Authorization: `Bearer ${access_token}`}
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            const axiosError = error as AxiosError;
+            const status = axiosError.response?.status;
+            const message = (axiosError.response?.data as { detail?: string })?.detail || axiosError.message;
+            throw new Error(`Failed to delete  ${friendly_name}. Status: ${status}. Reason: ${message}`);
+        }
+        throw new Error(`An unexpected error occurred while fetching the ${friendly_name}.`);
+    }
+}
+
 /**
  * For edge cases, function takes any url and passes it to the api, and passes back whatever it gets
  * @param access_token
