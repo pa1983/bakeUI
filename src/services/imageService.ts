@@ -1,13 +1,12 @@
 import type {ApiResponse} from "../models/api.ts";
 import type {IBuyable} from "../models/IBuyable.ts";
-import {deleteElement, fetchAllElementsDumb, fetchElement} from "./factoryService.ts";
-import config from '../services/api.js';
+import {deleteElement, fetchAllElements, fetchElement} from "./factoryService.ts";
 
 export async function fetchImages(
     url: string,
     access_token: string
 ): Promise<ApiResponse<Image[]>> {
-    return fetchAllElementsDumb<IBuyable>( access_token, "Ingredient Images", url);
+    return fetchAllElements<IBuyable>( access_token, "Ingredient Images", url);
 }
 
 

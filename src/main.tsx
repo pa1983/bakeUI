@@ -8,7 +8,7 @@ import {RouterProvider} from 'react-router-dom';
 import "../styles.css"
 import router from './routes/routes.tsx'
 import {UnitOfMeasureProvider} from "./contexts/UnitOfMeasureContext.tsx";
-import {IngredientProvider} from "./contexts/ingredientContext.tsx";
+
 import {FlashProvider} from "./contexts/FlashContext.tsx";
 import {CustomAlertProvider} from "./contexts/CustomAlertContext.tsx";
 import {pdfjs} from 'react-pdf';
@@ -46,11 +46,11 @@ root.render(
                 <AuthProvider {...cognitoAuthConfig}>
                     <KeyboardShortcutProvider>
                     <UnitOfMeasureProvider>
-                        <IngredientProvider>
+
                             <DataProvider>
                             <RouterProvider router={router}/>
                             </DataProvider>
-                        </IngredientProvider>
+
                     </UnitOfMeasureProvider>
                     </KeyboardShortcutProvider>
                 </AuthProvider>

@@ -157,10 +157,13 @@ export interface LineItemRead {
     description: string;
     size: string | null;
     code: string | null;
-    value_ex_vat: number;
-    value_inc_vat: number;
-    vat_percentage: number;
-    is_delivery: boolean;
+    value_ex_vat: number;  // user modifiable
+    value_inc_vat: number; // user modifiable
+    vat_percentage: number; // user modifiable
+    is_delivery: boolean; // user modifiable
+    buyable_id: number; //  // user modifiable in picker function
+    buyable_quantity: number;  // user modifiable
+    unit_cost: number; // user modifiable
 }
 
 /**

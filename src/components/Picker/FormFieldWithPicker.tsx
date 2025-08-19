@@ -1,9 +1,8 @@
-import React from 'react';
 import type {IPickerElement} from "../../models/picker.ts";
 
 interface FormFieldWithPickerProps {
     label: string;
-    fieldValue: string | number;        // The current value to find - can be any database table id type
+    fieldValue: string | number| null;        // The current value to find - can be any database table id type
     pickerArray: IPickerElement[];     // The array to search
     onLaunch: () => void;   // The callback to open the modal - will be defined in the parent component and contain specific details for setting up a particular array
 }
@@ -27,8 +26,8 @@ const FormFieldWithPicker = ({
 
     // Find the object and get the specific property to display
     const displayValue = pickerArray
-        ?.find((element: any) => element.id === fieldValue)
-        ?.title || 'Not Selected'; // ✅ Corrected optional chaining syntax
+        ?.find((element: IPickerElement) => element.id === fieldValue)
+        ?.title || 'Not Selected';
 
     return (
         <div className="field">

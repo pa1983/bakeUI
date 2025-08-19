@@ -319,12 +319,12 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
                     <div className="columns is-multiline">
                         <div className="column is-half">
                             {/* Use .map() because it returns an array of elements to render */}
-                            {suppliers.map((supplier) => (
+                            {(suppliers || []).map((supplier) => (
                                 <p key={supplier.supplier_id} className="mb-1"> {/* Added a unique key */}
                                     <strong>{supplier.supplier_name}</strong> {supplier.currency}
                                 </p>
                             ))}
-                            {currencies.map((currency) => (
+                            {(currencies || []).map((currency) => (
                                 <p key={currency.currency_code} className="mb-1"> {/* Added a unique key */}
                                     <strong>{currency.currency_name}</strong> {currency.symbol}
                                 </p>

@@ -1,14 +1,14 @@
-import React from 'react';
 import LoadingSpinner from '../Utility/LoadingSpinner';
 import { useElementFormLogic, type ElementFormConfig } from '../../hooks/useElementFormLogic';
-import {type IGenericFormProps } from '../../models/IFormProps';
 
 interface ElementViewProps<T> {
     config: ElementFormConfig<T>;
-    FormComponent: React.ComponentType<IGenericFormProps<T>>;
 }
 
-export const ElementView = <T extends { [key: string]: any }>({ config, FormComponent }: ElementViewProps<T>) => {
+export const ElementView = <T extends { [key: string]: any }>({ config }: ElementViewProps<T>) => {
+    // pull out FormComponent so function remains the same as before adding component to the config type
+    const {FormComponent, ...restOfConfig} = config;
+
     const {
         element,
         isLoading,
@@ -26,12 +26,13 @@ export const ElementView = <T extends { [key: string]: any }>({ config, FormComp
         return <LoadingSpinner size='is-large' text={`Loading ${config.elementName} details...`} />;
     }
 
+    // todo = abstract the details of this error to avoid giving user too much potnentially sensative information
     if (error) {
-        return <div className="notification is-danger">{error}</div>;
+        return <div className="h2 is-danger">{error}</div>;
     }
 
     if (!element) {
-        return <div className="notification is-warning">{config.elementName} not found.</div>;
+        return <div className="h2 is-warning">{config.elementName} not found.</div>;
     }
 
     return (

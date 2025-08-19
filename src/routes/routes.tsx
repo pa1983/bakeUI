@@ -4,9 +4,7 @@ import {createBrowserRouter} from "react-router-dom";
 import Home from '../components/Home/Home.tsx';
 import Contact from '../components/Home/Contact.tsx';
 import NotFound from '../components/Home/NotFound.tsx';
-import IngredientForm from "../components/IngredientForm.tsx";
 import Layout from "../components/layout.tsx";
-import IngredientsList from "../components/ingredientsList.tsx";
 import InvoiceList from "../components/Invoice/invoiceList.tsx";
 import InvoiceViewer from "../components/Invoice/InvoiceViewer.tsx";
 import Dashboard from '../components/dashboard';
@@ -18,6 +16,11 @@ import ViewBuyableForm from "../components/Buyable/ViewBuyableForm.tsx";
 import ViewSupplierForm from "../components/Supplier/ViewSupplierForm.tsx";
 import IngredientList from "../components/Ingredient/IngredientList.tsx";
 import ViewIngredientForm from "../components/Ingredient/ViewIngredientForm.tsx";
+import ViewRecipeForm from "../components/Recipe/ViewRecipeForm.tsx";
+import RecipeList from "../components/Recipe/RecipeList.tsx";
+import LabourerList from "../components/Labourer/LabourerList.tsx";
+import ViewLabourerForm from "../components/Labourer/ViewLabourerForm.tsx";
+
 
 const router = createBrowserRouter([
     {
@@ -94,8 +97,24 @@ const router = createBrowserRouter([
             {
                 path: 'buyable/supplier/:id',
                 element: <ViewSupplierForm/>
-            }
+            },
+            {
+                path: '/recipe/all',
+                element: <RecipeList/>
+            },
+            {
+                path: '/recipe/:id',
+                element: <ViewRecipeForm/>
+            },
+            {
+                path: '/labourer/all',
+                element: <LabourerList/>
+            },
 
+            {
+                path: '/labourer/:id',
+                element: <ViewLabourerForm/>
+            },
 
         ]
     },

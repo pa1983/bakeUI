@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {type IBuyable} from '../../models/IBuyable.ts';
 import DeleteElement from '../Utility/DeleteElement.tsx';
 import {useData} from "../../contexts/DataContext.tsx";
@@ -11,7 +11,7 @@ import {useFormLogic} from "../../hooks/useFormLogic.ts";
 
 
 const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
-        const {formData, onSave, onChange, onEdit, onCancel, isSaving, onDelete, isModal = false} = props;
+        const {formData, onCancel, isSaving, onDelete} = props;
 
         // --- 1. Call the custom hook to get all the generic logic and handlers ---
         const {
@@ -29,14 +29,15 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
         } = useFormLogic({...props, primaryKeyName: 'id'});
 
         // DEFINE NON-STANDARD FORM ELEMENTS, e.g. pickerConfig, data sources
-        // Define data souorces
+
+        // Define data souorces - these are pulled from contexts
         const {PickerBrandArray} = useData();
         const {units} = useUnitOfMeasures();
 
-        const brandPickerOnSelect = async (selectedBrandId: number) => {
+        const brandPickerOnSelect = (selectedBrandId: number|string ) => {
             // persist the new brand id to the database.  This isn't part of the useFormLogic hook as it deviates from
             // from the standard handling of change to a form field.
-            // It IS common to all pickers - todo - consider a way of building this into the useFormLogic hook?
+            // It IS common to all pickers
             console.log(`brandPickerOnSelect called with value ${selectedBrandId}`);
             // added guard clause - when the form is for a new element, can't PATCH the update,
             // so just save the data to the formData, it will then persist once the save form is done
@@ -60,7 +61,7 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
                 pickerOnSelect: brandPickerOnSelect,
                 addNewFormActive: false,
                 pickerOnAddNewClicked: () => {
-                    // behaviour of the Add New button in the picker.  As this is a modal view, want to simply flip
+                    // Behaviour of the Add New button in the picker.  As this is a modal view, want to simply flip
                     // the addNewFormActive boolean to switch between the picker and the add new form.
                     toggleNewItemView()
                 },
@@ -72,7 +73,10 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
                         onSuccess={brandPickerOnSelect}  // expected to be passed the ID of the newly created item
                         isModal={true}  // deactivates shortcuts when form is displaed as a modal
                     />
-                )
+                ), onClose(): void | null {
+                    return undefined;
+                },  // todo - consider correct behaviour for onClose here
+                pickerSubtitle: "Pick a brand..."
             })
 
         }

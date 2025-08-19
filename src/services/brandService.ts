@@ -1,5 +1,5 @@
 import axios, { type AxiosError } from "axios";
-import config from "./api.js";
+import config from "./api.ts";
 import type { IBrand } from "../models/IBrand.ts";
 import type { ApiResponse } from "../models/api.ts";
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 import type {InvoiceListResponse, InvoiceRead} from "../models/invoice.ts";
-import config from "./api.js";
+import config from "./api.ts";
 
 // fetch invoice list and ensure it matches the InvoiceListResponse model format
 export const fetchInvoices = async (access_token: string): Promise<InvoiceListResponse[]> => {

@@ -35,7 +35,7 @@ const ViewBrandForm = ({prop_element_id, onSuccess, isModal=false}: ViewBrandFor
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
-    const [originalValueOnFocus, setOriginalValueOnFocus] = useState<any>(null);
+    const [originalValueOnFocus, setOriginalValueOnFocus] = useState<string | number | null>(null);
 
     const isNew = param_element_id === 'new' || prop_element_id === 'new';
     const formTitle = isNew ? `Create New ${elementName}` : `Edit ${elementName}`;
@@ -169,7 +169,7 @@ const ViewBrandForm = ({prop_element_id, onSuccess, isModal=false}: ViewBrandFor
 
         try {
             setIsSaving(true);
-            const response = await patchField(auth.user.access_token, element[primary_key_name], name, value, api_endpoint);
+            const response = await patchField<IBrand>(auth.user.access_token, element[primary_key_name], name, value, api_endpoint);
             showFlashMessage(response.message, 'success');
             // trigger a refresh of the brand context data to update the list view
             refetchBrands();
@@ -192,11 +192,11 @@ const ViewBrandForm = ({prop_element_id, onSuccess, isModal=false}: ViewBrandFor
     }
 
     if (error) {
-        return <div className="notification is-danger">{error}</div>;
+        return <div className="h2 is-danger">{error}</div>;
     }
 
     if (!element) {
-        return <div className="notification is-warning">{elementName} not found.</div>;
+        return <div className="h2 is-warning">{elementName} not found.</div>;
     }
 
     return (

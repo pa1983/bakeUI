@@ -165,6 +165,79 @@ const Navbar = () => {
                             )}
                         </li>
 
+                        {/* labourers Dropdown */}
+                        <li className="relative">
+
+                            <button
+                                onClick={() => handleDropdownToggle('labourers')}
+                                className="flex items-center text-white hover:text-blue-200 transition duration-300 py-2 px-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-white"
+                                aria-haspopup="true"
+                                aria-expanded={openDropdown === 'labourers'}
+                            >
+
+                                Labourers
+                                <ExpandCircleDown
+                                    className={`ml-1 w-4 h-4 transform transition-transform duration-200 ${
+                                        openDropdown === 'labourers' ? 'rotate-180' : 'rotate-0'
+                                    }`}
+                                />
+                            </button>
+                            {openDropdown === 'labourers' && (
+                                <ul className="absolute md:top-full left-0 md:left-auto mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg py-2 z-10 transition-all duration-300 ease-in-out transform origin-top md:origin-top-right scale-y-100 opacity-100">
+                                    <li>
+                                        <Link to="/labourer/all"
+                                              className="block px-4 py-2 hover:bg-gray-100 rounded-md transition duration-200">All
+                                            labourers</Link>
+                                    </li>
+
+
+                                    <li>
+                                        <Link to="/labourer/new"
+                                              className="block px-4 py-2 hover:bg-gray-100 rounded-md transition duration-200">Add
+                                            New</Link>
+                                    </li>
+
+                                </ul>
+                            )}
+                        </li>
+
+
+                        {/* Recipes Dropdown */}
+                        <li className="relative">
+
+                            <button
+                                onClick={() => handleDropdownToggle('recipes')}
+                                className="flex items-center text-white hover:text-blue-200 transition duration-300 py-2 px-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-white"
+                                aria-haspopup="true"
+                                aria-expanded={openDropdown === 'recipes'}
+                            >
+
+                                Recipes
+                                <ExpandCircleDown
+                                    className={`ml-1 w-4 h-4 transform transition-transform duration-200 ${
+                                        openDropdown === 'recipes' ? 'rotate-180' : 'rotate-0'
+                                    }`}
+                                />
+                            </button>
+                            {openDropdown === 'recipes' && (
+                                <ul className="absolute md:top-full left-0 md:left-auto mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg py-2 z-10 transition-all duration-300 ease-in-out transform origin-top md:origin-top-right scale-y-100 opacity-100">
+                                    <li>
+                                        <Link to="/recipe/all"
+                                              className="block px-4 py-2 hover:bg-gray-100 rounded-md transition duration-200">All
+                                            Recipes</Link>
+                                    </li>
+
+
+                                    <li>
+                                        <Link to="/recipe/new"
+                                              className="block px-4 py-2 hover:bg-gray-100 rounded-md transition duration-200">Add
+                                            New</Link>
+                                    </li>
+
+                                </ul>
+                            )}
+                        </li>
+
 
                         {/* Invoices Dropdown */}
                         <li className="relative">

@@ -39,9 +39,9 @@ function InvoiceViewer() {
 
                 // Important: Log the fetched data directly, not the state variable,
                 // as `setInvoice` is async and won't be updated immediately.
-                showFlashMessage(`Got invoice details from API: ID ${fetchedInvoice.id}`, 'success')
-                console.log(`Got invoice details from API: ID ${fetchedInvoice.id}`);
-                console.log(fetchedInvoice);
+                showFlashMessage(`Got invoice details from API: ID ${fetchedInvoice.data.id}`, 'success')
+                console.log(`Got invoice details from API: ID ${fetchedInvoice.data.id}`);
+                console.log(fetchedInvoice.data);
 
                 setError(null);
             } catch (err) {
@@ -133,9 +133,9 @@ function InvoiceViewer() {
                             <div className="box ">
                                 <h2 className="title is-5 has-text-grey-light">Line Items <MoreInfo message="Check content of each line item matches invoice. Correct as required. Make sure each line item matches a buyable item."/></h2>
                                 <div className="content">
-                                    {invoice.line_items[0]?.description}
                                     <InvoiceLineItemsList
-                                    line_items={invoice.line_items}/>
+                                        invoice_id = {invoice.id}
+                                    />
                                 </div>
                             </div>
                         </div>

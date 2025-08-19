@@ -3,7 +3,7 @@
 import React, {createContext, useState, useEffect, useContext, type ReactNode} from 'react';
 import axios from 'axios';
 import { useAuth } from 'react-oidc-context'; // Assuming you still use this for auth
-
+import config from '../../src/services/api.ts';
 // Define your UnitOfMeasure interface
 interface IUnitOfMeasure {
     uom_id: number;
@@ -35,6 +35,7 @@ export const useUnitOfMeasures = () => useContext(UnitOfMeasureContext);
 interface UnitOfMeasureProviderProps {
     children: ReactNode;
 }
+const CACHE_DURATION = 60 * 60 * 1000;  // 1 hour cache invalidation
 
 export const UnitOfMeasureProvider = ({ children }: UnitOfMeasureProviderProps) => {
     const [units, setUnits] = useState<IUnitOfMeasure[]>([]);
@@ -52,17 +53,18 @@ export const UnitOfMeasureProvider = ({ children }: UnitOfMeasureProviderProps) 
             }
 
             try {
-                const storedUOMs = localStorage.getItem('unitOfMeasureOptions');
-                if (storedUOMs) {
+                const cachedUOMs = localStorage.getItem('unitOfMeasureOptions');
+                if (cachedUOMs) {
                     // Try to load from localStorage first to prevent re-fetching on every page load
-                    setUnits(JSON.parse(storedUOMs));
+                    // todo - add a timebased acche invalidation here to avoid indefinite storage in localStorage
+                    setUnits(JSON.parse(cachedUOMs));
                     setLoading(false);
                     console.log("Loaded UOMs from localStorage.");
                     return; // Don't fetch from API if found in local storage
                 }
 
                 console.log('Fetching Unit of Measure options from API...');
-                const res = await axios.get('http://localhost:8000/common/uom', {
+                const res = await axios.get(`http://${config.API_URL}/common/uom`, {
                     headers: { Authorization: `Bearer ${auth.user?.access_token}` }
                 });
                 const fetchedUnits: IUnitOfMeasure[] = res.data;

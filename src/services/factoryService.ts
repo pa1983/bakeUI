@@ -1,5 +1,5 @@
 import axios, { type AxiosError } from "axios";
-import config from "./api.js";
+import config from "./api.ts";
 import type {ApiResponse} from "../models/api.ts";
 
 // Factory functions for use in element creation, update, delete, get etc to keep error and response handling uniform
@@ -72,6 +72,13 @@ export async function fetchElement<T>(
 }
 
 
+/** Factory function to delete an element by ID
+ *
+ * @param element_id
+ * @param access_token
+ * @param friendly_name
+ * @param api_endpoint
+ */
 export async function deleteElement<T>(
     element_id: number | string,
     access_token: string,
@@ -105,14 +112,14 @@ export async function deleteElement<T>(
  * @param friendly_name
  * @param api_endpoint
  */
-export async function fetchAllElementsDumb<T>(
-    access_token: string,
-    friendly_name: string,
-    api_endpoint: string
+export async function fetchAllElements<T>(
+    access_token: string,   // jwt taken from auth.user.access_token
+    friendly_name: string,  // for display in console and log messages
+    api_endpoint: string  // note - no leading or trailing slashes
 ): Promise<ApiResponse<T>> {
     const url = `${config.API_URL}/${api_endpoint}`;
 
-    console.log(`fetching from url ${url} with element ID ${element_id}, friendly name ${friendly_name}, api endpoint ${api_endpoint}. Response.data: `);
+    console.log(`fetching from url ${url} , friendly name ${friendly_name}, api endpoint ${api_endpoint}.`);
 
     try {
         const response = await axios.get<ApiResponse<T>>(url, {

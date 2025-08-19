@@ -1,3 +1,5 @@
+// contexts/DataContext.tsx
+
 import React, {createContext, useContext, useMemo, type ReactNode} from 'react';
 
 import {type ICurrency} from "../models/ICurrency.ts";
@@ -6,7 +8,13 @@ import type {IBrand} from "../models/IBrand.ts";
 import type {IBuyable} from "../models/IBuyable.ts";
 import type {IPickerElement} from "../models/picker.ts";
 import {useDataFetcher} from '../hooks/useDataFetcher';
-import type {IIngredient} from "../models/IIngredient.ts"; // Import the new hook
+import type {IIngredient} from "../models/IIngredient.ts";
+import type {IRecipeStatus} from "../models/IRecipeStatus.ts"; // Import the new hook
+import type {IProductType} from "../models/IProductType.ts";
+import type {IRecipeType} from "../models/IRecipeType.ts";
+import type {IRecipe} from "../models/IRecipe.ts";
+import type {ILabourer} from "../models/ILabourer.ts";
+import type {ILabourCategory} from "../models/ILabourCategory.tsx";
 
 // --- Updated Context Type ---
 // Reflects the new granular loading/error states and refetch functions
@@ -16,12 +24,23 @@ interface DataContextType {
     brands: IBrand[];
     buyables: IBuyable[];
     ingredients: IIngredient[];
+    recipeStatuses: IRecipeStatus[];
+    productTypes: IProductType[];
+    recipeTypes: IRecipeType[];
+    recipes: IRecipe[];
+    labourers: ILabourer[];
+    labourCategories: ILabourCategory[];
+
 
     PickerSupplierArray: IPickerElement[],
     PickerBrandArray: IPickerElement[],
     PickerCurrencyArray: IPickerElement[],
     PickerBuyableArray: IPickerElement[],
     PickerIngredientArray: IPickerElement[],
+    PickerRecipeArray: IPickerElement[],
+    PickerLabourerArray: IPickerElement[],
+    PickerLabourCategoryArray: IPickerElement[],
+
 
     loading: {
         currencies: boolean;
@@ -29,6 +48,12 @@ interface DataContextType {
         brands: boolean;
         buyables: boolean;
         ingredients: boolean;
+        recipeStatuses: boolean;
+        productTypes: boolean;
+        recipeTypes: boolean;
+        recipes: boolean;
+        labourers: boolean;
+        labourCategories: boolean;
     };
 
     error: {
@@ -37,6 +62,12 @@ interface DataContextType {
         brands: string | null;
         buyables: string | null;
         ingredients: string | null;
+        recipeStatuses: string | null;
+        productTypes: string | null;
+        recipeTypes: string | null;
+        recipes: string | null;
+        labourers: string | null;
+        labourCategories: string | null;
     };
 
 
@@ -45,6 +76,12 @@ interface DataContextType {
     refetchBrands: () => void;
     refetchBuyables: () => void;
     refetchIngredients: () => void;
+    refetchRecipeStatuses: () => void;
+    refetchProductTypes: () => void;
+    refetchRecipeTypes: () => void;
+    refetchRecipes: () => void;
+    refetchLabourers: () => void;
+    refetchLabourCategories: () => void;
 
     refetchAllData: () => void;
 
@@ -91,11 +128,48 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         loading: loadingIngredients,
         error: errorIngredients,
         refetch: refetchIngredients
-    } = useDataFetcher<IIngredient>('/ingredient/all');  // ?own_organisation=False  <- do i need to pass this or set as a default?
+    } = useDataFetcher<IIngredient>('/ingredient/all');  // ?own_organisation=False <- do I need to pass this or set as a default?
+    const {
+        data: recipeStatuses,
+        loading: loadingRecipeStatuses,
+        error: errorRecipeStatuses,
+        refetch: refetchRecipeStatuses
+    } = useDataFetcher<IRecipeStatus>('/common/recipe_status');
+    const {
+        data: productTypes,
+        loading: loadingProductTypes,
+        error: errorProductTypes,
+        refetch: refetchProductTypes
+    } = useDataFetcher<IProductType>('/common/product_type');
+    const {
+        data: recipeTypes,
+        loading: loadingRecipeTypes,
+        error: errorRecipeTypes,
+        refetch: refetchRecipeTypes
+    } = useDataFetcher<IRecipeType>('/common/recipe_type');
+    const {
+        data: recipes,
+        loading: loadingRecipes,
+        error: errorRecipes,
+        refetch: refetchRecipes
+    } = useDataFetcher<IRecipe>('/recipe/all');
+    const {
+        data: labourers,
+        loading: loadingLabourers,
+        error: errorLabourers,
+        refetch: refetchLabourers
+    } = useDataFetcher<ILabourer>('/labourer/all');
+    const {
+        data: labourCategories,
+        loading: loadingLabourCategories,
+        error: errorLabourCategories,
+        refetch: refetchLabourCategories
+    } = useDataFetcher<ILabourCategory>('/labourer/labour_category/all');
 
-    // --- Memoized Picker Arrays  ---
+
+    // --- Memoized Picker Arrays - all allow for empty source arrays gracefully ---
     const PickerSupplierArray = useMemo((): IPickerElement[] => {
-        return suppliers.map((supplier): IPickerElement => ({
+        return (suppliers || []).map((supplier): IPickerElement => ({
             id: supplier.supplier_id,
             title: supplier.supplier_name || "",
             subtitle: supplier.account_number || "",
@@ -104,7 +178,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
     }, [suppliers]);
 
     const PickerBrandArray = useMemo((): IPickerElement[] => {
-        return brands.map((brand): IPickerElement => ({
+        return (brands || []).map((brand): IPickerElement => ({
             id: brand.brand_id,
             title: brand.brand_name,
             subtitle: `${brand.notes || ''}`,
@@ -113,7 +187,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
     }, [brands]);
 
     const PickerCurrencyArray = useMemo((): IPickerElement[] => {
-        return currencies.map((currency): IPickerElement => ({
+        return (currencies || []).map((currency): IPickerElement => ({
             id: currency.currency_code,
             title: `${currency.symbol} - ${currency.currency_name}`,
             subtitle: currency.currency_code,
@@ -123,22 +197,43 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
 
 
     const PickerBuyableArray = useMemo((): IPickerElement[] => {
-        return buyables.map((buyable: IBuyable): IPickerElement => ({
+        const safeBrands = brands || [];
+        return (buyables || []).map((buyable: IBuyable): IPickerElement => ({
             id: buyable.id,
-            title: `${buyable.sku} - ${brands.find(brand => brand.brand_id === buyable.brand_id)?.brand_name || '      \n\n'}  -  ${buyable.item_name}`,
+            title: `${buyable.sku} - ${safeBrands.find(brand => brand.brand_id === buyable.brand_id)?.brand_name || '      \n\n'}  -  ${buyable.item_name}`,
             subtitle: buyable.notes,
             imageUrl: null
         }))
     }, [buyables]);
 
     const PickerIngredientArray = useMemo((): IPickerElement[] => {
-        return ingredients.map((ingredient: IIngredient): IPickerElement => ({
+        return (ingredients || []).map((ingredient: IIngredient): IPickerElement => ({
             id: ingredient.ingredient_id,
             title: `${ingredient.ingredient_name}`,
             subtitle: ingredient.notes || '',
-            imageUrl:  ingredient.images?.length > 0 ? ingredient.images[0].image_url : null
+            imageUrl: ingredient.images?.length > 0 ? ingredient.images[0].image_url : null
         }))
     }, [ingredients]);
+
+    const PickerRecipeArray = useMemo((): IPickerElement[] => {
+        return (recipes || []).map((recipe: IRecipe): IPickerElement => ({
+            id: recipe.recipe_id,
+            title: recipe.recipe_name,
+            subtitle: recipe.recipe_description || '',
+            imageUrl: null // come back and populate this
+        }))
+
+    }, [recipes]);
+
+    const PickerLabourerArray = useMemo((): ILabourer[] => {
+        return (labourers || []).map((labourer: ILabourer): IPickerElement => ({
+            id: labourer.id,
+            title: labourer.name,
+            subtitle: labourer.description,
+            imageUrl: null
+
+        }))
+    }, [labourers])
 
 
     // --- Refetching Logic ---
@@ -148,6 +243,12 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         refetchBrands();
         refetchBuyables();
         refetchIngredients();
+        refetchRecipeStatuses();
+        refetchProductTypes();
+        refetchRecipeTypes();
+        refetchRecipes();
+        refetchLabourers();
+        refetchLabourCategories();
     };
 
     // --- Assemble the context value ---
@@ -157,17 +258,33 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         brands,
         buyables,
         ingredients,
+        recipeStatuses,
+        productTypes,
+        recipeTypes,
+        recipes,
+        labourers,
+        labourCategories,
+
         PickerSupplierArray,
         PickerBrandArray,
         PickerCurrencyArray,
         PickerBuyableArray,
         PickerIngredientArray,
+        PickerRecipeArray,
+        PickerLabourerArray,
+
         loading: {
             currencies: loadingCurrencies,
             suppliers: loadingSuppliers,
             brands: loadingBrands,
             buyables: loadingBuyables,
             ingredients: loadingIngredients,
+            recipeStatuses: loadingRecipeStatuses,
+            productTypes: loadingProductTypes,
+            recipeTypes: loadingRecipeTypes,
+            recipes: loadingRecipes,
+            labourers: loadingLabourers,
+            labourCategories: loadingLabourCategories,
         },
         error: {
             currencies: errorCurrencies,
@@ -175,13 +292,25 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
             brands: errorBrands,
             buyables: errorBuyables,
             ingredients: errorIngredients,
+            recipeStatuses: errorRecipeStatuses,
+            productTypes: errorProductTypes,
+            recipeTypes: errorRecipeTypes,
+            recipes: errorRecipes,
+            labourers: errorLabourers,
+            labourCategories: errorLabourCategories,
         },
         refetchAllData,
         refetchCurrencies,
         refetchSuppliers,
         refetchBuyables,
         refetchBrands,
-        refetchIngredients
+        refetchIngredients,
+        refetchRecipeStatuses,
+        refetchProductTypes,
+        refetchRecipeTypes,
+        refetchRecipes,
+        refetchLabourers,
+        refetchLabourCategories
     };
 
     return (

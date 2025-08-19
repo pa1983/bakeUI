@@ -20,12 +20,12 @@ const ViewIngredientForm = () => {
         getElement: fetchIngredient,
         postNewElement: postNewIngredient,
         refetchDataList: refetchDataList,
+        FormComponent:IngredientForm
     };
 
     return (
         <ElementView
             config={IngredientConfig}
-            FormComponent={IngredientForm}
         />
     );
 };

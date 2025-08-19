@@ -25,6 +25,14 @@ export const useFormLogic = <T extends { id?: number | string }>({
     const [originalValueOnFocus, setOriginalValueOnFocus] = useState<any>(null);
     const [pickerModalConfig, setPickerModalConfig] = useState<IPickerModalConfig>(createDefaultPickerModalConfig());
 
+    // ADDED to fix issue with PATCH being fired by onEdit for every element in recipeElement viewer on reload
+    // This effect runs when the component first mounts and whenever the entity
+    // it represents changes (identified by its primary key) and invalidates the focus state after a list refresh.
+    useEffect(() => {
+        setOriginalValueOnFocus(null);
+    }, [formData[primaryKeyName]]);
+
+
     const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setOriginalValueOnFocus(e.target.value);
     }, []);
@@ -48,7 +56,14 @@ export const useFormLogic = <T extends { id?: number | string }>({
 
 
     const handleEdit = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        // ... (handleEdit logic remains the same)
+
+        // If originalValueOnFocus is null, it means we haven't had a valid focus event
+        // since the component was rendered or refreshed. Do not proceed.
+        if (originalValueOnFocus === null) {
+            return;
+        };
+
+
         if (isNew || !auth.user?.access_token) {
             return;
         }
@@ -57,11 +72,16 @@ export const useFormLogic = <T extends { id?: number | string }>({
             ? (e.target as HTMLInputElement).checked
             : e.target.value;
 
+        // leaving this in for debugging in future
+        // console.log(`handle edit comparing ${originalValueOnFocus} to ${value} - ${String(originalValueOnFocus) === String(value)?"true":"false"}`);
+
         if (String(originalValueOnFocus) === String(value)) {
             return;
         }
         onEdit(name as keyof T, value);
     }, [isNew, auth.user, originalValueOnFocus, onEdit]);
+
+
 
     // ... (other handlers like closePickerModal, handleSubmit, etc. remain the same) ...
     const closePickerModal = useCallback(() => {
@@ -99,5 +119,6 @@ export const useFormLogic = <T extends { id?: number | string }>({
         handleValueChange: handlePickerValueChange, // For pickers and other custom components
         handleEdit,
         handleSubmit,
+        isSaving
     };
 };

@@ -66,16 +66,16 @@ const DeleteElement = ({element_id, endpoint, elementName = 'this item', onDelet
             >
                 <i
 
-                    className={`fa-solid fa-trash-can ${isLoading ? 'is-loading is-warning' : 'is-clickable is-damger'}`}
+                    className={`fa-solid fa-trash-can ${isLoading ? 'is-loading is-warning' : 'is-clickable is-danger'}`}
 
                 ></i>
             </button>
 
             <ConfirmationModal
                 isOpen={isDeleteConfirmationModalOpen}
-                title="Cofirm Delete Brand"
+                title={`Confirm Delete ${elementName.length > 0 ? ` ${elementName}`: 'this item'}`}
                 onClose={() => setIsDeleteConfirmationModalOpen(false)}
-                onConfirm={submitDeleteElement} children={`are you really sure you want to delete ${elementName}?`}/>
+                onConfirm={submitDeleteElement} children={`Are you sure you want to delete ${elementName}?`}/>
         </>
     );
 };

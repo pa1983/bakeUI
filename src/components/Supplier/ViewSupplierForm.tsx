@@ -21,12 +21,12 @@ const ViewSupplierForm = () => {
         getElement: fetchSupplier,
         postNewElement: postNewSupplier,
         refetchDataList: refetchDataList,
+        FormComponent:SupplierForm
     };
 
     return (
         <ElementView
             config={supplierConfig}
-            FormComponent={SupplierForm}
         />
     );
 };

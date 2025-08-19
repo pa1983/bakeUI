@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from 'react-oidc-context';
 import useFlash from '../contexts/FlashContext';
 import { patchField } from '../services/commonService';
+import type {IGenericFormProps} from "../models/IFormProps.ts";
 
 // Define the shape of the configuration object the hook needs
 export interface ElementFormConfig<T> {
@@ -11,9 +12,12 @@ export interface ElementFormConfig<T> {
     elementName: string;
     apiEndpoint: string;
     createEmptyElement: () => T;
-    getElement: (id: number, token: string) => Promise<{ data: T, message?: string }>;
-    postNewElement: (data: T, token: string) => Promise<{ data: T, message: string }>;
+    getElement: (id: number, token: string) => Promise<{ data: T | null, message?: string }>;
+    postNewElement: (data: T, token: string) => Promise<{ data: T | null, message: string }>;
     refetchDataList: () => void;
+    FormComponent: React.ComponentType<IGenericFormProps<T>>;
+    onSuccess?: (id: number) => void;
+    isModal?: boolean;
 }
 
 export const useElementFormLogic = <T extends { [key: string]: any }>(config: ElementFormConfig<T>) => {
@@ -26,6 +30,7 @@ export const useElementFormLogic = <T extends { [key: string]: any }>(config: El
         getElement,
         postNewElement,
         refetchDataList,
+        onSuccess,
     } = config;
 
     const { id: param_element_id } = useParams();
@@ -52,8 +57,13 @@ export const useElementFormLogic = <T extends { [key: string]: any }>(config: El
             }
             try {
                 const response = await getElement(id, auth.user.access_token);
-                console.log(response.data);
-                setElement(response.data);
+                if (response.data) {
+                    setElement(response.data);
+                } else {
+                    const msg = response.message || `${elementName} not found.`;
+                    setError(msg);
+                    showFlashMessage(msg, 'info');
+                }
             } catch (err: any) {
                 const msg = err.message || `Failed to fetch ${elementName}`;
                 setError(msg);
@@ -97,7 +107,11 @@ export const useElementFormLogic = <T extends { [key: string]: any }>(config: El
             //  Only perform success actions (like refetching and navigating) if the call was successful
             if (flashType === 'success' && response.data) {
                 refetchDataList();
-                navigate(`/${apiEndpoint}/${response.data[primaryKeyName]}`);
+                if (onSuccess) {
+                    onSuccess(response.data[primaryKeyName]);
+                } else {
+                    navigate(`/${apiEndpoint}/${response.data[primaryKeyName]}`);
+                }
             }
         } catch (err: any) {
             showFlashMessage(err.message || 'An unknown error occurred', 'danger');
@@ -106,11 +120,11 @@ export const useElementFormLogic = <T extends { [key: string]: any }>(config: El
         }
     };
 
-    const handleChange = useCallback((fieldName: keyof T, value: any) => {
+    const handleChange = useCallback((fieldName: keyof T, value: T[keyof T]) => {
         setElement(prev => (prev ? { ...prev, [fieldName]: value } : null));
     }, []);
 
-    const handleEdit = async (fieldName: keyof T, value: any) => {
+    const handleEdit = async (fieldName: keyof T, value: T[keyof T]) => {
         if (isNew || !element || !auth.user?.access_token) {
             // For new elements, handleChange already updated the state. No API call needed.
             return;

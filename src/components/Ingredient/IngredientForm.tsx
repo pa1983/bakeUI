@@ -6,7 +6,7 @@ import DeleteElement from '../Utility/DeleteElement.tsx';
 import IngredientBuyablesList from "../IngredientBuyable/IngredientBuyablesList.tsx";
 import ImageMaster from "../Image/ImageMaster.tsx";
 
-import config from "../../services/api.js";
+import config from "../../services/api.ts";
 
 const IngredientForm = (props: IGenericFormProps<IIngredient>) => {
     const {formData, onSave, onChange, onEdit, onCancel, isSaving, onDelete, isModal = false} = props;
@@ -73,7 +73,6 @@ const IngredientForm = (props: IGenericFormProps<IIngredient>) => {
                                         required
                                     >
                                         <option value={0} disabled>Select a base unit...</option>
-                                        {/* Assuming `units` (UnitOfMeasure[]) is passed as a prop */}
                                         {units.map((uom) => (
                                             <option key={uom.uom_id} value={uom.uom_id}>
                                                 {uom.name} ({uom.abbreviation})
