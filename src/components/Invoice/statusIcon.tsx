@@ -1,33 +1,48 @@
-const StatusIcon = ({status, id}) => {
+import type { InvoiceStatus } from "../../models/invoice.ts";
 
-    const statusMap = {
-        'processing': "fa-solid fa-spinner",
-        'archived': "fa-solid fa-box-archive",
-        'draft': "fa-solid fa-eye",
-        'failed': "fa-solid fa-triangle-exclamation",
-        'received_ok': "fa-solid fa-clipboard-check",
-        'received_query': "fa-solid fa-clipboard-question",
-        'validated': "fa-solid fa-check",
-        'default': "fa-solid fa-questione"
-    };
-    const icon_name = statusMap[status.name] || statusMap['default'];
+type StatusIconProps = {
+    status?: InvoiceStatus;
+    id: number;
+};
 
-    const statusIconClickHandler = () => {
-        console.log(`status icon clicked for invoice id ${id}`)
-        //todo -trigger a new component to display a list of status options;
-        // update the database if a new status is selected
-        // change the currently displayed status to match the newly selected status
+// Define the possible status names as a specific type.
+type StatusName = 'processing' | 'archived' | 'draft' | 'failed' | 'received_ok' | 'received_query' | 'validated' | 'default';
+
+// Use the Record utility type to create a strongly-typed map.
+const statusMap: Record<StatusName, string> = {
+    'processing': "fa-solid fa-spinner",
+    'archived': "fa-solid fa-box-archive",
+    'draft': "fa-solid fa-eye",
+    'failed': "fa-solid fa-triangle-exclamation",
+    'received_ok': "fa-solid fa-clipboard-check",
+    'received_query': "fa-solid fa-clipboard-question",
+    'validated': "fa-solid fa-check",
+    'default': "fa-solid fa-question"
+};
+
+const StatusIcon = ({ status, id }: StatusIconProps) => {
+
+    // Default to the 'default' icon.
+    let icon_name = statusMap['default'];
+
+    if (status) {
+        // Assert that status.name is one of the keys of our map.
+        const statusName = status.name as StatusName;
+        // This lookup is now type-safe.
+        icon_name = statusMap[statusName] || statusMap['default'];
     }
 
+    const statusIconClickHandler = () => {
+        console.log(`status icon clicked for invoice id ${id}`);
+    };
 
     return (
-        //  todo - pass in onhover text to explain meaning of statuses
-        // todo - implement a method of clicking on the icon to show a list of options to pick, with the currently selected status highlighted.  clicking a new one changes the processing status of the invoice id passed in.
-        <div title={status.description} key={status.name}>
+        <div title={status?.description || 'No status description'} key={status?.name || 'default'}>
             <i className={`${icon_name} fa-2x`} onClick={statusIconClickHandler}></i>
-            <p>{status.display_name}</p>
+            {/* Conditionally render the display name to prevent errors if status is undefined */}
+            {status && <p>{status.display_name}</p>}
         </div>
-    )
-}
+    );
+};
 
 export default StatusIcon;

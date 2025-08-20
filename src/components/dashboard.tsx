@@ -1,9 +1,3 @@
-import React from 'react';
-
-// Make sure you have Bulma and an icon library like Font Awesome linked in your project's main HTML file.
-// For example: <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-// And: <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
-
 const Dashboard = () => {
     return (
         <section className="section">

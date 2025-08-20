@@ -3,7 +3,7 @@ import imageNotFound from '../../assets/Image-not-found.png'
 import type {IPickerElement} from "../../models/picker.ts";  // todo - replace this with a logo or plain colour so that no image doesn't look like missing data
 
 export interface PickerElementProp extends IPickerElement {
-    onSelect: () => void,
+    onSelect: (id: number) => void,
     onClose: () => void
 }
 
@@ -23,21 +23,18 @@ export interface PickerElementProp extends IPickerElement {
 const PickerListElementCard = ({imageUrl, title, subtitle, id, onSelect, onClose}: PickerElementProp) => {
 
     const handleClick = useCallback(() => {
-            console.log(`handling click on element card in picker modal for element id ${id}`);
-            console.log(`type of onSelect: ${typeof onSelect}`);
-            console.log(`ID being passed to the onSelect callback: ${id}`);
             onSelect(id);  // should apply the id value to the grandparent's formdata for the field, or trigger a navigate redirect to the edit form
             onClose();  // if the picker is called in a modal ,just closes down the modal, otherwise run custom onClose function
-        }
+        }, [id, onClose, onSelect]
     )
 
 
-    const imageSource = imageUrl || imageNotFound  // defaults in a placeholder image if no image is present; helps presever formatting and makes it clear to user that image has not been uploaded
+    const imageSource = imageUrl || imageNotFound  // defaults in a placeholder image if no image is present; helps preserve formatting and makes it clear to user that image has not been uploaded
     return (
         <div className="box mb-6" onClick={handleClick}>
             <div className="columns is-vcentered">
                 {/* Image Section */}
-                {/* if an image is passed in, use it to display a thumbnail, other wise render nothing and allow the title-sub title to fill the whole card width */}
+                {/* if an image is passed in, use it to display a thumbnail, otherwise render nothing and allow the title-subtitle to fill the whole card width */}
                 {!imageUrl ? null : (
 
                     <div className="column">

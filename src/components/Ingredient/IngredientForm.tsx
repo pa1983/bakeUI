@@ -6,21 +6,15 @@ import DeleteElement from '../Utility/DeleteElement.tsx';
 import IngredientBuyablesList from "../IngredientBuyable/IngredientBuyablesList.tsx";
 import ImageMaster from "../Image/ImageMaster.tsx";
 
-import config from "../../services/api.ts";
 
 const IngredientForm = (props: IGenericFormProps<IIngredient>) => {
-    const {formData, onSave, onChange, onEdit, onCancel, isSaving, onDelete, isModal = false} = props;
+    const {formData, onCancel, isSaving, onDelete}= props;
 
     const {
         isNew,
         focusInputRef,
-        pickerModalConfig,
-        setPickerModalConfig,
-        closePickerModal,
-        toggleNewItemView,
         handleFocus,
         handleChange,
-        handleValueChange,
         handleEdit,
         handleSubmit,
     } = useFormLogic({...props, primaryKeyName: 'ingredient_id'});

@@ -1,5 +1,6 @@
 
 export interface IIngredientBuyable {
+    id?: number;
     ingredient_id: number;
     buyable_id: number;
     sort_order?: number;

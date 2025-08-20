@@ -1,18 +1,18 @@
-import React, {useCallback, useState} from 'react'
+import {useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 import axios, {type AxiosResponse} from "axios";
 import {useAuth} from "react-oidc-context";
 import config from '../../../src/services/api.ts';
+import useFlash from '../../contexts/FlashContext.tsx';
 // todo - move this to services.invoice to keep the component tidy
 // todo - refactor UploadInvoice to use the generic FIleUploader function - just need to refactor callbacks and titles
 function UploadInvoice() {
-    const [error, setError] = useState<string | null>(null);
     const auth = useAuth();
-
+    const { showFlashMessage } = useFlash();
     const uploadInvoiceFile = useCallback(async (file: File) => {
 
         if (!auth.user?.access_token) {
-            setError("Authentication token not available. Please log in.");
+            showFlashMessage("Authentication token not available. Please log in.", 'danger');
             return false;
         }
         console.log('uploading invoice...');
@@ -26,15 +26,15 @@ function UploadInvoice() {
             };
             const res: AxiosResponse = await axios.post(`${config.API_URL}/invoice`, formData, {headers});
             console.log(res.data);
-            setError(null);
             return res;
 
         } catch (err) {
             console.error(err);
-            setError("Invoice upload failed");
+            showFlashMessage("File upload failed", 'danger');
+            return false;
         }
 
-    }, [auth]);
+    }, [auth.user?.access_token, showFlashMessage]);
 
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -49,7 +49,7 @@ function UploadInvoice() {
             ;  // acceptedFiles returns a list - only uploading the first.  todo - set restrictions in invoice upload for file type, qty and size
         }
 
-    }, [uploadInvoiceFile]);  // list uploadInvoiceFile as a dependancy of onDrop
+    }, [uploadInvoiceFile]);  // list uploadInvoiceFile as a dependency of onDrop
 
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 

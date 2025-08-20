@@ -1,6 +1,6 @@
 export interface IPickerElement {
     // a single element in a picker array
-    id: string | number;
+    id: number;
     title: string;
     subtitle: string | null;
     imageUrl: string | null;
@@ -12,11 +12,13 @@ export interface PickerProps {
     // The title displayed at the top of the modal.
     pickerTitle: string;
     // Callback function executed when an item is selected from the list. Takes the ID of the selected item as an argument.
-    pickerOnSelect: (id: number | string) => void;
+    pickerOnSelect: (id: number) => void;
     onClose: () => void | null;
     // Callback function executed when the "Add New" button is clicked. IN a modal it will flip the addNewFormActive boolean, in a page view it can trigger a navigation to the new item form
     pickerOnAddNewClicked?: () => void | null;
     pickerSubtitle?: string | null;
+    addNewButtonText?: string;
+    showSearch?: boolean;
 }
 
 
@@ -51,6 +53,11 @@ export const createDefaultPickerModalConfig = (): IPickerModalConfig => {
             console.warn('pickerOnAddNewClicked was called, but no handler was provided.');
         },
         addNewComponent: null,  // default of null will cause conditional logic to show nothing
-        pickerSubtitle: null
+        pickerSubtitle: null,
+        onClose: () => {
+            // default function to warn if callback is called without being defined todo - define this
+            console.warn('onClose was called, but no handler was provided.');
+        },
+
     };
 };

@@ -1,5 +1,3 @@
-import React, { useState, useEffect } from 'react';
-
 interface LoadingSpinnerProps {
     /** Optional size, defaults to 'is-large'. */
     size?: 'is-small' | 'is-medium' | 'is-large';

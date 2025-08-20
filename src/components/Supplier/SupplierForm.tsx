@@ -1,4 +1,3 @@
-import React from 'react';
 import {type ISupplier} from '../../models/ISupplier.ts';
 import DeleteElement from '../Utility/DeleteElement.tsx';
 import {useData} from "../../contexts/DataContext.tsx";
@@ -7,12 +6,12 @@ import {useFormLogic} from "../../hooks/useFormLogic.ts";
 
 const SupplierForm = (props: IGenericFormProps<ISupplier>) => {
     // No changes needed here
-    const {formData, onSave, onChange, onEdit, onCancel, isSaving, onDelete, isModal = false} = props;
+    const {formData, onCancel, isSaving, onDelete} = props;
     const {
-        isNew, focusInputRef, handleFocus, handleChange, handleValueChange, handleEdit, handleSubmit,
+        isNew, focusInputRef, handleFocus, handleChange, handleEdit, handleSubmit,
     } = useFormLogic({...props, primaryKeyName: 'supplier_id'});
     const api_endpoint = 'buyable/supplier';
-    const {pickerCurrencyArray, currencies, loading} = useData();
+    const {currencies, loading} = useData();
 
     return (
         <form onSubmit={handleSubmit}>

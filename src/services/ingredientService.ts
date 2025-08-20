@@ -1,6 +1,5 @@
 import {postNewElement, fetchElement} from "./factoryService.ts";
 import type {ApiResponse} from "../models/api.ts";
-import type {IBuyable} from "../models/IBuyable.ts";
 import type {IIngredient} from "../models/IIngredient.ts";
 
 const FRIENDLY_NAME = 'Ingredient';
@@ -28,5 +27,5 @@ export async function postNewIngredient(
     formData: IIngredient,
     access_token: string
 ): Promise<ApiResponse<IIngredient>> {
-    return postNewElement<IIngredient>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT, 'ingredient_id');
+    return postNewElement<IIngredient, 'ingredient_id'>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT, 'ingredient_id');
 }

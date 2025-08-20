@@ -26,5 +26,5 @@ export async function postNewBuyable(
     formData: IBuyable,
     access_token: string
 ): Promise<ApiResponse<IBuyable>> {
-    return postNewElement<IBuyable>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT);
+    return postNewElement<IBuyable, 'id'>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT, 'id');
 }

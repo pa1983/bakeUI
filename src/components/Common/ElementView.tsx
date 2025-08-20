@@ -1,13 +1,16 @@
 import LoadingSpinner from '../Utility/LoadingSpinner';
-import { useElementFormLogic, type ElementFormConfig } from '../../hooks/useElementFormLogic';
+import {useElementFormLogic, type ElementFormConfig} from '../../hooks/useElementFormLogic';
 
-interface ElementViewProps<T> {
-    config: ElementFormConfig<T>;
+interface ElementViewProps<T, K extends keyof T> {
+    config: ElementFormConfig<T, K>;
 }
 
-export const ElementView = <T extends { [key: string]: any }>({ config }: ElementViewProps<T>) => {
-    // pull out FormComponent so function remains the same as before adding component to the config type
-    const {FormComponent, ...restOfConfig} = config;
+export const ElementView = <
+    T extends Record<K, number | string>,
+    K extends keyof T
+>({ config }: ElementViewProps<T, K>) => {
+    // pull out FormComponent so function remains the same as before adding component to the config type.  Unused params are ignored
+    const { FormComponent } = config;
 
     const {
         element,
@@ -20,10 +23,10 @@ export const ElementView = <T extends { [key: string]: any }>({ config }: Elemen
         handleEdit,
         handleCancel,
         handleDelete,
-    } = useElementFormLogic<T>(config);
+    } = useElementFormLogic<T, K>(config);
 
     if (isLoading) {
-        return <LoadingSpinner size='is-large' text={`Loading ${config.elementName} details...`} />;
+        return <LoadingSpinner size='is-large' text={`Loading ${config.elementName} details...`}/>;
     }
 
     // todo = abstract the details of this error to avoid giving user too much potnentially sensative information

@@ -1,6 +1,6 @@
 //  Used to populate and store common data used across most elements, e.g. Title, UOM
 
-import React, {createContext, useState, useEffect, useContext, type ReactNode} from 'react';
+import {createContext, useState, useEffect, useContext, type ReactNode} from 'react';
 import axios from 'axios';
 import { useAuth } from 'react-oidc-context'; // Assuming you still use this for auth
 import config from '../../src/services/api.ts';
@@ -35,7 +35,7 @@ export const useUnitOfMeasures = () => useContext(UnitOfMeasureContext);
 interface UnitOfMeasureProviderProps {
     children: ReactNode;
 }
-const CACHE_DURATION = 60 * 60 * 1000;  // 1 hour cache invalidation
+// const CACHE_DURATION = 60 * 60 * 1000;  // 1 hour cache invalidation todo - not yet implemented - commented out to keep ts happy
 
 export const UnitOfMeasureProvider = ({ children }: UnitOfMeasureProviderProps) => {
     const [units, setUnits] = useState<IUnitOfMeasure[]>([]);
@@ -72,8 +72,9 @@ export const UnitOfMeasureProvider = ({ children }: UnitOfMeasureProviderProps) 
                 localStorage.setItem('unitOfMeasureOptions', JSON.stringify(fetchedUnits)); // Store in localStorage
                 console.log("Fetched and stored UOMs from API.");
 
-            } catch (err: any) {
-                console.error("Failed to fetch Unit of Measure options:", err);
+            } catch (err: unknown) {
+                const message = err instanceof Error ? err.message : 'An unknown error occurred';
+                console.error("Failed to fetch Unit of Measure options:", message);
                 setError("Failed to load unit of measure options.");
                 setUnits([]); // Clear units on error
             } finally {

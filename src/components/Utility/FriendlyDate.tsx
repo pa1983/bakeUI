@@ -1,8 +1,12 @@
-import React from 'react';
 import {formatRelative, parseISO} from 'date-fns';
 
-const FriendlyDate = ({date, classname}) => {
-    const dateObject = typeof date === 'string' ? parseISO(date) : date;
+interface PropsFriendlyDate {
+    date: string
+    classname: string
+}
+
+const FriendlyDate = ({date, classname}:PropsFriendlyDate) => {
+    const dateObject = parseISO(date);
     const formattedDate = formatRelative(dateObject, new Date());
 
     return (

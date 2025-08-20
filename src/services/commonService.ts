@@ -3,40 +3,47 @@ import axios, {type AxiosError} from "axios";
 import type {ApiResponse} from "../models/api";
 
 // generic field patching function for use by all forms that save changes as they're made
-export const patchField = async <T>(
+/**
+ * <T, K> where T is the object type, e.g. IIngredient, and K is the name of the primary key of T (e.g. ingredient_id)
+ * @param access_token
+ * @param entry_id
+ * @param field_name
+ * @param field_value
+ * @param api_endpoint
+ */
+export const patchField = async <
+    // T is the object type (e.g., Ingredient)
+    T,
+    // K is the name of the primary key (e.g., 'id', 'ingredient_id')
+    K extends keyof T
+>(
     access_token: string,
-    entry_id: number | string,
-    field_name: string,
-    field_value: any,
+    // The ID's value must match the type of the primary key on the object
+    entry_id: T[K],
+    // The field name must be a valid key of T
+    field_name: keyof T,
+    // The field value must match the type of that key on T
+    field_value: T[keyof T],
     api_endpoint: string
 ): Promise<ApiResponse<T>> => {
     if (entry_id === null || entry_id === undefined) {
-        // Throw a clear error for invalid input, which can be caught by the caller.
         throw new Error("Invalid entry_id provided to patchField service.");
     }
 
     const api_url = `${config.API_URL}/${api_endpoint}/${entry_id}`;
-    console.log(`Attempting to patch ${api_url} for entry_id: ${entry_id} with field: ${field_name} and value: ${field_value}`);
+    console.log(`Attempting to patch ${api_url} with field: ${String(field_name)} and value: ${field_value}`);
 
     try {
         const response = await axios.patch<ApiResponse<T>>(
             api_url,
-            // {
-            //         "field_name": field_name,
-            //     "new_value": field_value
-            // },
-
-            {
-                [field_name]: field_value
-            },
-            // todo - fix invoice patch api to match this structure
-
+            // This computed property name is the correct, modern way to build the payload
+            { [field_name as string]: field_value },
             {headers: {Authorization: `Bearer ${access_token}`}}
         );
-        return response.data;  // returns the full api response object
+        return response.data;
 
     } catch (error) {
-        console.error(`Error patching field '${field_name}' for entry_id ${entry_id}:`, error);
+        console.error(`Error patching field '${String(field_name)}' for entry_id ${entry_id}:`, error);
 
         if (axios.isAxiosError(error)) {
             const axiosError = error as AxiosError;
@@ -48,6 +55,7 @@ export const patchField = async <T>(
         throw new Error("An unexpected error occurred while updating the field.");
     }
 };
+
 
 export const deleteElement = async <T>(
         access_token: string,

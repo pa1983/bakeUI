@@ -1,6 +1,5 @@
 import PickerListElementCard from "./PickerListElementCard.tsx";
 import React, {useEffect, useRef, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import type {PickerProps} from "../../models/picker.ts";
 
 
@@ -9,25 +8,21 @@ function Picker({
                     pickerTitle,
                     pickerOnSelect,  // to be passed on to the picker elements to allow it to update the grandparent function from where the picker list is called
                     onClose,
-                    pickerOnAddNewClicked,  // callback for preferred method of triggering an add new form to load.
+                    pickerOnAddNewClicked,  // callback for the preferred method of triggering an 'add new' form to load.
                     addNewButtonText = 'Add New',
-                    showSearch = true,  // optionally turn off the search bar for tidiness when list isn't going to be long enough to need filtering
+                    showSearch = true,  // optionally turn off the search bar for tidiness when a list isn't going to be long enough to need filtering
                     pickerSubtitle = null
                 }: PickerProps) {
-
-
-    const [error, setError] = useState(null); // Added setError  // todo - add error handlers in all functions that setError if there's an issue - currently error is never set, even on error
-    const [loading, setLoading] = useState(true);
 
     const [searchTerm, setSearchTerm] = useState('');  // search variable
 
 
     // SET FOCUS ELEMENT
-    //create a ref for the input element to be focussed on first render
+    //create a ref for the input element to be focussed on the first render
     const focusInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        // On first render, focus on the element with ref = focusInputRef
+        // On the first render, focus on the element with ref = focusInputRef
         focusInputRef.current?.focus();
     }, []);
     //
@@ -39,7 +34,7 @@ function Picker({
     );
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // value of the search bar has changed - set newSearchTerm to the new search value
+        // the value of the search bar has changed - set the newSearchTerm to the new search value
         const newSearchTerm = event.target.value;
         setSearchTerm(newSearchTerm);
     };
@@ -56,13 +51,13 @@ function Picker({
 
 
             <div className="columns is-vcentered mb-5">
-                {/*conditionally show the search bar; not required when used as a simple list function, such as listing linked buyables in ingredient, ingredient in recipe */}
+                {/*conditionally show the search bar; not required when used as a simple list function, such as listing linked buyables in ingredient, ingredient in a recipe */}
                 {showSearch && (
                     <div className="column is-9">
                         <div className="field">
                             <p className="control has-icons-left">
                                 <input
-                                    ref={focusInputRef}  // set initial focus so can start typing without clicking into search bar
+                                    ref={focusInputRef}  // set initial focus so can start typing without clicking into the search bar
                                     type="text"
                                     placeholder="Search name and description ..."
                                     value={searchTerm}
@@ -91,7 +86,7 @@ function Picker({
             </div>
 
 
-            {filteredPickerArray.length === 0 && searchTerm === '' && !loading ? (
+            {filteredPickerArray.length === 0 && searchTerm === '' ? (
                 <p className="is-size-5 has-text-grey">Nothing found in picker list</p>
             ) : filteredPickerArray.length === 0 && searchTerm !== '' ? (
                 <p className="is-size-5 has-text-grey">No matches for your search ("{searchTerm})".</p>

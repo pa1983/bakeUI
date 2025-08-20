@@ -1,7 +1,5 @@
 // C:/web/bake/src/components/Invoice/InvoiceLineItem.tsx
-
-import React from 'react';
-import {type LineItemRead} from '../../models/invoice';
+import {type ILineItem} from '../../models/invoice';
 import {type IGenericFormProps} from '../../models/IFormProps';
 import {useFormLogic} from '../../hooks/useFormLogic';
 import DeleteElement from '../Utility/DeleteElement.tsx';
@@ -10,21 +8,19 @@ import {useData} from "../../contexts/DataContext.tsx";
 import FormFieldWithPicker from "../Picker/FormFieldWithPicker.tsx";
 import ViewBuyableForm from "../Buyable/ViewBuyableForm.tsx";
 
-const InvoiceLineItem = (props: IGenericFormProps<LineItemRead>) => {
+const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
     const {formData, isSaving, onDelete} = props;
 
     const {
         isNew,
-        focusInputRef,
         pickerModalConfig,
         setPickerModalConfig,
         closePickerModal,
         toggleNewItemView,
         handleFocus,
         handleChange,
-        handleValueChange,  // for programatic changes, primarily triggered by picker
+        handleValueChange,  // for programmatic changes, primarily triggered by picker
         handleEdit,
-        handleSubmit,
     } = useFormLogic({...props, primaryKeyName: 'id'});
 
     const uniqueId = formData.id;
@@ -32,7 +28,6 @@ const InvoiceLineItem = (props: IGenericFormProps<LineItemRead>) => {
     const {PickerBuyableArray} = useData();
 
     const buyablePickerOnSelect = async (selectedBuyableId: number) => {
-        console.log(`buyablepickeronselect called with value ${selectedBuyableId}`);
         handleValueChange('buyable_id', selectedBuyableId);
         closePickerModal();
 
@@ -40,7 +35,10 @@ const InvoiceLineItem = (props: IGenericFormProps<LineItemRead>) => {
 
     const openBuyablePicker = () => {
         setPickerModalConfig({
-                isPickerModalActive: true,
+            addNewButtonText: "", onClose(): void | null {
+                return undefined;
+            }, pickerSubtitle: undefined, showSearch: false,
+            isPickerModalActive: true,
                 pickerArray: PickerBuyableArray,
                 pickerTitle: "Buyable Item",
                 pickerOnSelect: buyablePickerOnSelect,
@@ -72,13 +70,13 @@ const InvoiceLineItem = (props: IGenericFormProps<LineItemRead>) => {
                                     <p className="title is-4 has-text-white has-text-weight-semibold">{formData.description}</p>
                                 </div>
                                 <div className="level-right">
-                                    {!isNew && (
+                                    {!isNew && uniqueId && (
                                         <DeleteElement
                                             element_id={uniqueId}
                                             endpoint='invoice/lineitem'
-                                            elementName={`line item: ${formData.description.substring(0, 20)}...`}
+                                            elementName={`line item: ${formData.description?.substring(0, 20)}...`}
                                             onDelete={onDelete}
-                                            isSmall={true}
+
                                         />
                                     )}
                                 </div>

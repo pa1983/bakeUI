@@ -1,14 +1,13 @@
-import React from 'react';
-
 import {type IRecipeSubRecipe} from "../../models/IRecipeSubRecipe.ts";
-import { type IGenericFormProps } from "../../models/IFormProps";
-import { useFormLogic } from "../../hooks/useFormLogic";
+import {type IGenericFormProps} from "../../models/IFormProps";
+import {useFormLogic} from "../../hooks/useFormLogic";
 import DeleteElement from '../Utility/DeleteElement.tsx';
-import { useUnitOfMeasures } from "../../contexts/UnitOfMeasureContext.tsx";
-import { useData } from "../../contexts/DataContext.tsx";
+import {useUnitOfMeasures} from "../../contexts/UnitOfMeasureContext.tsx";
+import {useData} from "../../contexts/DataContext.tsx";
+import React, {useEffect, useState} from "react";
 
 const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
-    const { formData, onSave, onChange, onEdit, onCancel, isSaving, onDelete, isModal = false } = props;
+    const {formData, isSaving, onDelete} = props;
 
     const {
         isNew,
@@ -16,15 +15,64 @@ const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
         handleFocus,
         handleChange,
         handleEdit,
-    } = useFormLogic({ ...props, primaryKeyName: 'id' });
+    } = useFormLogic({...props, primaryKeyName: 'id'});
 
-    const { units } = useUnitOfMeasures();
-    const { recipes } = useData();  // Pull recipe data from context - will be used to fill in recipe elements in sub-recipe form using the recipe_id
+    const {units} = useUnitOfMeasures();
+    const {recipes} = useData();  // Pull recipe data from context - will be used to fill in recipe elements in sub-recipe form using the recipe_id
 
     // In the recipe context data, look for the recipe matching the sub recipe ID from the formdata - this represents the recipe being used as a sub-recipe to the parent
     const SubRecipeName = (recipes || []).find(recipe => recipe.recipe_id === formData.sub_recipe_id)?.recipe_name || 'Loading...';
 
     const uniqueId = formData.id;
+
+
+    // following copied verbatim from recipeIngredient to handle friendly display of decimals in the quantity form
+    const [displayQuantity, setDisplayQuantity] = useState('');  // local state var to handle the parsed value for display-only purposes (hides trailing zeros)
+
+    // Sync the prop value to the local display state when it changes
+    useEffect(() => {
+        const value = formData.quantity;
+        if (value !== null && value !== undefined) {
+            // Format the incoming value by parsing it and converting back to a string.
+            const formatted = parseFloat(String(value)).toString();
+            setDisplayQuantity(formatted);
+        } else {
+            // Handle null or undefined cases
+            setDisplayQuantity('');
+        }
+    }, [formData.quantity]);
+
+
+    const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // update the local display var for qty
+        setDisplayQuantity(e.target.value);
+    };
+
+// 4. Use onBlur to commit the change to the parent state
+    const handleBlurAndCommit = (e: React.FocusEvent<HTMLInputElement>) => {
+        // Before calling the parent's handleEdit callback, parse the local state
+        const numericValue = parseFloat(displayQuantity);
+
+        // Also parse the original value to ensure a correct comparison to check if change has occurred and needs to be persisted to DB
+        const originalNumericValue = formData.quantity !== null && formData.quantity !== undefined
+            ? parseFloat(String(formData.quantity))
+            : null;
+
+        if (!isNaN(numericValue)) {
+            setDisplayQuantity(numericValue.toString());
+        } else if (originalNumericValue !== null) {
+            // If the user entered invalid text, revert to the original value
+            setDisplayQuantity(originalNumericValue.toString());
+        }
+
+        // Check the event target's value matches the final numeric value before passing it to the parent handler.
+        e.target.value = isNaN(numericValue) ? '' : String(numericValue);
+
+        // Only call the expensive parent handleEdit API callback if the value has actually changed
+        if (numericValue !== originalNumericValue) {
+            handleEdit(e);
+        }
+    };
 
 
     return (
@@ -48,7 +96,6 @@ const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
                                         endpoint={`recipe_ingredient`}
                                         elementName={SubRecipeName}
                                         onDelete={onDelete}
-                                        isSmall={true}
                                     />
                                 )}
                             </div>
@@ -70,17 +117,21 @@ const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
                                         step="any"
                                         placeholder="e.g., 500"
                                         name="quantity"
-                                        value={parseFloat(formData.quantity) || ''}  // added parse float to convert string to number and trim off trailing zeros in decimals
-                                        onChange={handleChange}
-                                        onBlur={handleEdit}
+                                        // The input is controlled by local string state to allow for parsing the actual value to display a decimal without trailing zeroes
+                                        value={displayQuantity}
+                                        // onChange updates the LOCAL string state
+                                        onChange={handleLocalChange}
+                                        // onBlur commits the actual numeric value to the parent state
+                                        onBlur={handleBlurAndCommit}
                                         onFocus={handleFocus}
                                         disabled={isSaving}
                                         required
                                     />
                                 </div>
                             </div>
+
                             {/* Unit of Measure Dropdown */}
-                            <div className="field" style={{ flexGrow: 2 }}>
+                            <div className="field" style={{flexGrow: 2}}>
                                 <label className="label is-small" htmlFor={`uom_id_${uniqueId}`}>Unit</label>
                                 <div className="control">
                                     <div className="select is-fullwidth">
@@ -97,7 +148,7 @@ const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
                                             <option value={0} disabled>Select unit...</option>
                                             {(units || []).map((uom) => (
                                                 <option key={uom.uom_id} value={uom.uom_id}>
-                                                    {uom.abbreviation || uom.uom_name}
+                                                    {uom.abbreviation || uom.name}
                                                 </option>
                                             ))}
                                         </select>

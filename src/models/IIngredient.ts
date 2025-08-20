@@ -1,4 +1,3 @@
-import type {OrganisationRead} from './organisation.ts'
 import type {UnitOfMeasure} from './uom.ts';
 import type {IImage} from './IImage.ts';
 
@@ -51,14 +50,6 @@ export interface IIngredient {
  */
 export const createEmptyIngredient = (): IIngredient => {
     return {
-        ingredient_id: 0, // Use 0 to indicate a new, unsaved item.
-        ingredient_name: '',
-        standard_uom_id: 0, // Default to 0
-        density: null,
-        notes: null,
-        standard_uom: null,
-        image_links: [], // Always initialize arrays as empty.
-        images: [],
         ingredient_id: 0,
         ingredient_name: '',
         standard_uom_id: 0,

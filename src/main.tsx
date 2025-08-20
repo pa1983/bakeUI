@@ -19,42 +19,72 @@ import {KeyboardShortcutProvider} from './contexts/KeyboardShortcutContext.tsx';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
-// Set the worker source path
+
+const COGNITO_AUTHORITY = import.meta.env.VITE_COGNITO_AUTHORITY;
+// console.log(`cognito authority set to ${COGNITO_AUTHORITY}`);
+const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+// console.log(`client ID set to ${CLIENT_ID}`);
+const REDIRECT_URL = import.meta.env.VITE_REDIRECT_URL;
+
+// console.log(`redirect URL set to ${REDIRECT_URL}`);
+
+// Set the worker source path for pdf viewr
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.min.mjs',
     import.meta.url,
 ).toString();
 
-// todo - update redirect for deployment
+// const cognitoAuthConfig = {
+//     authority: "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_l4pSAAZYP",
+//     client_id: "4ph7lbuua09u9qstvlc6mf2i4",
+//     redirect_uri: "http://localhost:5174",
+//     response_type: "code",
+//     scope: "email openid phone",
+//     userStore: new WebStorageStateStore({store: window.sessionStorage})  // currently storing tokens in sessionStore for security.  Change to localStorage for reduced security but improved convenience
+// };
+
+
 const cognitoAuthConfig = {
-    authority: "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_l4pSAAZYP",
-    client_id: "4ph7lbuua09u9qstvlc6mf2i4",
-    redirect_uri: "http://localhost:5174",
+    authority: COGNITO_AUTHORITY,
+    client_id: CLIENT_ID,
+    redirect_uri: REDIRECT_URL,
     response_type: "code",
     scope: "email openid phone",
-    userStore: new WebStorageStateStore({store: window.sessionStorage})  // currently storing tokens in sessionStore for security.  Change to localStorage for reduced security but improved convenience
-};
+    userStore: new WebStorageStateStore({store: window.sessionStorage})};  // currently storing tokens in sessionStore for security.  Change to localStorage for reduced security but improved convenience
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-{/*todo - consider if should have an ingredients context to pull all available ingredients into memory at load time - could run in background and only block dependant components from loading*/
-}
 
-root.render(
+// Ddedicated component to compose all providers- makes the main file cleaner and the provider setup reusable.
+const AppProviders = ({ children }: { children: React.ReactNode }) => (
     <React.StrictMode>
         <FlashProvider>
             <CustomAlertProvider>
                 <AuthProvider {...cognitoAuthConfig}>
                     <KeyboardShortcutProvider>
-                    <UnitOfMeasureProvider>
-
+                        <UnitOfMeasureProvider>
+                            {/* Your TODO about an ingredients context is a great idea!
+                                The DataProvider is the perfect place to implement that
+                                data-loading logic. */}
                             <DataProvider>
-                            <RouterProvider router={router}/>
+                                {children}
                             </DataProvider>
-
-                    </UnitOfMeasureProvider>
+                        </UnitOfMeasureProvider>
                     </KeyboardShortcutProvider>
                 </AuthProvider>
             </CustomAlertProvider>
         </FlashProvider>
     </React.StrictMode>
+);
+
+// Runtime check to ensure the root element exists.
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+    throw new Error("Fatal Error: The root element with ID 'root' was not found in the DOM.");
+}
+
+const root = ReactDOM.createRoot(rootElement);
+
+root.render(
+    <AppProviders>
+        <RouterProvider router={router} />
+    </AppProviders>
 );

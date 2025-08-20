@@ -4,9 +4,8 @@ import {deleteElement} from "../../services/commonService.ts";
 import {useAuth} from "react-oidc-context";
 import ConfirmationModal from "./ConfirmationModal.tsx";
 
-// Add the onDeleteSuccess prop to the interface
 interface DeleteElementProps {
-    element_id: string | number;
+    element_id: number;
     endpoint: string;
     elementName?: string;
     onDelete: () => void;
@@ -19,13 +18,14 @@ const DeleteElement = ({element_id, endpoint, elementName = 'this item', onDelet
     const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = React.useState(false);
 
     const submitDeleteElement = async () => {
+        // Guard clause to ensure the user is authenticated before proceeding.
         if (!auth.user?.access_token) {
             showFlashMessage('You must be logged in to delete an element', 'danger');
-
+            return; // Exit the function early.
         }
-        ;
 
-        setIsLoading(true); // 2. Set loading state to true
+
+        setIsLoading(true);
 
         try {
             await deleteElement(auth.user.access_token, element_id, endpoint);
@@ -34,7 +34,7 @@ const DeleteElement = ({element_id, endpoint, elementName = 'this item', onDelet
             //close the modal
             setIsDeleteConfirmationModalOpen(false);
             // 3. Call the success callback
-            setIsLoading(false); // 4. Always set loading back to false
+            setIsLoading(false); // Always set loading back to false
             onDelete();
             return;
 
@@ -42,21 +42,19 @@ const DeleteElement = ({element_id, endpoint, elementName = 'this item', onDelet
             console.error("Error during deletion:", err);
             const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
             showFlashMessage(`Could not delete item. Error: ${errorMessage}`, 'danger');
-            setIsLoading(false); // 4. Always set loading back to false
+            setIsLoading(false);
         }
 
 
     };
 
-
     const handleClick = async () => {
-        // 1. Ask for confirmation first
-
+        // Ask for confirmation first
         setIsDeleteConfirmationModalOpen(true);
 
     };
 
-    // Use the isLoading state to provide visual feedback and prevent double clicks
+    // Use the isLoading state to provide feedback and prevent double clicks
     return (
         <>
             <button className="button is-danger" type="button"
@@ -65,9 +63,7 @@ const DeleteElement = ({element_id, endpoint, elementName = 'this item', onDelet
                     title="Delete"
             >
                 <i
-
                     className={`fa-solid fa-trash-can ${isLoading ? 'is-loading is-warning' : 'is-clickable is-danger'}`}
-
                 ></i>
             </button>
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {type IRecipe} from '../../models/IRecipe'; // Adjust path
 import {type IGenericFormProps} from "../../models/IFormProps";
 import {useFormLogic} from "../../hooks/useFormLogic";
@@ -7,7 +7,7 @@ import {useData} from "../../contexts/DataContext.tsx";
 import {useUnitOfMeasures} from "../../contexts/UnitOfMeasureContext.tsx";
 
 const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
-    const {formData, onSave, onChange, onEdit, onCancel, isSaving, onDelete, isModal = false} = props;
+    const {formData, onCancel, isSaving, onDelete} = props;
 
     // Generic form logic hook
     const {

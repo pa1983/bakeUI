@@ -1,21 +1,32 @@
 import useAlert from "../../contexts/CustomAlertContext.tsx"
 
-function MoreInfo({message}) {
-    // todo - add a default prop for type == info, use to colour an icon in the message.
-    // allow danger, warning, info - change the icon displayed and colour to allow more descriptive info display
-    const {showAlert} = useAlert();
-    const moreInfo = (event) => {
-        // when element is clicked for more info, display a modal containing the description text.
-        // todo  Maybe get working from hover rather than click?
 
-        const description: string = event.currentTarget.title;
-        console.log(description);
-        showAlert(description);
-    }
+import React from 'react';
+
+interface MoreInfoProps {
+    message: string;
+}
+
+const MoreInfo = ({ message }: MoreInfoProps) => {
+    // You might be using a different context hook, like useFlash, adjust as needed.
+    const { showAlert } = useAlert();
+
+    const handleClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        showAlert(message);
+    };
 
     return (
-        <i onClick={moreInfo} className="fa-solid fa-circle-question"
-           title={message}></i>
-    )
-}
+        <span
+            className="icon is-small has-text-info"
+            onClick={handleClick}
+            // The title is the native browser tooltip on hover.
+            title={message}
+            style={{ cursor: 'pointer' }}
+        >
+            <i className="fas fa-info-circle"></i>
+        </span>
+    );
+};
+
 export default MoreInfo;

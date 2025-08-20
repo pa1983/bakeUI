@@ -1,6 +1,6 @@
 // contexts/DataContext.tsx
 
-import React, {createContext, useContext, useMemo, type ReactNode} from 'react';
+import {createContext, useContext, useMemo, type ReactNode} from 'react';
 
 import {type ICurrency} from "../models/ICurrency.ts";
 import {type ISupplier} from "../models/ISupplier.ts";
@@ -16,9 +16,8 @@ import type {IRecipe} from "../models/IRecipe.ts";
 import type {ILabourer} from "../models/ILabourer.ts";
 import type {ILabourCategory} from "../models/ILabourCategory.tsx";
 
-// --- Updated Context Type ---
-// Reflects the new granular loading/error states and refetch functions
-interface DataContextType {
+// Granular loading/error states and refetch functions
+export interface DataContextType {
     currencies: ICurrency[];
     suppliers: ISupplier[];
     brands: IBrand[];
@@ -34,7 +33,7 @@ interface DataContextType {
 
     PickerSupplierArray: IPickerElement[],
     PickerBrandArray: IPickerElement[],
-    PickerCurrencyArray: IPickerElement[],
+    // PickerCurrencyArray: IPickerElement[],
     PickerBuyableArray: IPickerElement[],
     PickerIngredientArray: IPickerElement[],
     PickerRecipeArray: IPickerElement[],
@@ -186,14 +185,15 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         }));
     }, [brands]);
 
-    const PickerCurrencyArray = useMemo((): IPickerElement[] => {
-        return (currencies || []).map((currency): IPickerElement => ({
-            id: currency.currency_code,
-            title: `${currency.symbol} - ${currency.currency_name}`,
-            subtitle: currency.currency_code,
-            imageUrl: '' // todo - create image icons for currencies and make them callable by the currency code so no need to for a link saved in currency table
-        }));
-    }, [currencies]);
+    //
+    // const PickerCurrencyArray = useMemo((): IPickerElement[] => {
+    //     return (currencies || []).map((currency): IPickerElement => ({
+    //         id: currency.currency_code,
+    //         title: `${currency.symbol} - ${currency.currency_name}`,
+    //         subtitle: currency.currency_code,
+    //         imageUrl: '' // todo - create image icons for currencies and make them callable by the currency code so no need to for a link saved in currency table
+    //     }));
+    // }, [currencies]);
 
 
     const PickerBuyableArray = useMemo((): IPickerElement[] => {
@@ -225,11 +225,11 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
 
     }, [recipes]);
 
-    const PickerLabourerArray = useMemo((): ILabourer[] => {
+    const PickerLabourerArray = useMemo((): IPickerElement[] => {
         return (labourers || []).map((labourer: ILabourer): IPickerElement => ({
             id: labourer.id,
             title: labourer.name,
-            subtitle: labourer.description,
+            subtitle: labourer.description || '',
             imageUrl: null
 
         }))
@@ -253,21 +253,21 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
 
     // --- Assemble the context value ---
     const contextValue: DataContextType = {
-        currencies,
-        suppliers,
-        brands,
-        buyables,
-        ingredients,
-        recipeStatuses,
-        productTypes,
-        recipeTypes,
-        recipes,
-        labourers,
-        labourCategories,
+        currencies: currencies || [],
+        suppliers: suppliers || [],
+        brands: brands || [],
+        buyables: buyables || [],
+        ingredients: ingredients || [],
+        recipeStatuses: recipeStatuses || [],
+        productTypes: productTypes || [],
+        recipeTypes: recipeTypes || [],
+        recipes: recipes || [],
+        labourers: labourers || [],
+        labourCategories: labourCategories || [],
 
         PickerSupplierArray,
         PickerBrandArray,
-        PickerCurrencyArray,
+        // PickerCurrencyArray,
         PickerBuyableArray,
         PickerIngredientArray,
         PickerRecipeArray,
@@ -310,7 +310,8 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         refetchRecipeTypes,
         refetchRecipes,
         refetchLabourers,
-        refetchLabourCategories
+        refetchLabourCategories,
+        PickerLabourCategoryArray: []
     };
 
     return (

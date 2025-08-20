@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { type IRecipeIngredient } from '../../models/IRecipeIngredient';
 import { type IGenericFormProps } from "../../models/IFormProps";
 import { useFormLogic } from "../../hooks/useFormLogic";
@@ -7,7 +7,7 @@ import { useUnitOfMeasures } from "../../contexts/UnitOfMeasureContext.tsx";
 import { useData } from "../../contexts/DataContext.tsx";
 
 const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
-    const { formData, onSave, onChange, onEdit, onCancel, isSaving, onDelete, isModal = false } = props;
+    const { formData, isSaving, onDelete } = props;
 
     const {
         isNew,
@@ -20,8 +20,55 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
     const { ingredients } = useData();
     const { units } = useUnitOfMeasures();
     const ingredientName = (ingredients || []).find(ing => ing.ingredient_id === formData.ingredient_id)?.ingredient_name || 'Loading...';
-
     const uniqueId = formData.id;
+
+    const [displayQuantity, setDisplayQuantity] = useState('');  // local state var to handle the parsed value for display-only purposes (hides trailing zeros)
+
+    // Sync the prop value to the local display state when it changes
+    useEffect(() => {
+        const value = formData.quantity;
+        if (value !== null && value !== undefined) {
+            // Format the incoming value by parsing it and converting back to a string.
+            const formatted = parseFloat(String(value)).toString();
+            setDisplayQuantity(formatted);
+        } else {
+            // Handle null or undefined cases
+            setDisplayQuantity('');
+        }
+    }, [formData.quantity]);
+
+
+    const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // update the local display var for qty
+        setDisplayQuantity(e.target.value);
+    };
+
+// 4. Use onBlur to commit the change to the parent state
+    const handleBlurAndCommit = (e: React.FocusEvent<HTMLInputElement>) => {
+        // Before calling the parent's handleEdit callback, parse the local state
+        const numericValue = parseFloat(displayQuantity);
+
+        // Also parse the original value to ensure a correct comparison to check if change has occurred and needs to be persisted to DB
+        const originalNumericValue = formData.quantity !== null && formData.quantity !== undefined
+            ? parseFloat(String(formData.quantity))
+            : null;
+
+        if (!isNaN(numericValue)) {
+            setDisplayQuantity(numericValue.toString());
+        } else if (originalNumericValue !== null) {
+            // If the user entered invalid text, revert to the original value
+            setDisplayQuantity(originalNumericValue.toString());
+        }
+
+        // Check the event target's value matches the final numeric value before passing it to the parent handler.
+        e.target.value = isNaN(numericValue) ? '' : String(numericValue);
+
+        // Only call the expensive parent handleEdit API callback if the value has actually changed
+        if (numericValue !== originalNumericValue) {
+            handleEdit(e);
+        }
+    };
+
 
     return (
         <div className="box is-light p-4 mb-4 recipe-ingredient">
@@ -44,7 +91,6 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
                                         endpoint={`recipe_ingredient`}
                                         elementName={ingredientName}
                                         onDelete={onDelete}
-                                        isSmall={true}
                                     />
                                 )}
                             </div>
@@ -66,9 +112,12 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
                                         step="any"
                                         placeholder="e.g., 500"
                                         name="quantity"
-                                        value={parseFloat(formData.quantity) || ''}
-                                        onChange={handleChange}
-                                        onBlur={handleEdit}
+                                        // The input is controlled by local string state to allow for parsing the actual value to display a decimal without trailing zeroes
+                                        value={displayQuantity}
+                                        // onChange updates the LOCAL string state
+                                        onChange={handleLocalChange}
+                                        // onBlur commits the actual numeric value to the parent state
+                                        onBlur={handleBlurAndCommit}
                                         onFocus={handleFocus}
                                         disabled={isSaving}
                                         required
@@ -93,7 +142,7 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
                                             <option value={0} disabled>Select unit...</option>
                                             {(units || []).map((uom) => (
                                                 <option key={uom.uom_id} value={uom.uom_id}>
-                                                    {uom.abbreviation || uom.uom_name}
+                                                    {uom.abbreviation || uom.name}
                                                 </option>
                                             ))}
                                         </select>

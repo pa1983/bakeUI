@@ -1,21 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {useAuth} from 'react-oidc-context';
-import {VerifiedUser, ExpandCircleDown} from '@mui/icons-material';
+import { ExpandCircleDown} from '@mui/icons-material';
 
-import {Login, Logout, Info, Person} from '@mui/icons-material';
-import FriendlyDate from "../Utility/FriendlyDate.tsx";
+import {Login, Logout, Person} from '@mui/icons-material';
 
 
 // Navbar Component
 const Navbar = () => {
     const auth = useAuth();
-    const [openDropdown, setOpenDropdown] = useState(null);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
     // Handler to toggle a specific dropdown by its name
     // This also handles closing the currently open dropdown
-    const handleDropdownToggle = (dropdownName) => {
+    const handleDropdownToggle = (dropdownName: string) => {
         setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
     };
 
@@ -68,7 +67,7 @@ const Navbar = () => {
                     </button>
                 </div>
 
-                {/* Navigation links - hidden on mobile by default, shown when mobile menu is open */}
+                {/* Navigation links - hidden on mobile by default, shown when the mobile menu is open */}
                 <div
                     className={`${
                         isMobileMenuOpen ? 'block' : 'hidden'
@@ -165,7 +164,7 @@ const Navbar = () => {
                             )}
                         </li>
 
-                        {/* labourers Dropdown */}
+                        {/* labourer Dropdown */}
                         <li className="relative">
 
                             <button
@@ -320,6 +319,7 @@ const Navbar = () => {
                         ) : (
                             <>
                                 {/* Sign In Button */}
+
                                 <button
                                     onClick={() => auth.signinRedirect()}
                                     className="flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"

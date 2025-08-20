@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode} from 'react';
+import {createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode} from 'react';
 
 interface Shortcut {
     id: symbol; // unique id for each shortcut

@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, type ReactNode, useEffect} from 'react';
+import {createContext, useState, useContext, type ReactNode, useEffect} from 'react';
 
 type FlashMessageType = 'success' | 'danger' | 'info';
 

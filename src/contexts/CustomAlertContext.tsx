@@ -1,36 +1,41 @@
-import React, { createContext, useState, useContext } from 'react';
+import {createContext, useState, useContext, type ReactNode} from 'react';
 import CustomAlert from '../components/Utility/CustomAlert.tsx';
 
-//  Create the context
-const AlertContext = createContext();
+interface AlertContextType {
+    showAlert: (message: string) => void;
+}
 
-// 2. Create the Provider component
-export function CustomAlertProvider({ children }) {
-    const [alertMessage, setAlertMessage] = useState('');
+const AlertContext = createContext<AlertContextType | undefined>(undefined);
 
-    const showAlert = (message) => {
+interface CustomAlertProviderProps {
+    children: ReactNode;
+}
+
+export function CustomAlertProvider({children}: CustomAlertProviderProps) {
+    const [alertMessage, setAlertMessage] = useState<string | null>(null);
+    const showAlert = (message: string) => {
         setAlertMessage(message);
     };
 
     const closeAlert = () => {
-        setAlertMessage('');
+        setAlertMessage(null);
     };
-
-    // The value provided to consuming components
-    const value = { showAlert };
+    const value: AlertContextType = {showAlert};
 
     return (
         <AlertContext.Provider value={value}>
             {children}
-            {/* The Alert UI is now managed by the provider itself! */}
-            <CustomAlert message={alertMessage} onClose={closeAlert} />
+            <CustomAlert message={alertMessage} onClose={closeAlert}/>
         </AlertContext.Provider>
     );
 }
 
-// 3. Create a custom hook for easy consumption
 function useAlert() {
-    return useContext(AlertContext);
+    const context = useContext(AlertContext);
+    if (context === undefined) {
+        throw new Error('useAlert must be used within a CustomAlertProvider');
+    }
+    return context;
 }
 
 export default useAlert;

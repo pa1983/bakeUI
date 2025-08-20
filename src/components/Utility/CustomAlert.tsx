@@ -1,6 +1,9 @@
-import React from 'react';
+interface CustomAlertProps {
+    message: string | null;
+    onClose: () => void;
+}
 
-function CustomAlert({ message, onClose }) {
+const CustomAlert = ({ message, onClose }:CustomAlertProps) => {
     if (!message) {
         return null;
     }

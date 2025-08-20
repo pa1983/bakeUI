@@ -1,19 +1,21 @@
 // display form containing all the invoice's meta data
-import React, {useState, useEffect, useCallback, useMemo} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import useFlash from '../../contexts/FlashContext.tsx';
-import useAlert from "../../contexts/CustomAlertContext.tsx";
 import {patchField} from '../../services/commonService.ts';
 import {useAuth} from 'react-oidc-context';
 import {useData} from "../../contexts/DataContext.tsx";
-import {type ICurrency} from "../../models/ICurrency.ts";
-import {type Supplier} from "../../models/ISupplier.ts";
 import PickerModal from "../Picker/PickerModal.tsx";
 import FormFieldWithPicker from "../Picker/FormFieldWithPicker.tsx";
 import {type IPickerElement} from "../../models/picker.ts";
+import type {InvoiceRead} from "../../models/invoice.ts";
 
 
-// display form containing all the invoice's meta data - use generic name for initialFormDetails so can reuse code snippets in other forms without refactoring
-function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
+// display the form containing all the invoice's meta data - use generic name for initialFormDetails so can reuse code snippets in other forms without refactoring
+function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) {
+
+
+    const {showFlashMessage} = useFlash();
+    const auth = useAuth();
     const [formData, setFormData] = useState(initialFormDetails);
     const [isSaving, setIsSaving] = useState(false); // State to disable form during save
     const api_endpoint = `invoice`;
@@ -21,84 +23,80 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
     const [isPickerModalActive, setIsPickerModalActive] = useState<boolean>(false);
     const [pickerArray, setPickerArray] = useState<[] | IPickerElement[]>([]);  // array to be passed to picker to make selections from
     const [pickerTitle, setPickerTitle] = useState<string>('');  // text descriptor for the picker popup
-    const [pickerOnSelect, setPickerOnSelect] = useState(() => () => {
-    }); // A no-op function as default- better than null as unexpected call to pickerOnSelect here will have no effect; call to null() would throw an error
-    const [PickerAddNewLink, setPickerAddNewLink] = useState(null);
+
     // same function for picker close can be used by all possible instances of picker being called - other fields do need to change
     const handlePickerClose = useCallback(() => {
         setIsPickerModalActive(false);
     }, []);
 
     // get context data for use in form and pickers
-    const {currencies, suppliers, PickerSupplierArray, pickerCurrencyArray} = useData();
+    const {currencies, suppliers, PickerSupplierArray} = useData();
 
     // now map the currency and Supplier arrays into correct shape for picker.
     // Memoize the calc'd array to avoid recalculation on every render of InvoiceMeta.
     // Make depandent on currencies - only re-create the array if currencies changes
     // use this format for all other utilisations of Picker component
 
+    const handlePatchField = useCallback(async <K extends keyof InvoiceRead & string>(
+        name: K,
+        value: InvoiceRead[K],
+    ) => {
+        try {
+            if (!auth.user) {
+                showFlashMessage("You must log in to proceed", "danger");
+                return;
+            }
 
+            const res = await patchField<InvoiceRead, 'id' >(
+                auth.user.access_token,
+                initialFormDetails.id,
+                name,
+                value,
+                api_endpoint
+            );
+            showFlashMessage(res.message, 'success');
 
-
-    const updateCurrency = (newCurrencyValue: string) => {
-        // take a shallow copy of the exisitng state, then overwrite the changed element.
-        //  the creation of a new for object will trigger a re-render, ensuring the change is reflected throughout the component
-        setFormData((prevState: any) => ({...prevState, currency_code: newCurrencyValue}));
-    }
-
-
-
-    // FUNCTIONS LINKED TO CURRENCY PICKER SETUP - will be similar for Supplier picker
-
-    const currencyPickerOnSelect = async (newCurrencyCode: string): IPickerElement[] => {
-        // onselect needs to be set to update the currency id value in the form; the picker modal will inject the necessary logic to close itself so
-        // that doesn't need duplicated here
-        updateCurrency(newCurrencyCode);  // to update the value as displayed in the form
-        await handlePatchField('currency_code', newCurrencyCode, api_endpoint);  // to check if the value has changed and push to DB if required
-        setIsPickerModalActive(false);  // then finally close down the modal
-    };
+        } catch (error) {
+            console.error("Failed to update field:", error);
+            showFlashMessage(`Error saving ${name}. Please try again.`, 'danger');
+        } finally {
+            setIsSaving(false);
+        }
+    }, [auth.user, initialFormDetails.id, showFlashMessage, api_endpoint]);
 
     const updateSupplier = (newSupplierValue: number) => {
-        setFormData((prevState: any) => ({...prevState, supplier_id: newSupplierValue}));
+        setFormData((prevState) => ({...prevState, supplier_id: newSupplierValue}));
     }
 
+    const supplierPickerOnSelect = useCallback(async (newSupplierId: number): Promise<void> => {
+        updateSupplier(newSupplierId);
 
-    const supplierPickerOnSelect = async (newSupplierId: number): IPickerElement[] => {
-        updateSupplier(newSupplierId);  // update Supplier ID in the local formData object
-        await handlePatchField('supplier_id', newSupplierId, api_endpoint);  // persist the new Supplier id to the database
-        setIsPickerModalActive(false);  // close the modal
+        await handlePatchField('supplier_id', newSupplierId);
 
-    }
-
-
-    // Function called when the currency picker button is clicked - sets values for the picker modal, then activates the modal
-    // use callback here to only re-create the function when the pickerCurrencyArray changes
-    // todo - get this working then duplicate for suppliers.  Copy a good working example into the pickerModal as a use-case example for future use
-    const handleCurrencyPickerClick = useCallback(() => {
-            // button for launch currency picker was clicked - set picker variables to populate the picker with currency data, and make it visible
-            console.log("currency picker clicked");
-            setPickerTitle("Currency");
-            setPickerArray(pickerCurrencyArray);
-            setIsPickerModalActive(true);
-            setPickerOnSelect(() => currencyPickerOnSelect);
+        setIsPickerModalActive(false);
+    }, [handlePatchField]);
 
 
-        }
-        , [pickerCurrencyArray, currencyPickerOnSelect]);
-
+    const [pickerOnSelect, setPickerOnSelect] = useState<(id: string | number) => void>(() => () => {});
 
     const handleSupplierPickerClick = useCallback(() => {
         console.log("Supplier picker clicked");
         setPickerTitle("Supplier");
         setPickerArray(PickerSupplierArray);
         setIsPickerModalActive(true);
-        setPickerOnSelect(() => supplierPickerOnSelect);
-        // setPickerAddNewLink()  // todo - populate this - currnetly no suplier form to link to
-    })
 
-    const {showFlashMessage} = useFlash();
-    const {showAlert} = useAlert();
-    const auth = useAuth();
+        const onSelectAdapter = (id: string | number) => {
+            const numericId = Number(id);
+            if (!isNaN(numericId)) {
+                void supplierPickerOnSelect(numericId);   // void - don't want to do anything with the response
+            } else {
+                console.error("Picker returned a non-numeric ID for supplier:", id);
+            }
+        };
+        // Store the actual handler function in state.
+        setPickerOnSelect(() => onSelectAdapter);
+    }, [PickerSupplierArray, supplierPickerOnSelect]);
+
 
     // Reset form state if a new invoice is passed in
     useEffect(() => {
@@ -109,58 +107,46 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
         console.log('handleChange fired');
-        setFormData((prevState: any) => ({
+        setFormData((prevState: InvoiceRead) => ({
             ...prevState,
             [name]: value,
         }));
     };
 
 
-    const handlePatchField = async (name: string, value: any, api_endpoint:string) => {
-        // when reusing this function, need to set the correct endpoint here so can reuse the patchField function for all forms
-        // decoupled from handleBlur to allow same save logic to be called by picker's onSelect callback (on blur not called by a JS function updating the function)
-        // 1. Check if the value has actually changed. Convert all values to string before comparison since form values are always string.
-        console.log(`comparing ${String(initialFormDetails[name] ?? '')} to ${value} for field: ${name}`);
-        if (String(initialFormDetails[name] ?? '') === value) {
-            console.log("No change detected, skipping save.");
-            return; // Exit if there's no change
-        }
-        try {
-            // 2. Call API to update the specific field
-            // await updateInvoiceField(auth.user.access_token, formData.id, { [name]: value });
-            if (!auth.user) {
-                showFlashMessage("You must log in to proceed", "danger");
-            } else {
-                const res = await patchField(auth.user.access_token, initialFormDetails.id, name, value, api_endpoint);
-                showFlashMessage(res.message, 'success');
-            }
 
-        } catch (error) {
-            console.error("Failed to update field:", error);
-            showFlashMessage(`Error saving ${name}. Please try again.`, 'danger');
-            // todo: Revert the field to its original value on error
-            setFormData(initialFormDetails);
-        } finally {
-            console.log('trying to set is saving to false to reactivate the form after a change has been saved');
-            setIsSaving(false);
-            console.log(`is saving? ${isSaving}`);
-        }
-
-    }
 
 
     // Handle saving when a field loses focus
     const handleBlur = async (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const {name, value} = e.target;
-        console.log(`Saving field: ${name} with value: ${value}`);
+        const {name, value, type} = e.target;
+
+        // The 'name' from an HTML input event is always a string.
+        const fieldName = name as keyof InvoiceRead;
+
+        // Prevent API call if the value hasn't actually changed.
+        const originalValue = String(initialFormDetails[fieldName] ?? '');
+        if (originalValue === value) {
+            return; // No change, no need to save.
+        }
+
+        // Parse the value to its correct type before saving.
+        let parsedValue: string | number | null = value;
+        if (type === 'number') {
+            parsedValue = value === '' ? null : parseFloat(value);
+        }
+
         setIsSaving(true);
-        await handlePatchField(name, value, api_endpoint);
+
+        // Explicitly provide the generic types to the handlePatchField function.
+
+            await handlePatchField<typeof fieldName>(
+                fieldName,
+                parsedValue as InvoiceRead[typeof fieldName]
+            );
+
     };
 
-    const formatDateForInput = (dateString: string) => {
-        if (!dateString) return '';
-        return new Date(dateString).toISOString().split('T')[0];
-    };
 
     return (
         <div className="container">
@@ -184,14 +170,14 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
                                 <div className="field">
                                     <label className="label">Invoice Date</label>
                                     <div className="control"><input className="input" type="date" name="invoice_date"
-                                                                    value={formatDateForInput(formData.invoice_date)}
+                                                                    value={formData.invoice_date || ''}
                                                                     onChange={handleChange} onBlur={handleBlur}/></div>
                                 </div>
                             </div>
 
 
                             {/* --- Row 2: Supplier and Status --- */}
-                            {/*Supplier Name, as found on invoice, is displayed, but is not editable, beside a drop down of possible suppliers.  User to pick correct one  */}
+                            {/*Supplier Name, as found on the invoice, is displayed, but is not editable, beside a drop-down of possible suppliers.  User to pick the correct one  */}
                             <div className="column is-half">
 
                                 <FormFieldWithPicker
@@ -264,13 +250,33 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
                             <div className="column is-one-third">
 
 
-                                <FormFieldWithPicker
-                                    label="Currency"
-                                    fieldName="currency_code"
-                                    fieldValue={formData.currency_code}
-                                    onLaunch={handleCurrencyPickerClick}
-                                    pickerArray={pickerCurrencyArray}
-                                ></FormFieldWithPicker>
+                                <div className="field">
+                                    <label className="label" htmlFor="currency_code">Currency</label>
+                                    <div className="control">
+                                        {
+                                            (!currencies || !currencies.length) ? (
+                                                <p className="input is-static">Loading currencies...</p>
+                                            ) : (
+                                                <div className="select is-fullwidth">
+                                                    <select
+                                                        id="currency_code" name="currency_code"
+                                                        value={formData.currency_code || 'GBP'} onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        disabled={isSaving} required
+                                                    >
+                                                        {/*Guard against 'undefined' to prevent crash when currencies not fully loaded. */}
+                                                        {(currencies || []).map((currency) => (
+                                                            <option key={currency.currency_code}
+                                                                    value={currency.currency_code}>
+                                                                {currency.currency_code} - {currency.currency_name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+                                </div>
 
 
                             </div>
@@ -321,7 +327,7 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
                             {/* Use .map() because it returns an array of elements to render */}
                             {(suppliers || []).map((supplier) => (
                                 <p key={supplier.supplier_id} className="mb-1"> {/* Added a unique key */}
-                                    <strong>{supplier.supplier_name}</strong> {supplier.currency}
+                                    <strong>{supplier.supplier_name}</strong> {supplier.currency_code}
                                 </p>
                             ))}
                             {(currencies || []).map((currency) => (
@@ -341,10 +347,9 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: any }) {
                 pickerArray={pickerArray}
                 pickerTitle={pickerTitle}
                 pickerOnSelect={pickerOnSelect}
-                // onClose={pickerOnClose}
                 onClose={handlePickerClose}
-                addNewLink={PickerAddNewLink}
-            />
+                addNewFormActive={false}
+                addNewComponent={undefined}/>
         </div>
     );
 }

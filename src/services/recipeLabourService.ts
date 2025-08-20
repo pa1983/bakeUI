@@ -22,7 +22,7 @@ export async function fetchRecipeLabourAll(
     access_token: string
 ): Promise<ApiResponse<IRecipeLabour[]>> {
     const full_endpoint = `${API_ENDPOINT}?recipe_id=${recipe_id}`;
-    return fetchAllElements<IRecipeLabour>(element_id, access_token, FRIENDLY_NAME, full_endpoint);
+    return fetchAllElements<IRecipeLabour>(access_token, FRIENDLY_NAME, full_endpoint);
 }
 
 
@@ -36,7 +36,7 @@ export async function postNewRecipeLabour(
     formData: IRecipeLabour,
     access_token: string
 ): Promise<ApiResponse<IRecipeLabour>> {
-    const formDataIDName = 'recipe_id';
+    const formDataIDName = 'id';
     console.log(formData);
-    return postNewElement<IRecipeLabour>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT, formDataIDName);
+    return postNewElement<IRecipeLabour, 'id'>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT, formDataIDName);
 }

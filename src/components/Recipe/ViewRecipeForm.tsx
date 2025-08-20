@@ -201,7 +201,7 @@ const ViewRecipeForm = () => {
             {id && (activePicker === 'none') &&
                 <RecipeElementList
                     recipe_id={Number(id)}
-                    refetchData={refetchElements}
+                    refetchTrigger={refetchElements}
                 />
             }
         </>

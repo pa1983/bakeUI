@@ -1,4 +1,3 @@
-import React from "react";
 import type {InvoiceListResponse} from "../../models/invoice.ts";
 import StatusIcon from "./statusIcon.tsx";  // model interface for invoice list item
 import FriendlyDate from "../Utility/FriendlyDate.tsx";
@@ -65,7 +64,7 @@ const InvoiceListElementCard = ({invoice, onUpdate}:InvoiceListElementCardProps)
 
                 <div className="card-footer-item">
                     <DeleteInvoice
-                        invoice_id={parseInt(invoice.id,10)}
+                        invoice_id={invoice.id}
                         onUpdate={onUpdate}
                     />
                 </div>

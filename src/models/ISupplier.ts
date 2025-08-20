@@ -1,5 +1,3 @@
-import {type ICurrency} from "./ICurrency.ts";
-
 /** All fields are optional to allow for partial updates, where only the changed fields are sent to the API. */
 
 export interface ISupplier {
@@ -25,7 +23,7 @@ export interface ISupplier {
  * for use when pre-populating values in a new Supplier form
  * @returns {ISupplierCreate} A new Supplier object with default values.
  */
-export const createEmptySupplier = (): ISupplierCreate => {
+export const createEmptySupplier = (): ISupplier => {
     return {
         supplier_id: 0,
         supplier_name: '',

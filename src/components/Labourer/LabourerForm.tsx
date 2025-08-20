@@ -1,21 +1,16 @@
 import type {ILabourer} from "../../models/ILabourer.ts";
 import {useFormLogic} from "../../hooks/useFormLogic.ts";
-import React from "react";
 import DeleteElement from "../Utility/DeleteElement.tsx";
+import type {IGenericFormProps} from "../../models/IFormProps.ts";
 
 const LabourerForm = (props: IGenericFormProps<ILabourer>) => {
-    const {formData, onSave, onChange, onEdit, onCancel, isSaving, onDelete, isModal = false} = props;
+    const {formData, onCancel, isSaving, onDelete} = props;
 
     const {
         isNew,
         focusInputRef,
-        pickerModalConfig,
-        setPickerModalConfig,
-        closePickerModal,
-        toggleNewItemView,
         handleFocus,
         handleChange,
-        handleValueChange,
         handleEdit,
         handleSubmit,
     } = useFormLogic({...props, primaryKeyName: 'id'});

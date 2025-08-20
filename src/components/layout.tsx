@@ -1,4 +1,3 @@
-import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Home/navbar.tsx';
 import {FlashMessage} from "./Utility/FlashMessage.tsx";

@@ -1,6 +1,5 @@
 // image master - encapsulate both an image viewer and image uploader
 import ImageList from "./ImageList.tsx";
-import {type IImage} from "../../models/IImage.ts";
 import {useDataFetcher} from "../../hooks/useDataFetcher.ts";
 import FileUploader from "..//Utility/FileUploader.tsx"
 import {deleteImage} from "../../services/imageService.ts";
@@ -9,7 +8,7 @@ import type {IIngredientImage} from "../../models/IIngredientImage.ts";
 
 interface ImageMasterProps {
     title: string
-    getEndpoint: string // endpoint from which to fetch a list of image elements, including filter for key.  keeping it generic so this component can serve in brands, buyables, ingredients, etc
+    getEndpoint: string // endpoint from which to fetch a list of image elements, including filter for a key.  keeping it generic so this component can serve in brands, buyables, ingredients, etc.
     postEndpoint: string
 }
 
@@ -67,7 +66,7 @@ const ImageMaster = ({title, getEndpoint, postEndpoint}: ImageMasterProps) => {
                         onSuccess={refetch}
                     />
                     {loading && <p>Loading images...</p>}
-                    {error && <p>Error loading images: {error.message}</p>}
+                    {error && <p>Error loading images: {error}</p>}
                     {images && (
                         <ImageList
                             imageLinks={images}

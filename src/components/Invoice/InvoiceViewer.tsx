@@ -1,14 +1,12 @@
-import {useEffect, useState} from "react";
+import {useMemo, useEffect, useState} from "react";
 import {useAuth} from "react-oidc-context";
 import {useParams} from "react-router-dom";
 import {getInvoiceFull} from "../../services/InvoiceServices.ts";
-// I noticed you previously asked for this interface, so let's use it!
 import {type InvoiceRead} from "../../models/invoice.ts";
 import InvoiceMeta from "./InvoiceMeta.tsx";
 import ViewInvoicePDF from "./viewInvoicePDF.tsx"; // Adjust the path as needed
 import InvoiceLineItemsList from "./InvoiceLineItemsList.tsx";
 import StatusIcon from "./statusIcon.tsx";
-import DeleteInvoice from "./DeleteInvoice.tsx";
 import useFlash from "../../contexts/FlashContext.tsx";
 import MoreInfo from "../Home/MoreInfo.tsx";
 import LoadingSpinner from "../Utility/LoadingSpinner.tsx";
@@ -16,7 +14,17 @@ import LoadingSpinner from "../Utility/LoadingSpinner.tsx";
 function InvoiceViewer() {
     const {showFlashMessage} = useFlash();
     const auth = useAuth();
-    const {invoice_id} = useParams<{ invoice_id: string }>();
+    const { invoice_id: rawInvoiceId } = useParams<{ invoice_id: string }>();
+
+    //  invoice ID should be a number, but useParams produces a string.  Convert to a number or null in order
+    // to use invoice_id where a number is expected, e.g. in api calls, etc.
+    const invoice_id = useMemo(() => {
+        if (!rawInvoiceId) {
+            return null; // Handle the case where the param is missing
+        }
+        const num = parseInt(rawInvoiceId, 10); // Always use a radix (10 for decimal)
+        return isNaN(num) ? null : num; // Handle cases like /invoices/abc
+    }, [rawInvoiceId]);
 
     // Use the specific InvoiceRead type for better type safety
     const [invoice, setInvoice] = useState<InvoiceRead | null>(null);
@@ -32,16 +40,17 @@ function InvoiceViewer() {
         }
 
         const fetchInvoice = async () => {
+            if (!auth.user?.access_token) {
+                showFlashMessage('You must be logged in to delete an element', 'danger');
+                return; // Exit the function early.
+            }
+
+
             try {
                 setLoading(true);
-                const fetchedInvoice = await getInvoiceFull(auth.user.access_token, invoice_id);
-                setInvoice(fetchedInvoice.data);
 
-                // Important: Log the fetched data directly, not the state variable,
-                // as `setInvoice` is async and won't be updated immediately.
-                showFlashMessage(`Got invoice details from API: ID ${fetchedInvoice.data.id}`, 'success')
-                console.log(`Got invoice details from API: ID ${fetchedInvoice.data.id}`);
-                console.log(fetchedInvoice.data);
+                const fetchedInvoice = await getInvoiceFull(auth.user.access_token, invoice_id);
+                setInvoice(fetchedInvoice);
 
                 setError(null);
             } catch (err) {
@@ -53,7 +62,7 @@ function InvoiceViewer() {
         };
 
         fetchInvoice();
-    }, [invoice_id, auth.user?.access_token]);
+    }, [invoice_id, auth, showFlashMessage]);
 
     // --- Corrected Return Block ---
 
@@ -74,14 +83,14 @@ function InvoiceViewer() {
         return <div>No invoice data found.</div>;
     }
 
-    const moreInfo = (event) => {
-    // when element is clicked for more info, display a modal containing the description text.
-        // todo - build the modal and include in all forms to allow use of moreInfo function.  Maybe get working from hover rather than click?
-
-        const description: string = event.currentTarget.title;
-        console.log(description);
-        showAlert(description);
-    }
+    // const moreInfo = (event) => {
+    // // when element is clicked for more info, display a modal containing the description text.
+    //     // todo - build the modal and include in all forms to allow use of moreInfo function.  Maybe get working from hover rather than click?
+    //
+    //     const description: string = event.currentTarget.title;
+    //     console.log(description);
+    //     showAlert(description);
+    // }
 
     // Now, render the properties of the invoice object
     return (
@@ -115,9 +124,9 @@ function InvoiceViewer() {
 
                             <div className="box mb-4">
                                 Actions
-                                <StatusIcon status={invoice.invoice_status}
+                                <StatusIcon status={invoice.invoice_status || undefined }
                                             id={invoice.id}/>
-                                {/*<DeleteInvoice invoice_id={invoice.id}/>*/}
+                                {/*<DeleteInvoice invoice_id={invoice.id}/>*/}  // todo - implement the delete shortcut here think I have a generic delete button ready to go...
                             </div>
 
                             <div className="box  mb-4">
@@ -175,7 +184,6 @@ function InvoiceViewer() {
             Notes: ${invoice?.notes}<br />
             <br />
             // --- Linked Objects ---<br />
-            Organisation Name: ${invoice?.organisation?.organisation_name}<br />
             Image ID: ${invoice?.invoice_image?.image_id}<br />
             Image S3 Key: ${invoice?.invoice_image?.s3_key}<br />
             <br />

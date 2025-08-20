@@ -1,29 +1,76 @@
-import React from 'react';
-import { type IRecipeLabour } from '../../models/IRecipeLabour';
-import { type IGenericFormProps } from "../../models/IFormProps";
-import { useFormLogic } from "../../hooks/useFormLogic";
+import {type IRecipeLabour} from '../../models/IRecipeLabour';
+import {type IGenericFormProps} from "../../models/IFormProps";
+import {useFormLogic} from "../../hooks/useFormLogic";
 import DeleteElement from '../Utility/DeleteElement.tsx';
-import { useData } from "../../contexts/DataContext.tsx";
+import {useData} from "../../contexts/DataContext.tsx";
+import React, {useEffect, useState} from "react";
 
 const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
-    const { formData, onSave, onChange, onEdit, onCancel, isSaving, onDelete, isModal = false } = props;
+    const {formData, isSaving, onDelete} = props;
 
     const {
         isNew,
         focusInputRef,
         handleFocus,
         handleChange,
-        handleEdit,
-        handleSubmit,  // never used here as the form cannot be created from new by the user - it's system generated when a user selected an item from the ADD ELEMENT list
+        handleEdit
 
-    } = useFormLogic({ ...props, primaryKeyName: 'id' });
+    } = useFormLogic({...props, primaryKeyName: 'id'});
 
     // Assumes your DataContext provides these lists
-    const { labourers, labourCategories } = useData();
+    const {labourers, labourCategories} = useData();
 
     const uniqueId = formData.id;
     // The description is now used for the delete confirmation, not as a title
     const taskDescription = formData.description || 'this task';
+
+    const [displayLabourMinutes, setDisplayLabourMinutes] = useState('');  // local state var to handle the parsed value for display-only purposes (hides trailing zeros)
+
+    // Sync the prop value to the local display state when it changes
+    useEffect(() => {
+        const value = formData.labour_minutes;
+        if (value !== null && value !== undefined) {
+            // Format the incoming value by parsing it and converting back to a string.
+            const formatted = parseFloat(String(value)).toString();
+            setDisplayLabourMinutes(formatted);
+        } else {
+            // Handle null or undefined cases
+            setDisplayLabourMinutes('');
+        }
+    }, [formData.labour_minutes]);
+
+
+    const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // update the local display var for qty
+        setDisplayLabourMinutes(e.target.value);
+    };
+
+// 4. Use onBlur to commit the change to the parent state
+    const handleBlurAndCommit = (e: React.FocusEvent<HTMLInputElement>) => {
+        // Before calling the parent's handleEdit callback, parse the local state
+        const numericValue = parseFloat(displayLabourMinutes);
+
+        // Also parse the original value to ensure a correct comparison to check if change has occurred and needs to be persisted to DB
+        const originalNumericValue = formData.labour_minutes !== null && formData.labour_minutes !== undefined
+            ? parseFloat(String(formData.labour_minutes))
+            : null;
+
+        if (!isNaN(numericValue)) {
+            setDisplayLabourMinutes(numericValue.toString());
+        } else if (originalNumericValue !== null) {
+            // If the user entered invalid text, revert to the original value
+            setDisplayLabourMinutes(originalNumericValue.toString());
+        }
+
+        // Check the event target's value matches the final numeric value before passing it to the parent handler.
+        e.target.value = isNaN(numericValue) ? '' : String(numericValue);
+
+        // Only call the expensive parent handleEdit API callback if the value has actually changed
+        if (numericValue !== originalNumericValue) {
+            handleEdit(e);
+        }
+    };
+
 
     return (
         <div className="box recipe-labour p-4 mb-4">
@@ -35,7 +82,7 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
                     <div className="field is-horizontal">
                         <div className="field-body">
                             {/* Labourer Dropdown */}
-                            <div className="field" style={{ flexGrow: 2 }}>
+                            <div className="field" style={{flexGrow: 2}}>
                                 <label className="label is-small" htmlFor={`labourer_id_${uniqueId}`}>Labourer</label>
                                 <div className="control">
                                     <div className="select is-fullwidth">
@@ -64,21 +111,25 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
                                 <label className="label is-small" htmlFor={`labour_minutes_${uniqueId}`}>Minutes</label>
                                 <div className="control">
                                     <input
-                                        id={`labour_minutes_${uniqueId}`}
                                         ref={focusInputRef}
+                                        id={`quantity_${uniqueId}`}
                                         className="input"
                                         type="number"
                                         step="any"
-                                        placeholder="e.g., 15"
-                                        name="labour_minutes"
-                                        value={parseFloat(formData.labour_minutes) || ''}
-                                        onChange={handleChange}
-                                        onBlur={handleEdit}
+                                        placeholder="e.g., 25"
+                                        name="quantity"
+                                        // The input is controlled by local string state to allow for parsing the actual value to display a decimal without trailing zeroes
+                                        value={displayLabourMinutes}
+                                        // onChange updates the LOCAL string state
+                                        onChange={handleLocalChange}
+                                        // onBlur commits the actual numeric value to the parent state
+                                        onBlur={handleBlurAndCommit}
                                         onFocus={handleFocus}
                                         disabled={isSaving}
                                         required
                                     />
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -86,9 +137,10 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
                     {/* --- TOP LEFT: Category Dropdown (styled as title) + Delete Button --- */}
                     <div className="level is-mobile mb-2">
                         <div className="level-left">
-                            <div className="level-item" style={{ flexGrow: 1 }}>
+                            <div className="level-item" style={{flexGrow: 1}}>
                                 <div className="field">
-                                    <label className="label is-small" htmlFor={`labour_category_id_${uniqueId}`}>Category</label>
+                                    <label className="label is-small"
+                                           htmlFor={`labour_category_id_${uniqueId}`}>Category</label>
                                     <div className="control">
                                         <div className="select is-fullwidth">
                                             <select
@@ -123,7 +175,6 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
                                         endpoint={`recipe_labour`}
                                         elementName={taskDescription}
                                         onDelete={onDelete}
-                                        isSmall={true}
                                     />
                                 )}
                             </div>

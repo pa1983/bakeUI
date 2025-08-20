@@ -15,7 +15,7 @@ export async function fetchRecipeSubRecipe(
     element_id: number | string,
     access_token: string
 ): Promise<ApiResponse<IRecipeSubRecipe>> {
-    return fetchElement<IRecipSubRecipe>(element_id, access_token, FRIENDLY_NAME, API_ENDPOINT);
+    return fetchElement<IRecipeSubRecipe>(element_id, access_token, FRIENDLY_NAME, API_ENDPOINT);
 }
 
 export async function fetchRecipeSubRecipeAll(
@@ -36,7 +36,7 @@ export async function postNewRecipeSubRecipe(
     formData: IRecipeSubRecipe,
     access_token: string
 ): Promise<ApiResponse<IRecipeSubRecipe>> {
-    const formDataIDName = 'recipe_id';
+    const formDataIDName = 'parent_recipe_id';
     console.log(formData);
-    return postNewElement<IRecipeSubRecipe>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT, formDataIDName);
+    return postNewElement<IRecipeSubRecipe, 'parent_recipe_id'>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT, formDataIDName);
 }

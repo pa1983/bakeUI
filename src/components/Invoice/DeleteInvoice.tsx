@@ -5,17 +5,22 @@ import React from "react";
 import useFlash from "../../contexts/FlashContext.tsx";
 
 interface DeleteInvoiceProps {
-    invoice_id: number | string;
+    invoice_id: number;
     onUpdate: () => void;
 }
 
-const DeleteInvoice = ({ invoice_id, onUpdate }: DeleteInvoiceProps) => {
+const DeleteInvoice = ({invoice_id, onUpdate}: DeleteInvoiceProps) => {
     const auth = useAuth();
     const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = React.useState(false);
     const {showFlashMessage} = useFlash();
     // callback function to be passed to the delete invoice confirmation modal - called when confirmation is clicked
-    const handleConfirmDelete = async() => {
-        const id = parseInt(invoice_id)
+    const handleConfirmDelete = async () => {
+        if (!auth.user?.access_token) {
+            showFlashMessage('You must be logged in to delete an element', 'danger');
+            return; // Exit the function early.
+        }
+
+        const id = invoice_id;
         console.log(`click handled to delete invoice ${id}`)
         const res = await deleteInvoice(auth.user.access_token, id);
         console.log(`${res.message}`);
@@ -35,17 +40,17 @@ const DeleteInvoice = ({ invoice_id, onUpdate }: DeleteInvoiceProps) => {
     }
 
     return (
-    <>
-        <i onClick={handleClick} className="fa-solid fa-trash-can fa-2x" title={`Delete Invoice ${invoice_id}`}></i>
+        <>
+            <i onClick={handleClick} className="fa-solid fa-trash-can fa-2x" title={`Delete Invoice ${invoice_id}`}></i>
 
-        <ConfirmationModal
-            isOpen={isDeleteConfirmationModalOpen}
-            title="Cofirm Delete Invoice"
-            onClose={() => setIsDeleteConfirmationModalOpen(false)}
-            onConfirm={handleConfirmDelete}
+            <ConfirmationModal
+                isOpen={isDeleteConfirmationModalOpen}
+                title="Cofirm Delete Invoice"
+                onClose={() => setIsDeleteConfirmationModalOpen(false)}
+                onConfirm={handleConfirmDelete}
             >
-            Are you sure you want to delete this item?  This action cannot be undone.
-        </ConfirmationModal>
+                Are you sure you want to delete this item? This action cannot be undone.
+            </ConfirmationModal>
         </>
     )
 }

@@ -16,10 +16,9 @@ import type {IRecipeLabour} from "../../models/IRecipeLabour.ts";
 const ViewLabourerForm = () => {
     const { id } = useParams<{ id: string }>();  // ID of the labourer element to display
     const { refetchLabourers : refetchDataList } = useData();
-    ``
-    const recipeLabourerConfig: ElementFormConfig<IRecipeLabour> = {
+    const recipeLabourerConfig: ElementFormConfig<IRecipeLabour, 'id'> = {
         prop_element_id: id,
-        primaryKeyName: 'id' as const,
+        primaryKeyName: 'id',
         elementName: 'Recipe Labour Item',
         apiEndpoint: 'recipe_labour',
         createEmptyElement: createEmptyBuyable,

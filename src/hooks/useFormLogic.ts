@@ -4,11 +4,15 @@ import { useShortcut } from '../contexts/KeyboardShortcutContext.tsx';
 import { createDefaultPickerModalConfig, type IPickerModalConfig } from '../models/picker.ts';
 import { type IGenericFormProps } from '../models/IFormProps.ts';
 
-interface UseFormLogicProps<T extends { id?: number | string }> extends IGenericFormProps<T> {
-    primaryKeyName: keyof T;
+interface UseFormLogicProps<T, K extends keyof T> extends IGenericFormProps<T> {
+    primaryKeyName: K;
 }
 
-export const useFormLogic = <T extends { id?: number | string }>({
+
+export const useFormLogic = <
+    T extends Record<K, number | string | undefined | null>,
+    K extends keyof T
+>({
                                                                      formData,
                                                                      onSave,
                                                                      onChange,
@@ -16,13 +20,13 @@ export const useFormLogic = <T extends { id?: number | string }>({
                                                                      isSaving,
                                                                      isModal,
                                                                      primaryKeyName
-                                                                 }: UseFormLogicProps<T>) => {
+                                                                 }: UseFormLogicProps<T,K>) => {
 
 
     const isNew = !formData?.[primaryKeyName] || formData[primaryKeyName] === 0;
     const focusInputRef = useRef<HTMLInputElement>(null);
     const auth = useAuth();
-    const [originalValueOnFocus, setOriginalValueOnFocus] = useState<any>(null);
+    const [originalValueOnFocus, setOriginalValueOnFocus] = useState<string | null>(null);
     const [pickerModalConfig, setPickerModalConfig] = useState<IPickerModalConfig>(createDefaultPickerModalConfig());
 
     // ADDED to fix issue with PATCH being fired by onEdit for every element in recipeElement viewer on reload
@@ -40,46 +44,68 @@ export const useFormLogic = <T extends { id?: number | string }>({
     // This handler is for standard DOM change events
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, type } = e.target;
-        const value = type === 'checkbox'
-            ? (e.target as HTMLInputElement).checked
-            : e.target.value;
-        onChange(name as keyof T, value);
+
+        let value: string | boolean | number | null;
+
+        if (type === 'checkbox') {
+            value = (e.target as HTMLInputElement).checked;
+        } else if (type === 'number') {
+            // Handle number inputs, treating empty strings as null.
+            const numValue = e.target.value;
+            value = numValue === '' ? null : parseFloat(numValue);
+        } else {
+            value = e.target.value;
+        }
+
+        // The type assertion is now much safer because we've handled the common types.
+        // This allows us to keep the strong `T[keyof T]` signature on the `onChange` prop.
+        onChange(name as keyof T, value as T[keyof T]);
     }, [onChange]);
 
-    // A dedicated handler for programmatic value changes, i.e, from a picker - named explicitly for now; can make generic if find use cases other than in picker callbacks
-    const handlePickerValueChange = useCallback((name: keyof T, value: any) => {
-        onChange(name, value);  // always update the parent formData attribute
-        if (!isNew){
-            onEdit(name, value);  // if it's not a new entry form, push the change to the API
+    // SUGGESTION: Make this handler fully generic and type-safe. This eliminates the `any`
+    // and ensures that programmatic changes are just as safe as user input.
+    const handlePickerValueChange = useCallback(<FieldName extends keyof T>(name: FieldName, value: T[FieldName]) => {
+        onChange(name, value);
+        const originalValue = formData?.[name];
+        // SUGGESTION: Add a check to prevent API calls if the value hasn't changed.
+        if (originalValue !== value) {
+            onEdit(name, value, originalValue as T[FieldName]);
         }
-    }, [onChange]);
+    }, [onChange, onEdit, isNew]);
 
 
     const handleEdit = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-
-        // If originalValueOnFocus is null, it means we haven't had a valid focus event
-        // since the component was rendered or refreshed. Do not proceed.
         if (originalValueOnFocus === null) {
             return;
-        };
-
-
+        }
         if (isNew || !auth.user?.access_token) {
             return;
         }
-        const { name, type } = e.target;
-        const value = type === 'checkbox'
-            ? (e.target as HTMLInputElement).checked
-            : e.target.value;
 
-        // leaving this in for debugging in future
-        // console.log(`handle edit comparing ${originalValueOnFocus} to ${value} - ${String(originalValueOnFocus) === String(value)?"true":"false"}`);
+        const { name, type } = e.target;
+
+        // Use the same robust parsing logic as in handleChange to get the correct new value type.
+        let value: string | boolean | number | null;
+        if (type === 'checkbox') {
+            value = (e.target as HTMLInputElement).checked;
+        } else if (type === 'number') {
+            const numValue = e.target.value;
+            value = numValue === '' ? null : parseFloat(numValue);
+        } else {
+            value = e.target.value;
+        }
 
         if (String(originalValueOnFocus) === String(value)) {
             return;
         }
-        onEdit(name as keyof T, value);
-    }, [isNew, auth.user, originalValueOnFocus, onEdit]);
+
+        // Retrieve the original value with its correct type from the formData prop.
+        const originalTypedValue = formData?.[name as keyof T];
+
+        // Call onEdit with all three required arguments.
+        onEdit(name as keyof T, value as T[keyof T], originalTypedValue as T[keyof T]);
+
+    }, [isNew, auth.user, originalValueOnFocus, onEdit, formData]); //
 
 
 

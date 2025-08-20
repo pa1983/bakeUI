@@ -13,10 +13,9 @@ import LabourerForm from './LabourerForm';
 const ViewLabourerForm = () => {
     const { id } = useParams<{ id: string }>();
     const { refetchLabourers : refetchDataList } = useData();
-    ``
-    const labourerConfig: ElementFormConfig<ILabourer> = {
+    const labourerConfig: ElementFormConfig<ILabourer, 'id'> = {
         prop_element_id: id,
-        primaryKeyName: 'id' as const,
+        primaryKeyName: 'id',
         elementName: 'Labourer',
         apiEndpoint: 'labourer',
         createEmptyElement: createEmptyLabourer,

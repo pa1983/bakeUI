@@ -1,9 +1,19 @@
-import axios, { type AxiosError } from "axios";
+import axios from "axios";
 import config from "./api.ts";
 import type {ApiResponse} from "../models/api.ts";
 
 // Factory functions for use in element creation, update, delete, get etc to keep error and response handling uniform
 // and comply with DRY principles
+
+function handleAxiosError(error: unknown, action: string, friendly_name: string): never {
+    if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const message = (error.response?.data as { detail?: string })?.detail || error.message;
+        throw new Error(`Failed to ${action} ${friendly_name}. Status: ${status}. Reason: ${message}`);
+    }
+    throw new Error(`An unexpected error occurred while ${action}ing the ${friendly_name}.`);
+}
+
 
 /**
  * A generic factory for creating a new element via a POST request.
@@ -11,13 +21,14 @@ import type {ApiResponse} from "../models/api.ts";
  * @param access_token The user's JWT, extracted from AWS cognito user.
  * @param friendly_name A user-friendly name for the element type, used in console logs and error messages.
  * @param api_endpoint The specific API endpoint for this element type (e.g., 'buyable', 'brand').
+ * @param formDataIDName  The name of the ID field in formdata - usually 'id' so this is defaulted in
  */
-export async function postNewElement<T extends { id?: number|string }>(
+export async function postNewElement<T, K extends keyof T>(
     formData: T,
     access_token: string,
     friendly_name: string,
     api_endpoint: string,
-    formDataIDName?: string = 'id'
+    formDataIDName: K
 ): Promise<ApiResponse<T>> {
     const url = `${config.API_URL}/${api_endpoint}`;
 
@@ -31,13 +42,7 @@ export async function postNewElement<T extends { id?: number|string }>(
         return response.data;
 
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            const axiosError = error as AxiosError;
-            const status = axiosError.response?.status;
-            const message = (axiosError.response?.data as { detail?: string })?.detail || axiosError.message;
-            throw new Error(`Failed to create ${friendly_name}. Status: ${status}. Reason: ${message}`);
-        }
-        throw new Error(`An unexpected error occurred while creating the ${friendly_name}.`);
+        handleAxiosError(error, 'create', friendly_name);
     }
 }
 
@@ -61,13 +66,7 @@ export async function fetchElement<T>(
         console.log(response.data);
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            const axiosError = error as AxiosError;
-            const status = axiosError.response?.status;
-            const message = (axiosError.response?.data as { detail?: string })?.detail || axiosError.message;
-            throw new Error(`Failed to fetch ${friendly_name}. Status: ${status}. Reason: ${message}`);
-        }
-        throw new Error(`An unexpected error occurred while fetching the ${friendly_name}.`);
+        handleAxiosError(error, 'fetch', friendly_name);
     }
 }
 
@@ -96,13 +95,7 @@ export async function deleteElement<T>(
         console.log(response.data);
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            const axiosError = error as AxiosError;
-            const status = axiosError.response?.status;
-            const message = (axiosError.response?.data as { detail?: string })?.detail || axiosError.message;
-            throw new Error(`Failed to delete  ${friendly_name}. Status: ${status}. Reason: ${message}`);
-        }
-        throw new Error(`An unexpected error occurred while fetching the ${friendly_name}.`);
+        handleAxiosError(error, 'delete', friendly_name);
     }
 }
 
@@ -116,24 +109,18 @@ export async function fetchAllElements<T>(
     access_token: string,   // jwt taken from auth.user.access_token
     friendly_name: string,  // for display in console and log messages
     api_endpoint: string  // note - no leading or trailing slashes
-): Promise<ApiResponse<T>> {
+): Promise<ApiResponse<T[]>> {
     const url = `${config.API_URL}/${api_endpoint}`;
 
     console.log(`fetching from url ${url} , friendly name ${friendly_name}, api endpoint ${api_endpoint}.`);
 
     try {
-        const response = await axios.get<ApiResponse<T>>(url, {
+        const response = await axios.get<ApiResponse<T[]>>(url, {
             headers: {Authorization: `Bearer ${access_token}`}
         });
         console.log(response.data);
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            const axiosError = error as AxiosError;
-            const status = axiosError.response?.status;
-            const message = (axiosError.response?.data as { detail?: string })?.detail || axiosError.message;
-            throw new Error(`Failed to fetch ${friendly_name}. Status: ${status}. Reason: ${message}`);
-        }
-        throw new Error(`An unexpected error occurred while fetching the ${friendly_name}.`);
+        handleAxiosError(error, 'fetch all', friendly_name);
     }
 }

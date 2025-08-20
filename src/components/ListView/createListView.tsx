@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Picker from '../Picker/Picker';
 import { useData } from '../../contexts/DataContext';
@@ -29,14 +29,14 @@ export function createListView(config: ListViewConfig) {
         onAddNewOverride
     } = config;
 
-    // The generated component now accepts its own props.
+    // The generated component accepts its own props.
     const ListViewComponent = (props: ListViewComponentProps) => {
-        // These are the props passed directly to the component at render time.
+        // Props to be passed directly to the component at render time.
         const { title: propTitle, onSelectOverride: propOnSelectOverride } = props;
         const dataContext = useData();
         const navigate = useNavigate();
 
-        // --> Determine the data source (this logic remains the same).
+        // Determine the data source - can optionally pass one in or pull it from context
         const itemsToRender = useMemo(() => {
             if (pickerArray) return pickerArray;
             if (!dataContext) return [];
@@ -45,16 +45,16 @@ export function createListView(config: ListViewConfig) {
 
             console.warn(`ListView for "${configTitle}" has no valid data source configured.`);
             return [];
-        }, [dataContext, pickerArray, pickerArrayName, pickerArraySelector]);
+        }, [dataContext]);
 
-        // --> 1. Determine the final values, giving precedence to props.
+        // Determine the final values, giving precedence to props.
         // Use the title from props if provided, otherwise fall back to the config title.
         const finalTitle = propTitle || configTitle;
 
         // Use the onSelect from props if provided, otherwise fall back to the config onSelect.
         const finalOnSelectOverride = propOnSelectOverride || configOnSelectOverride;
 
-        // --> 2. Update the callback to use the final override function.
+        // Update the callback to use the final override function.
 
 
         const elementOnSelect = useCallback((id: number | string) => {
@@ -65,22 +65,20 @@ export function createListView(config: ListViewConfig) {
                     navigate(`/${endpoint}/${id}`);
                 }
             },
-            [navigate, endpoint, finalOnSelectOverride] // Dependency array updated.
+            [navigate, finalOnSelectOverride] 
         );
 
         const pickerOnAddNewClicked = useCallback(() => {
-            // This part remains the same, but could also be made overridable via props.
             if (onAddNewOverride) {
                 onAddNewOverride();
             } else {
                 navigate(`/${endpoint}/new`);
             }
-        }, [navigate, endpoint, onAddNewOverride]);
+        }, [navigate]);
 
         return (
             <Picker
                 pickerArray={itemsToRender}
-                // --> 3. Use the final determined title.
                 pickerTitle={finalTitle}
                 pickerOnSelect={elementOnSelect}
                 onClose={() => {

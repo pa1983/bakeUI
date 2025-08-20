@@ -6,7 +6,7 @@ export interface IRecipeIngredient {
     id: number;
     recipe_id: number;
     ingredient_id: number;
-    quantity: number | string;
+    quantity: number | null;
     uom_id: number;
     notes: string | null;
     sort_order: number;

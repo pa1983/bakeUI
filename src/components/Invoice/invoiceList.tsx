@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import {useEffect, useState, useCallback} from 'react';
 import UploadInvoice from '../Utility/invoice_uploader.tsx';
 import {fetchInvoices} from "../../services/InvoiceServices.ts";
 import type {InvoiceListResponse} from "../../models/invoice.ts";
@@ -17,7 +17,7 @@ function InvoiceList() {
                 // check user is signed in
                 if (auth.user?.access_token) {
                     const invoiceList = await fetchInvoices(auth.user.access_token);
-                    setInvoices(invoiceList);
+                    setInvoices(invoiceList|| []);
                 }
             } catch (err) {
                 console.error("Failed to fetch invoices: ", err);

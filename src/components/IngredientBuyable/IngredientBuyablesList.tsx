@@ -1,5 +1,4 @@
-import React, {useMemo, useCallback, useState} from "react"; // Import useState
-import {useNavigate} from "react-router-dom";
+import {useMemo, useCallback, useState} from "react"; // Import useState
 import {useDataFetcher} from "../../hooks/useDataFetcher.ts";
 import {useData} from "../../contexts/DataContext.tsx";
 import {useAuth} from "react-oidc-context"; // Import useAuth
@@ -8,32 +7,33 @@ import type {IIngredientBuyable} from "../../models/IIngredient_Buyable.ts";
 import Picker from "../Picker/Picker";
 import {deleteIngredientBuyableLink, postNewIngredientBuyableLink} from "../../services/ingredientBuyableService.ts";
 import useFlash from "../../contexts/FlashContext.tsx";
+import LoadingSpinner from "../Utility/LoadingSpinner.tsx";
+import ConfirmationModal from "../Utility/ConfirmationModal.tsx";
 
 interface IngredientBuyablesListProps {
     ingredient_id: number;
 }
 
 const IngredientBuyablesList = ({ingredient_id}: IngredientBuyablesListProps) => {
-    const navigate = useNavigate();
     const {PickerBuyableArray} = useData();
     const auth = useAuth();
     const {showFlashMessage} = useFlash();
 
     const [showBuyablePicker, setShowBuyablePicker] = useState(false);
-
+    const [itemToUnlink, setItemToUnlink] = useState<number | null>(null);
     // Fetch the array of link objects for this specific ingredient
     const {
         data: links,
         loading,
         error,
         refetch,
-    } = useDataFetcher<IIngredientBuyable[]>(`/ingredient/link_buyable/all?ingredient_id=${ingredient_id}`);
+    } = useDataFetcher<IIngredientBuyable>(`/ingredient/link_buyable/all?ingredient_id=${ingredient_id}`);
 
     // Memoize the lists of linked and unlinked buyables for performance
     const {linkedBuyables, unlinkedBuyables} = useMemo(() => {
         if (!links) return {linkedBuyables: [], unlinkedBuyables: PickerBuyableArray};
 
-        const linkedBuyableIds = new Set(links.map(link => link.buyable_id));
+        const linkedBuyableIds = new Set(links.map(link => link.id));
 
         const linked = PickerBuyableArray.filter(buyable => linkedBuyableIds.has(buyable.id));
         const unlinked = PickerBuyableArray.filter(buyable => !linkedBuyableIds.has(buyable.id));
@@ -49,7 +49,7 @@ const IngredientBuyablesList = ({ingredient_id}: IngredientBuyablesListProps) =>
         console.log(`handleCreateLink called with id: ${id}`);
         if (!auth.user?.access_token) {
             console.error("Authentication token not found.");
-            // todo: Show a flash message to the user
+            showFlashMessage("You must be logged in to link items.", "danger");
             return;
         }
 
@@ -58,12 +58,10 @@ const IngredientBuyablesList = ({ingredient_id}: IngredientBuyablesListProps) =>
             const newLink: IIngredientBuyable = {
                 ingredient_id: ingredient_id,
                 buyable_id: id,
-                sort_order: null,
-                notes: null
             };
 
             await postNewIngredientBuyableLink(newLink, auth.user.access_token);
-
+            showFlashMessage("Buyable Item Linked", "success");
             // On success, hide the picker and refetch the data to update the list
             setShowBuyablePicker(false);
             if (refetch) {
@@ -78,7 +76,7 @@ const IngredientBuyablesList = ({ingredient_id}: IngredientBuyablesListProps) =>
     // 2. Callback for when an ALREADY LINKED item is clicked
     const handleUnlinkBuyable = useCallback(async (buyableIdToUnlink: number) => {
         if (!auth.user?.access_token || !links) {
-            showFlashMessage("Cannot perform action: data not ready.", "warning");
+            showFlashMessage("Cannot perform action: data not ready.", "danger");
             return;
         }
 
@@ -96,43 +94,74 @@ const IngredientBuyablesList = ({ingredient_id}: IngredientBuyablesListProps) =>
             if (refetch) refetch();
         } catch (err) {
             console.error("Failed to unlink item:", err);
-            showFlashMessage(err instanceof Error ? err.message : "Failed to unlink item.", "danger");
-        }
+            const message = err instanceof Error ? err.message : "Failed to unlink item.";
+            showFlashMessage(message, "danger");        }
     }, [auth.user?.access_token, refetch, showFlashMessage, links]);
 
+    const handleUnlinkClick = (id: number) => {
+        setItemToUnlink(id);
+    };
 
-    if (loading) return <p>Loading linked items...</p>;
-    if (error) return <p>Error: {error.message}</p>;
+    // SUGGESTION: Create a handler for the modal's confirm action.
+    const confirmUnlink = async () => {
+        if (itemToUnlink !== null) {
+            await handleUnlinkBuyable(itemToUnlink);
+        }
+        setItemToUnlink(null); // Close the modal
+    };
+
+    const safeSelectHandler = (id: string | number, action: (id: number) => void) => {
+        const numericId = typeof id === 'number' ? id : parseInt(String(id), 10);
+        if (!isNaN(numericId)) {
+            action(numericId);
+        } else {
+            console.error("Invalid ID provided from picker:", id);
+            showFlashMessage("An invalid item was selected.", "danger");
+        }
+    };
+
+    // SUGGESTION: Use better loading and error components.
+    if (loading) return <LoadingSpinner text="Loading linked items..."/>;
+    if (error) return <div className="title is-danger">{error}</div>;
+
 
     // --- Conditional Rendering Logic ---
     // Use the `showBuyablePicker` state to render one view or the other.
     return (
         <div className="box p-5">
             {showBuyablePicker ? (
-                // VIEW 2: Show a picker with UNLINKED items to create a new link
                 <Picker
                     pickerTitle="Link a New Buyable Item"
                     pickerArray={unlinkedBuyables}
-                    pickerOnSelect={(id) => handleCreateLink(id as number)}
-                    pickerOnAddNewClicked={()=>setShowBuyablePicker(false)}
+                    pickerOnSelect={(id) => safeSelectHandler(id, handleCreateLink)}
+                    pickerOnAddNewClicked={() => setShowBuyablePicker(false)}
                     addNewButtonText="Cancel"
                     onClose={() => setShowBuyablePicker(false)}
                     showSearch={true}
                     pickerSubtitle="Click to add to list"
                 />
             ) : (
-                // VIEW 1: Show a list of ALREADY LINKED items
                 <Picker
                     pickerTitle="Linked Buyable Items"
                     pickerArray={linkedBuyables}
-                    pickerOnSelect={(id) => handleUnlinkBuyable(id as number)}  // needs the link ID, not the buyable ID
+                    pickerOnSelect={(id) => safeSelectHandler(id, handleUnlinkClick)}
                     pickerOnAddNewClicked={() => setShowBuyablePicker(true)}
                     addNewButtonText="Link Another Buyable"
                     showSearch={false}
-                    onClose={() => {}} // Not needed for this view
+                    onClose={() => {}}
                     pickerSubtitle="Click to remove from list"
                 />
             )}
+
+            {/* SUGGESTION: Add the confirmation modal for a safer UX. */}
+            <ConfirmationModal
+                isOpen={itemToUnlink !== null}
+                onClose={() => setItemToUnlink(null)}
+                onConfirm={confirmUnlink}
+                title="Confirm Unlink"
+            >
+                Are you sure you want to unlink this buyable item? This action cannot be undone.
+            </ConfirmationModal>
         </div>
     );
 };
