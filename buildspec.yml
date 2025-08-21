@@ -19,7 +19,7 @@ phases:
       - echo "Invalidating CloudFront cache..."
       - aws cloudfront create-invalidation --distribution-id E35MZAIKMRD12W --paths "/spa/*"
 
-artifacts:
-  files:
-# None - build phase has taken care of all artefact handling
-
+#artifacts:
+#  files:
+## None - build phase has taken care of all artefact handling
+#
