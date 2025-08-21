@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from 'react-oidc-context';
+import styles from '../../styles/Navbar.module.css';
 
 // Navbar Component styled with Bulma
 const Navbar = () => {
@@ -52,7 +53,7 @@ const Navbar = () => {
     );
 
     return (
-        <nav ref={navRef} className="navbar is-link has-shadow" role="navigation" aria-label="main navigation">
+        <nav ref={navRef} className={`navbar ${styles.stickyNav}`} role="navigation" aria-label="main navigation">
             <div className="container">
                 <div className="navbar-brand">
                     {/* Logo/Brand Name */}

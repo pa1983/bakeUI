@@ -1,0 +1,24 @@
+version: 0.1
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - echo "Installing dependencies..."
+      - npm ci # 'ci' is faster and safer for CI/CD than 'install'
+  build:
+    commands:
+      - echo "Running the build script..."
+      - npm run build  # builds the React app to /dist
+  post_build:
+    commands:
+      # The S3_BUCKET and CF_DISTRIBUTION_ID are environment variables we will set in CodeBuild
+      - echo "Deploying to S3..."
+      - aws s3 sync dist/ s3://bakeonomics/spa --delete  # copy in the newly built files; delete anything not in dist
+      - echo "Invalidating CloudFront cache..."
+      - aws cloudfront create-invalidation --distribution-id E35MZAIKMRD12W --paths "/spa/*"
+
+artifacts:
+  files:
+# None - build phase has taken care of all artefact handling

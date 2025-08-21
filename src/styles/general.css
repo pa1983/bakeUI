@@ -87,23 +87,3 @@
 .modal-card-foot {
     justify-content: flex-end
 }
-
-/*.notification {*/
-/*    position: fixed;*/
-/*    top: 20px;*/
-/*    right: 20px;*/
-/*    zIndex: 2000;*/
-/*    minWidth: '300px';*/
-/*    opacity: 1; !* Start visible *!*/
-/*    transition: opacity 2s ease-in-out; !* Smooth fade *!*/
-/*}*/
-
-/*.flash-message {*/
-/*    position: fixed;*/
-/*    top: 20px;*/
-/*    left: 90%;*/
-/*    !*transform: translateX(-50%);*!*/
-/*    zIndex: 99999;*/
-/*    minWidth: 750px;*/
-/*    textAlign: center;*/
-/*}*/

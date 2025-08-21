@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
-import Navbar from './Home/navbar.tsx';
+import Navbar from './Home/Navbar.tsx';
 import {FlashMessage} from "./Utility/FlashMessage.tsx";
+import styles from '../styles/Layout.module.css';
 
 const Layout = () => {
 
@@ -10,7 +11,7 @@ const Layout = () => {
             {/*float flash message above all other content */}
             <Navbar />
 
-            <main>
+            <main className={styles.mainContent}>
                 {/* The Outlet renders the matched child route element */}
                 <Outlet />
             </main>

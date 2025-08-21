@@ -1,0 +1,5 @@
+.mainContent {
+    padding-top: 5rem;  /* match height of navbar plus some wiggle room */
+    padding-left: 1rem;
+    padding-right: 1rem;
+}

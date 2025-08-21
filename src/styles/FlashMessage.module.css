@@ -1,0 +1,17 @@
+.flashContainer {
+    /* Position relative to the browser window */
+    position: fixed;
+
+    /* Center it horizontally */
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Place it near the top */
+    top: 1rem;
+
+    /* Ensure it floats above all other content, including the navbar */
+    z-index: 2000;
+
+    width: 90%;
+    max-width: 600px;
+}

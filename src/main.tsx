@@ -19,30 +19,15 @@ import {KeyboardShortcutProvider} from './contexts/KeyboardShortcutContext.tsx';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
-
 const COGNITO_AUTHORITY = import.meta.env.VITE_COGNITO_AUTHORITY;
-// console.log(`cognito authority set to ${COGNITO_AUTHORITY}`);
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-// console.log(`client ID set to ${CLIENT_ID}`);
 const REDIRECT_URL = import.meta.env.VITE_REDIRECT_URL;
 
-// console.log(`redirect URL set to ${REDIRECT_URL}`);
-
-// Set the worker source path for pdf viewr
+// Set the worker source path for pdf viewer
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.min.mjs',
     import.meta.url,
 ).toString();
-
-// const cognitoAuthConfig = {
-//     authority: "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_l4pSAAZYP",
-//     client_id: "4ph7lbuua09u9qstvlc6mf2i4",
-//     redirect_uri: "http://localhost:5174",
-//     response_type: "code",
-//     scope: "email openid phone",
-//     userStore: new WebStorageStateStore({store: window.sessionStorage})  // currently storing tokens in sessionStore for security.  Change to localStorage for reduced security but improved convenience
-// };
-
 
 const cognitoAuthConfig = {
     authority: COGNITO_AUTHORITY,
