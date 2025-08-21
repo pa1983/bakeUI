@@ -24,17 +24,14 @@ function handleAxiosError(error: unknown, action: string, friendly_name: string)
  * @param formDataIDName  The name of the ID field in formdata - usually 'id' so this is defaulted in
  */
 export async function postNewElement<T, K extends keyof T>(
-    formData: T,
+    formData: Omit<T,K>,  // formData being submitted EXPECTS to have no primary key field
     access_token: string,
     friendly_name: string,
     api_endpoint: string,
-    formDataIDName: K
 ): Promise<ApiResponse<T>> {
     const url = `${config.API_URL}/${api_endpoint}`;
 
     try {
-        // This console.log is now type-safe due to the generic constraint `T extends { id?: any }`
-        console.log(`Creating new ${friendly_name} with initial ID: ${formData[formDataIDName]}`);
         const response = await axios.post<ApiResponse<T>>(url, formData, {
             headers: {Authorization: `Bearer ${access_token}`}
         });

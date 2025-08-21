@@ -1,10 +1,9 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useData } from '../../contexts/DataContext';
 
 import {fetchLabourer, postNewLabourer} from '../../services/labourerService';
 import {createEmptyLabourer} from "../../models/ILabourer.ts";
-import { ElementView } from '../common/ElementView';
+import { ElementView } from '../Common/ElementView';
 import { type ElementFormConfig } from '../../hooks/useElementFormLogic';
 
 import type {ILabourer} from "../../models/ILabourer.ts";

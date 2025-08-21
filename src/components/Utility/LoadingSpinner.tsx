@@ -5,9 +5,12 @@ interface LoadingSpinnerProps {
     text?: string;
 }
 
+
+
+
 const LoadingSpinner = ({ size = 'is-large', text = 'Loading...' }: LoadingSpinnerProps) => {
     return (
-        <div className="section is-flex is-justify-content-center is-align-items-center" style={{ minHeight: '200px' }}>
+        <div className="section is-flex is-justify-content-center is-align-items-center loading-spinner">
             <div className="has-text-centered">
                 <div className={`loader is-loading ${size}`}></div>
                 {text && <p className="is-size-5 has-text-grey mt-4">{text}</p>}

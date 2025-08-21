@@ -1,11 +1,10 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { createEmptyIngredient } from '../../models/IIngredient';
 import { fetchIngredient, postNewIngredient } from '../../services/ingredientService';
 import { useData } from '../../contexts/DataContext';
 import IngredientForm from './IngredientForm';
-import { ElementView } from '../common/ElementView';
+import { ElementView } from '../Common/ElementView';
 
 const ViewIngredientForm = () => {
     const { id } = useParams<{ id: string }>();

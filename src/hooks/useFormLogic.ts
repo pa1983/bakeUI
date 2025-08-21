@@ -131,7 +131,8 @@ export const useFormLogic = <
         focusInputRef.current?.focus();
     }, []);
 
-    useShortcut('Enter', isNew ? handleSave : null, { ctrl: true, disabled: isModal });
+        // only assign save shortcut if is new and not in modal view
+    useShortcut('Enter', (isNew && !isModal) ? handleSave : null);
 
     return {
         isNew,

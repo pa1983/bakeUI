@@ -16,7 +16,7 @@ interface ElementDataMap {
     ingredient: IRecipeIngredient;
     labour: IRecipeLabour;
     subrecipe: IRecipeSubRecipe;
-};
+}
 
 // Configuration object to map an element type to its specific component and API endpoint.
 const recipeElementConfig = {
@@ -173,6 +173,12 @@ const RecipeElementList = ({recipe_id, refetchTrigger}: RecipeElementListProps) 
         <div className="box">
             <h3 className="title is-5">Recipe Elements {recipeElements?.length}</h3>
             {recipeElements.map(element => {
+                if (!element.data.id || element.data.id === 0) {
+                    // This can happen with new, unsaved elements or bad data - skip rendering to avoid type errors
+                    console.warn('Skipping render for element without a valid database ID:', element);
+                    return null;
+                }
+
                 const key = `${element.element_type}-${element.data.id}`;
 
                 // Use a switch statement to allow TypeScript to narrow the element type
@@ -216,7 +222,8 @@ const RecipeElementList = ({recipe_id, refetchTrigger}: RecipeElementListProps) 
                             formData: element.data,
                             onSave: () => {},
                             onChange: (fieldName, value) => handleChange(element.data.id, 'subrecipe', fieldName, value),
-                            onEdit: (fieldName, value, originalValue) => handleEdit(element.data.id, 'subrecipe', fieldName, value, originalValue),
+                            onEdit: (fieldName, value, originalValue
+                            ) => handleEdit(element.data.id, 'subrecipe', fieldName, value, originalValue),
                             onDelete: () => handleDelete(element.data.id, 'subrecipe'),
                             onCancel: () => {},
                             isSaving: false,

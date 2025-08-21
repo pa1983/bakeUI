@@ -27,5 +27,5 @@ export async function postNewIngredient(
     formData: IIngredient,
     access_token: string
 ): Promise<ApiResponse<IIngredient>> {
-    return postNewElement<IIngredient, 'ingredient_id'>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT, 'ingredient_id');
+    return postNewElement<IIngredient, 'ingredient_id'>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT);
 }

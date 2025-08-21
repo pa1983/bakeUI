@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import {createEmptySupplier} from "../../models/ISupplier.ts";
@@ -6,7 +5,7 @@ import {fetchSupplier, postNewSupplier} from "../../services/supplierService.ts"
 import { useData } from '../../contexts/DataContext';
 
 import SupplierForm from './SupplierForm';
-import { ElementView } from '../common/ElementView';
+import { ElementView } from '../Common/ElementView';
 
 const ViewSupplierForm = () => {
     const { id } = useParams<{ id: string }>();  // string even fun numebr since paramas are always strings

@@ -19,7 +19,7 @@ export async function postNewLabourer(
     formData: ILabourer,
     access_token: string
 ): Promise<ApiResponse<ILabourer>> {
-    return postNewElement(formData, access_token, FRIENDLY_NAME, API_ENDPOINT, 'id');
+    return postNewElement(formData, access_token, FRIENDLY_NAME, API_ENDPOINT);
 }
 
 

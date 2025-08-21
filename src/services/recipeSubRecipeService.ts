@@ -36,7 +36,6 @@ export async function postNewRecipeSubRecipe(
     formData: IRecipeSubRecipe,
     access_token: string
 ): Promise<ApiResponse<IRecipeSubRecipe>> {
-    const formDataIDName = 'parent_recipe_id';
     console.log(formData);
-    return postNewElement<IRecipeSubRecipe, 'parent_recipe_id'>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT, formDataIDName);
+    return postNewElement<IRecipeSubRecipe, 'parent_recipe_id'>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT);
 }

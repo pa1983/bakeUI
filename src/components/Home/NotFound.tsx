@@ -1,25 +1,41 @@
-import { Container, Typography, Box, Button } from '@mui/material';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { Link } from 'react-router-dom'; // Using Link for client-side routing
 
 function NotFound() {
     return (
-        <Container maxWidth="sm" sx={{ mt: 8, textAlign: 'center' }}>
-            <Box sx={{ mb: 4 }}>
-                <ErrorOutlineIcon sx={{ fontSize: 100, color: 'text.secondary' }} />
-            </Box>
-            <Typography variant="h1" component="h1" gutterBottom>
-                404
-            </Typography>
-            <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 3 }}>
-                Page Not Found
-            </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-                Oops! The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
-            </Typography>
-            <Button variant="contained" color="primary" href="/">
-                Go to Homepage
-            </Button>
-        </Container>
+        <section className="section">
+            <div className="container has-text-centered">
+                <div className="columns is-centered">
+                    <div className="column is-half">
+                        {/* Icon */}
+                        <div className="mb-5">
+                            <span className="icon is-large has-text-warning">
+                                <i className="fas fa-exclamation-triangle fa-7x"></i>
+                            </span>
+                        </div>
+
+                        {/* Title */}
+                        <h1 className="title is-1">
+                            404
+                        </h1>
+
+                        {/* Subtitle */}
+                        <h2 className="subtitle is-3 mt-4">
+                            Page Not Found
+                        </h2>
+
+                        {/* Description */}
+                        <p className="mb-5">
+                            Oops! The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+                        </p>
+
+                        {/* Button */}
+                        <Link to="/" className="button is-primary">
+                            Go to Homepage
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 }
 

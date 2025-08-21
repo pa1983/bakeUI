@@ -16,5 +16,5 @@ export const fetchSupplier = (id: number | string, token: string): Promise<ApiRe
  * Creates a new Supplier.
  */
 export const postNewSupplier = (formData: ISupplier, token: string): Promise<ApiResponse<ISupplier>> => {
-    return postNewElement<ISupplier, 'supplier_id'>(formData, token, FRIENDLY_NAME, API_ENDPOINT, 'supplier_id');
+    return postNewElement<ISupplier, 'supplier_id'>(formData, token, FRIENDLY_NAME, API_ENDPOINT);
 };

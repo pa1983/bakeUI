@@ -59,13 +59,13 @@
 }
 
 .dropzone {
-    minHeight: 40px;
+    min-height: 40px;
     min-width: 200px;
     display: flex;
-    alignItems: center;
-    justifyContent: center;
+    align-items: center;
+    justify-content: center;
     padding: 0 1rem;
-    whiteSpace: nowrap
+    white-space: nowrap
 }
 
 .recipe-ingredient {
@@ -78,6 +78,14 @@
 
 .recipe-sub-recipe {
     background: #631f85;
+}
+
+.loading-spinner {
+    min-height: 200px;
+}
+
+.modal-card-foot {
+    justify-content: flex-end
 }
 
 /*.notification {*/

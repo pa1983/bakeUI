@@ -125,9 +125,27 @@ const ViewBrandForm = ({prop_element_id, onSuccess, isModal=false}: ViewBrandFor
         }
     };
 
-    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const {name, value} = e.target;
-        setElement(prevElement => prevElement ? {...prevElement, [name]: value} : null);
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, type } = e.target;
+
+        let value: string | boolean | number | null;
+
+        if (type === 'checkbox') {
+            value = (e.target as HTMLInputElement).checked;
+        } else if (type === 'number') {
+            const numValue = e.target.value;
+            value = numValue === '' ? null : parseFloat(numValue);
+        } else {
+            value = e.target.value;
+        }
+
+        setElement(prevElement => {
+            if (!prevElement) return null;
+            return {
+                ...prevElement,
+                [name]: value
+            };
+        });
     }, []);
 
     const handleCancel = () => {
@@ -160,16 +178,34 @@ const ViewBrandForm = ({prop_element_id, onSuccess, isModal=false}: ViewBrandFor
             return;
         }
 
-        const { name, value } = e.target;
+        const { name, type } = e.target;
 
-        if (originalValueOnFocus === value) {
+        // Use the same robust parsing logic as in handleChange.
+        let value: string | boolean | number | null;
+        if (type === 'checkbox') {
+            value = (e.target as HTMLInputElement).checked;
+        } else if (type === 'number') {
+            const numValue = e.target.value;
+            value = numValue === '' ? null : parseFloat(numValue);
+        } else {
+            value = e.target.value;
+        }
+
+        if (String(originalValueOnFocus) === String(value)) {
             console.log(`No change detected for field '${name}'. Skipping PATCH.`);
             return;
         }
 
         try {
             setIsSaving(true);
-            const response = await patchField<IBrand>(auth.user.access_token, element[primary_key_name], name, value, api_endpoint);
+            // The call to patchField is now fully type-safe.
+            const response = await patchField<IBrand, 'brand_id'>(
+                auth.user.access_token,
+                element[primary_key_name],
+                name as keyof IBrand, // Assert that `name` is a key of IBrand
+                value as IBrand[keyof IBrand], // Assert that the parsed value is of the correct type
+                api_endpoint
+            );
             showFlashMessage(response.message, 'success');
             // trigger a refresh of the brand context data to update the list view
             refetchBrands();

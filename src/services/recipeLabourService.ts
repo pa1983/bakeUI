@@ -36,7 +36,6 @@ export async function postNewRecipeLabour(
     formData: IRecipeLabour,
     access_token: string
 ): Promise<ApiResponse<IRecipeLabour>> {
-    const formDataIDName = 'id';
     console.log(formData);
-    return postNewElement<IRecipeLabour, 'id'>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT, formDataIDName);
+    return postNewElement<IRecipeLabour, 'id'>(formData, access_token, FRIENDLY_NAME, API_ENDPOINT);
 }

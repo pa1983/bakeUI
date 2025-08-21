@@ -12,8 +12,8 @@ export async function postNewIngredientBuyableLink(
 ): Promise<ApiResponse<IIngredientBuyable>> {
     console.log('postNewIngredientBuyableLink called - formData sent: ');
     console.log(formData);
-    return postNewElement<IIngredientBuyable, "id">(formData, access_token, 'Ingredient Buyable Link', api_endpoint, "id")
-};
+    return postNewElement<IIngredientBuyable, "id">(formData, access_token, 'Ingredient Buyable Link', api_endpoint)
+}
 
 export async function deleteIngredientBuyableLink(
     entry_id: number,

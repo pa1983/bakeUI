@@ -1,6 +1,4 @@
-import React from 'react';
 import {createBrowserRouter} from "react-router-dom";
-
 import Home from '../components/Home/Home.tsx';
 import Contact from '../components/Home/Contact.tsx';
 import NotFound from '../components/Home/NotFound.tsx';
@@ -78,12 +76,14 @@ const router = createBrowserRouter([
             },
             {
                 path: '/buyable/brand/:id',
-                element: <ViewBrandForm/>
+                element: <ViewBrandForm
+                isModal={false}/>
             },
 
             {
                 path: '/buyable/all',
-                element: <ViewBrandForm/>
+                element: <ViewBrandForm
+                isModal={false}/>
             },
             {
                 path: '/buyable/:id',

@@ -34,7 +34,7 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
         const {PickerBrandArray} = useData();
         const {units} = useUnitOfMeasures();
 
-        const brandPickerOnSelect = (selectedBrandId: number|string ) => {
+        const brandPickerOnSelect = (selectedBrandId: number ) => {
             // persist the new brand id to the database.  This isn't part of the useFormLogic hook as it deviates from
             // from the standard handling of change to a form field.
             // It IS common to all pickers

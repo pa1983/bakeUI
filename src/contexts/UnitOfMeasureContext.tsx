@@ -64,7 +64,7 @@ export const UnitOfMeasureProvider = ({ children }: UnitOfMeasureProviderProps) 
                 }
 
                 console.log('Fetching Unit of Measure options from API...');
-                const res = await axios.get(`http://${config.API_URL}/common/uom`, {
+                const res = await axios.get(`${config.API_URL}/common/uom`, {
                     headers: { Authorization: `Bearer ${auth.user?.access_token}` }
                 });
                 const fetchedUnits: IUnitOfMeasure[] = res.data;
@@ -82,7 +82,7 @@ export const UnitOfMeasureProvider = ({ children }: UnitOfMeasureProviderProps) 
             }
         };
 
-        fetchUOMs();
+        void fetchUOMs();
     }, [auth.isAuthenticated, auth.user?.access_token]); // Depend on auth status and token
 
     const contextValue = {

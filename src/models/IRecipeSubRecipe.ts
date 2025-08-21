@@ -2,6 +2,8 @@
  * Represents a link between a parent Recipe and a sub-recipe.
  * Corresponds to the Python SQLModel `RecipeSubRecipeRead`.
  */
+
+
 export interface IRecipeSubRecipe {
     id: number;
     parent_recipe_id: number;

@@ -31,7 +31,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, title, on
                 <section className="modal-card-body">
                     {children}
                 </section>
-                <footer className="modal-card-foot" style={{ justifyContent: 'flex-end' }}>
+                <footer className="modal-card-foot">
                     {/* Add type="button" to prevent form submission - was creating new record every time hit delete */}
                     <button type="button" className="button" onClick={onClose}>
                         Cancel
