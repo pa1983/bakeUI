@@ -1,4 +1,4 @@
-version: 0.1
+version: 0.2  # version of the buildspec process - NOT version of my buildspec
 
 phases:
   install:
