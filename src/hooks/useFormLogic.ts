@@ -38,7 +38,9 @@ export const useFormLogic = <
 
 
     const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        // console.log(`handleFocus fired, value: ${e.target.value}`);
         setOriginalValueOnFocus(e.target.value);
+        // console.log(originalValueOnFocus);
     }, []);
 
     // This handler is for standard DOM change events
@@ -62,8 +64,6 @@ export const useFormLogic = <
         onChange(name as keyof T, value as T[keyof T]);
     }, [onChange]);
 
-    // SUGGESTION: Make this handler fully generic and type-safe. This eliminates the `any`
-    // and ensures that programmatic changes are just as safe as user input.
     const handlePickerValueChange = useCallback(<FieldName extends keyof T>(name: FieldName, value: T[FieldName]) => {
         onChange(name, value);
         const originalValue = formData?.[name];
@@ -75,6 +75,8 @@ export const useFormLogic = <
 
 
     const handleEdit = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+
+        // default behaviour should be to send a patch request for the endpoint with the key-value pair
         if (originalValueOnFocus === null) {
             return;
         }
@@ -83,7 +85,7 @@ export const useFormLogic = <
         }
 
         const { name, type } = e.target;
-
+        console.log(`generic handleEdit fired for name: ${name}, type: ${type}`);
         // Use the same robust parsing logic as in handleChange to get the correct new value type.
         let value: string | boolean | number | null;
         if (type === 'checkbox') {
@@ -96,6 +98,7 @@ export const useFormLogic = <
         }
 
         if (String(originalValueOnFocus) === String(value)) {
+            console.log("No change detected - stopping");
             return;
         }
 
@@ -103,6 +106,7 @@ export const useFormLogic = <
         const originalTypedValue = formData?.[name as keyof T];
 
         // Call onEdit with all three required arguments.
+        console.log(`calling onEdit with name: ${name}, value: ${value}, originalTypedValue: ${originalTypedValue}`);
         onEdit(name as keyof T, value as T[keyof T], originalTypedValue as T[keyof T]);
 
     }, [isNew, auth.user, originalValueOnFocus, onEdit, formData]); //

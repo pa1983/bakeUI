@@ -41,7 +41,7 @@
     padding: 0.25rem;
 
     /* A subtle shadow, similar to Bulma's 'box' or 'card' element */
-    box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+    box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.02);
 
     /* Ensures the image covers the area without being distorted */
     object-fit: cover;

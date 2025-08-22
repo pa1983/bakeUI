@@ -303,7 +303,6 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
                     <h6 className="subtitle is-6 has-text-grey">System Information (Read-Only)</h6>
                     <div className="columns is-multiline">
                         <div className="column is-half">
-                            <p className="mb-1"><strong>Invoice ID:</strong> {formData.id}</p>
                             <p className="mb-1"><strong>Calculated Total:</strong> {formData.calculated_total}</p>
                             <p className="mb-1"><strong>Confidence Score:</strong> {formData.confidence_score}</p>
                         </div>
@@ -316,25 +315,6 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
                             </p>
                             <p className="mb-1"><strong>Parse Duration:</strong> {formData.parse_duration_ms}ms
                                 | <strong>AI Tokens:</strong> {formData.parse_ai_tokens}</p>
-                        </div>
-                    </div>
-                </div>
-                {/*invoice data context data */}
-                <div className="content is-small has-text-grey mt-5 pt-4" style={{borderTop: '1px solid #dbdbdb'}}>
-                    <h6 className="subtitle is-6 has-text-grey">Invoice Context</h6>
-                    <div className="columns is-multiline">
-                        <div className="column is-half">
-                            {/* Use .map() because it returns an array of elements to render */}
-                            {(suppliers || []).map((supplier) => (
-                                <p key={supplier.supplier_id} className="mb-1"> {/* Added a unique key */}
-                                    <strong>{supplier.supplier_name}</strong> {supplier.currency_code}
-                                </p>
-                            ))}
-                            {(currencies || []).map((currency) => (
-                                <p key={currency.currency_code} className="mb-1"> {/* Added a unique key */}
-                                    <strong>{currency.currency_name}</strong> {currency.symbol}
-                                </p>
-                            ))}
                         </div>
                     </div>
                 </div>

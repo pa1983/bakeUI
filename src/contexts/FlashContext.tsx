@@ -1,4 +1,5 @@
-import {createContext, useState, useContext, type ReactNode, useEffect} from 'react';
+// C:/web/bake/src/contexts/FlashContext.tsx
+import {createContext, useState, useContext, type ReactNode, useEffect, useCallback, useMemo} from 'react';
 
 type FlashMessageType = 'success' | 'danger' | 'info';
 
@@ -24,7 +25,7 @@ export const FlashProvider = ({children}: { children: ReactNode }) => {
         visible: false,
     });
 
-    // This useEffect hook manages the timer and its cleanup
+    // useEffect hook manages the timer and its cleanup
     useEffect(() => {
         // If a message is not visible, do nothing.
         if (!flashState.visible) {
@@ -40,22 +41,21 @@ export const FlashProvider = ({children}: { children: ReactNode }) => {
         return () => {
             clearTimeout(timerId);
         };
-    }, [flashState]); // The effect re-runs whenever the flashState changes.
+    }, [flashState]);
 
-    // This function now ONLY sets the state. The effect handles the timer.
-    const showFlashMessage = (message: string, type: FlashMessageType) => {
-        // USAGE
-        //
-        // import useFlash from '../contexts/FlashContext';
-        //
-        // const { showFlashMessage } = useFlash();
-        //
-        // showFlashMessage('Here is my message!', 'info');
 
+    // callback and memo below to fix multiple-rerender bug on invoice viewer when any changes were made to form conts
+    // wrapped in useCallback to gives the function a stable identity across re-renders, preventing it
+    // from triggering updates in components that consume it via the useFlash hook.
+    // The dependency array is empty because setFlashState is guaranteed to be stable.
+    const showFlashMessage = useCallback((message: string, type: FlashMessageType) => {
         setFlashState({message, type, visible: true});
-    };
+    }, []);
 
-    const contextValue = {showFlashMessage};
+    // This ensures that the object passed to the provider is consistent across renders
+    const contextValue = useMemo(() => ({
+        showFlashMessage
+    }), [showFlashMessage]);
 
     return (
         <FlashContext.Provider value={contextValue}>

@@ -1,4 +1,4 @@
-import {useMemo, useEffect, useState} from "react";
+import {useMemo, useEffect, useState, memo} from "react";
 import {useAuth} from "react-oidc-context";
 import {useParams} from "react-router-dom";
 import {getInvoiceFull} from "../../services/InvoiceServices.ts";
@@ -14,7 +14,7 @@ import LoadingSpinner from "../Utility/LoadingSpinner.tsx";
 function InvoiceViewer() {
     const {showFlashMessage} = useFlash();
     const auth = useAuth();
-    const { invoice_id: rawInvoiceId } = useParams<{ invoice_id: string }>();
+    const {invoice_id: rawInvoiceId} = useParams<{ invoice_id: string }>();
 
     //  invoice ID should be a number, but useParams produces a string.  Convert to a number or null in order
     // to use invoice_id where a number is expected, e.g. in api calls, etc.
@@ -71,7 +71,7 @@ function InvoiceViewer() {
             <LoadingSpinner
                 size='is-large'
                 text='Loading invoice...'
-        />
+            />
         </div>)
     }
 
@@ -94,104 +94,72 @@ function InvoiceViewer() {
 
     // Now, render the properties of the invoice object
     return (
-<>
-        {/*todo - try alternative styling to hero class - it seems to be throwing out the zindex layering and causing this form to appear over the top of the flash messages*/}
-        <section className="hero is-fullheight is-light">
-            <div className="hero-body">
-                <div className="container is-fluid">
-                    <div className="columns">
+        <>
+            {/*todo - try alternative styling to hero class - it seems to be throwing out the zindex layering and causing this form to appear over the top of the flash messages*/}
+            <section className="hero is-fullheight is-light">
+                <div className="hero-body">
+                    <div className="container is-fluid">
+                        <div className="columns">
 
-                        {/*pdf on left col */}
-                        <div className="column is-half full-height-content">
-                            <div className="box">
-                                <h1 className="title is-4 has-text-grey-light">Invoice Viewer for {invoice.id}</h1>
-                                <p className="subtitle is-6 has-text-grey">{invoice.invoice_image?.file_name}.{invoice.invoice_image?.file_ext}</p>
-                                <div className="content">
-                                    <ViewInvoicePDF invoice_id={invoice.id}/>
+                            {/*pdf on left col */}
+                            <div className="column is-half full-height-content">
+                                <div className="box">
+                                    <h1 className="title is-4 has-text-grey-light">Invoice Viewer for {invoice.id}</h1>
+                                    <p className="subtitle is-6 has-text-grey">{invoice.invoice_image?.file_name}.{invoice.invoice_image?.file_ext}</p>
+                                    <div className="content">
+                                        <ViewInvoicePDF invoice_id={invoice.id}/>
+                                    </div>
+                                </div>
+                                <div className="box"></div>
+                            </div>
+
+
+                            {/*INVOICE COLUMN:*/}
+                            {/*- This column takes up the remaining 50% of the width.*/}
+                            {/*- It contains two separate 'box' elements. As block-level elements, they will*/}
+                            {/*  stack on top of each other, creating the appearance of two rows.*/}
+                            {/*- Their height will adjust automatically to fit their content.*/}
+
+                            <div className="column">
+
+                                <div className="box mb-4">
+                                    Actions
+                                    <StatusIcon status={invoice.invoice_status || undefined}
+                                                id={invoice.id}/>
+                                    {/*<DeleteInvoice invoice_id={invoice.id}/>*/} // todo - implement the delete
+                                    shortcut here think I have a generic delete button ready to go...
+                                </div>
+
+                                <div className="box  mb-4">
+                                    <h2 className="title is-5 has-text-grey-light">Details <MoreInfo
+                                        message="check the details below match the invoice, correct as necessary. No need to save."/>
+                                    </h2>
+
+                                    <div className="content">
+                                        <InvoiceMeta
+                                            initialFormDetails={invoice}/>
+                                    </div>
+                                </div>
+
+
+                                <div className="box ">
+                                    <h2 className="title is-5 has-text-grey-light">Line Items <MoreInfo
+                                        message="Check content of each line item matches invoice. Correct as required. Make sure each line item matches a buyable item."/>
+                                    </h2>
+                                    <div className="content">
+                                        <InvoiceLineItemsList
+                                            invoice_id={invoice.id}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                            <div className="box"></div>
+
                         </div>
-
-
-                        {/*INVOICE COLUMN:*/}
-                        {/*- This column takes up the remaining 50% of the width.*/}
-                        {/*- It contains two separate 'box' elements. As block-level elements, they will*/}
-                        {/*  stack on top of each other, creating the appearance of two rows.*/}
-                        {/*- Their height will adjust automatically to fit their content.*/}
-
-                        <div className="column">
-
-                            <div className="box mb-4">
-                                Actions
-                                <StatusIcon status={invoice.invoice_status || undefined }
-                                            id={invoice.id}/>
-                                {/*<DeleteInvoice invoice_id={invoice.id}/>*/}  // todo - implement the delete shortcut here think I have a generic delete button ready to go...
-                            </div>
-
-                            <div className="box  mb-4">
-                                <h2 className="title is-5 has-text-grey-light">Details     <MoreInfo message="check the details below match the invoice, correct as necessary. No need to save."/></h2>
-
-                                <div className="content">
-                                    <InvoiceMeta
-                                    initialFormDetails={invoice}/>
-                                </div>
-                            </div>
-
-
-                            <div className="box ">
-                                <h2 className="title is-5 has-text-grey-light">Line Items <MoreInfo message="Check content of each line item matches invoice. Correct as required. Make sure each line item matches a buyable item."/></h2>
-                                <div className="content">
-                                    <InvoiceLineItemsList
-                                        invoice_id = {invoice.id}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
-            </div>
-        </section>
-        <div>
-            // --- Basic Invoice Details ---<br />
-            ID: ${invoice?.id}<br />
-            Invoice Number: ${invoice?.invoice_number}<br />
-            Supplier Name: ${invoice?.supplier_name}<br />
-            Supplier ID: ${invoice?.supplier_id}<br />
-            Customer Account Number: ${invoice?.customer_account_number}<br />
-            User Reference: ${invoice?.user_reference}<br />
-            Supplier Reference: ${invoice?.supplier_reference}<br />
-            <br />
-            // --- Financials ---<br />
-            Invoice Total: ${invoice?.invoice_total}<br />
-            Calculated Total: ${invoice?.calculated_total}<br />
-            Delivery Cost: ${invoice?.delivery_cost}<br />
-            Currency: ${invoice?.parsed_currency}<br />
-            <br />
-            // --- Dates ---<br />
-            Invoice Date: ${invoice?.invoice_date}<br />
-            Date Added: ${invoice?.date_added}<br />
-            Date Modified: ${invoice?.date_modified}<br />
-            Received Date: ${invoice?.received_date}<br />
-            <br />
-            // --- Parsing & Status ---<br />
-            Document Type: ${invoice?.document_type}<br />
-            Confidence Score: ${invoice?.confidence_score}<br />
-            Parse Duration (ms): ${invoice?.parse_duration_ms}<br />
-            Parse AI Tokens: ${invoice?.parse_ai_tokens}<br />
-            Status: invoice?.invoice_status?.name({invoice?.invoice_status?.display_name})<br />
-            Notes: ${invoice?.notes}<br />
-            <br />
-            // --- Linked Objects ---<br />
-            Image ID: ${invoice?.invoice_image?.image_id}<br />
-            Image S3 Key: ${invoice?.invoice_image?.s3_key}<br />
-            <br />
-            // --- Line Items ---<br />
-            Line Items Count: ${invoice?.line_items?.length}<br />
-        </div>
-    </>
+            </section>
+        </>
     );
 }
-
-export default InvoiceViewer;
+// export as memo to fix re-rendering of whole invoice viewer on every change to lineitems
+export default memo(InvoiceViewer);

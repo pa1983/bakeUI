@@ -144,9 +144,11 @@ export const useElementFormLogic = <
         if (isNew || !element || !auth.user?.access_token) {
             return;
         }
-        if (element[fieldName] === value) {
-            return; // No change, no need to save.
-        }
+
+        // console.log(`useElementFormLogic handleEdit fired for fieldName: ${fieldName}, value: ${value}`)
+        // if (element[fieldName] === value) {
+        //     return; // No change, no need to save.
+        // }
 
         setIsSaving(true);
         try {

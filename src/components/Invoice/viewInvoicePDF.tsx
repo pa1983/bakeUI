@@ -1,49 +1,48 @@
 // C:/web/bake/src/components/Invoice/viewInvoicePDF.tsx
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Document, Page } from 'react-pdf';
-import styled from '@emotion/styled'; // Import styled
+import {useState, useEffect} from "react";
+import {useParams} from "react-router-dom";
+import {Document, Page} from 'react-pdf';
+import styled from '@emotion/styled';
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
-import { getInvoiceURL } from "../../services/InvoiceServices.ts";
-import { useAuth } from "react-oidc-context";
+import {getInvoiceURL} from "../../services/InvoiceServices.ts";
+import {useAuth} from "react-oidc-context";
 import useFlash from "../../contexts/FlashContext.tsx";
 
 // --- Styled Components ---
 
 const PDFWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
 `;
 
 const PDFControls = styled.div`
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: fit-content;
-  z-index: 10; // Ensure controls stay on top
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    z-index: 10; // Ensure controls stay on top
 `;
 
-// This wrapper is the key to making the PDF responsive.
 const PDFDocumentWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  max-width: 900px; // Set a max-width for large screens
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 900px; // Set a max-width for large screens
 
-  .react-pdf__Page__canvas {
-    // Target the canvas rendered by react-pdf
-    max-width: 100%;
-    height: auto !important; // Override default height to maintain aspect ratio
-  }
+    .react-pdf__Page__canvas {
+        // Target the canvas rendered by react-pdf
+        max-width: 100%;
+        height: auto !important; // Override default height to maintain aspect ratio
+    }
 `;
 
 
@@ -51,10 +50,10 @@ type ViewInvoicePDFProps = {
     invoice_id?: number; // Make prop optional
 }
 
-function ViewInvoicePDF({ invoice_id: invoice_id_from_prop }: ViewInvoicePDFProps) {
+function ViewInvoicePDF({invoice_id: invoice_id_from_prop}: ViewInvoicePDFProps) {
     const auth = useAuth()
-    const { showFlashMessage } = useFlash();
-    const { invoice_id: invoice_id_from_params } = useParams<{ invoice_id: string }>();
+    const {showFlashMessage} = useFlash();
+    const {invoice_id: invoice_id_from_params} = useParams<{ invoice_id: string }>();
 
     // SUGGESTION: This logic is more robust for parsing the ID from either source.
     let invoice_id: number | undefined;
@@ -83,7 +82,7 @@ function ViewInvoicePDF({ invoice_id: invoice_id_from_prop }: ViewInvoicePDFProp
         }
 
         const fetchUrl = async () => {
-            // The outer `if` already handles the auth check, so the inner one was redundant.
+
             try {
                 setLoading(true);
                 // guard clause - check user logged in before proceeding
@@ -92,20 +91,22 @@ function ViewInvoicePDF({ invoice_id: invoice_id_from_prop }: ViewInvoicePDFProp
                     return; // Exit the function early.
                 }
                 const response = await getInvoiceURL(auth.user.access_token, invoice_id);
+                // allow for no invoice populated
                 setInvoiceUrl(response.data);
                 setError(null);
-            } catch (err: any) {
-                console.error("Failed to fetch invoice URL:", err);
-                setError(err.message || "Failed to load invoice. Please try again.");
+            } catch (err: unknown) {
+                const message = err instanceof Error ? err.message : 'An unknown error occurred';
+                console.error(message);
+                setError(message);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchUrl();
-    }, [invoice_id, auth.user?.access_token]); // Dependency array
+        void fetchUrl();
+    }, [invoice_id, auth, showFlashMessage]); // Dependency array
 
-    function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+    function onDocumentLoadSuccess({numPages}: { numPages: number }): void {
         setNumPages(numPages);
     }
 
@@ -131,22 +132,29 @@ function ViewInvoicePDF({ invoice_id: invoice_id_from_prop }: ViewInvoicePDFProp
         return <div>Could not find invoice URL.</div>;
     }
 
-    // FIX: The JSX now uses the clean, responsive styled-components.
+    if (!invoiceUrl) {
+        return (<div className='is-3'>No invoice uploaded</div>)
+    }
+
     return (
         <PDFWrapper>
             {/* Navigation Controls */}
             <PDFControls>
                 <button className="button" onClick={goToPrevPage} disabled={pageNumber <= 1}>Prev</button>
                 <span>Page {pageNumber} of {numPages || '--'}</span>
-                <button className="button" onClick={goToNextPage} disabled={!numPages || pageNumber >= numPages}>Next</button>
+                <button className="button" onClick={goToNextPage} disabled={!numPages || pageNumber >= numPages}>Next
+                </button>
             </PDFControls>
 
             {/* PDF Document */}
+            {/*don't render if no invoice URL found */}
+
             <PDFDocumentWrapper>
                 <Document file={invoiceUrl} onLoadSuccess={onDocumentLoadSuccess}>
-                    <Page pageNumber={pageNumber} />
+                    <Page pageNumber={pageNumber}/>
                 </Document>
             </PDFDocumentWrapper>
+
         </PDFWrapper>
     );
 }

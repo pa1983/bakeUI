@@ -40,7 +40,7 @@ export const ElementView = <
 
     return (
         <div className="container p-4">
-            <h1 className="title">{formTitle}</h1>
+            <h1 className="title">{formTitle} </h1>
             <div className="box">
                 <FormComponent
                     formData={element}

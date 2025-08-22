@@ -6,7 +6,8 @@ import {useDataFetcher} from "../../hooks/useDataFetcher.ts";
 import {patchField} from "../../services/commonService.ts";
 import {useAuth} from "react-oidc-context";
 import useFlash from "../../contexts/FlashContext.tsx";
-import InvoiceLineItem from './InvoiceLineItem.tsx'; // This will be our new "dumb" component
+import InvoiceLineItem from './InvoiceLineItem.tsx';
+import {createNewLineItem} from "../../services/invoiceLineItemService.ts"; // This will be our new "dumb" component
 
 interface InvoiceLineItemsProps {
     invoice_id: number;
@@ -46,6 +47,7 @@ function InvoiceLineItemsList({invoice_id}: InvoiceLineItemsProps) {
         []
     );
 
+
     // Persist changes to the database
     const handleEdit = useCallback(
         async <K extends keyof ILineItem>(id: number | null, fieldName: K, value: ILineItem[K]) => {
@@ -69,6 +71,24 @@ function InvoiceLineItemsList({invoice_id}: InvoiceLineItemsProps) {
         [fetchedLineItems, auth.user, showFlashMessage, refetch]
     );
 
+    const handleAddNewClick = useCallback(async ()=> {
+        // guard clause - check user logged in before proceeding
+        if (!auth.user?.access_token) {
+            showFlashMessage('You must be logged in to delete an element', 'danger');
+            return; // Exit the function early.
+        }
+        try {
+            await createNewLineItem(auth.user?.access_token, invoice_id);
+            showFlashMessage('new line item added', 'success');
+            refetch();  // refetch line item list to make the newly created item appear in the list
+        } catch {
+            showFlashMessage('Failed to add line item', 'danger');
+        }
+    }, [])
+
+
+
+
     const handleDelete = useCallback(async (id: number | null) => {
         // The actual delete logic is in the DeleteElement component.
         // We just need to refetch the list after a successful deletion.
@@ -84,6 +104,7 @@ function InvoiceLineItemsList({invoice_id}: InvoiceLineItemsProps) {
     if (error) {
         return <div className="notification is-danger">Error loading line items: {error}</div>;
     }
+
 
 
 
@@ -110,6 +131,7 @@ function InvoiceLineItemsList({invoice_id}: InvoiceLineItemsProps) {
                         />
                     ))}
             </div>
+            <button onClick={handleAddNewClick} className="button is-primary">Add New </button>
         </div>
     );
 }

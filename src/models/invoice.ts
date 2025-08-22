@@ -60,6 +60,7 @@ export interface ParsedInvoiceDetails {
  */
 export interface ILineItem {
     id: number | null;
+    invoice_id: number | null;
     cases: number | null;
     units: number | null;
     description: string | null;
@@ -72,6 +73,25 @@ export interface ILineItem {
     buyable_id: number | null;
     buyable_quantity: number | null; // JavaScript number can handle Python's Decimal for many use cases
     unit_cost: number | null;      // Consider using a string or a library like decimal.js if precision is critical
+}
+
+export function createEmptyLineItem(): ILineItem {
+    return {
+        id: 0,
+        invoice_id: 0,
+        cases: 0,
+        units: 0,
+        description: "",
+        size: "",
+        code: "",
+        value_ex_vat: 0,
+        value_inc_vat: 0,
+        vat_percentage: 0,
+        is_delivery: false,
+        buyable_id: null,
+        buyable_quantity: null,
+        unit_cost: null,
+    };
 }
 
 /**

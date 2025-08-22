@@ -35,10 +35,10 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
 
     const openBuyablePicker = () => {
         setPickerModalConfig({
-            addNewButtonText: "", onClose(): void | null {
-                return undefined;
-            }, pickerSubtitle: undefined, showSearch: false,
-            isPickerModalActive: true,
+                addNewButtonText: "", onClose(): void | null {
+                    return undefined;
+                }, pickerSubtitle: undefined, showSearch: false,
+                isPickerModalActive: true,
                 pickerArray: PickerBuyableArray,
                 pickerTitle: "Buyable Item",
                 pickerOnSelect: buyablePickerOnSelect,
@@ -63,37 +63,73 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
                 <fieldset disabled={isSaving}>
                     <div className="columns is-multiline is-vcentered is-mobile">
 
-                        {/* --- Row 1: Display-only guide information --- */}
-                        <div className="column is-full">
-                            <div className="level is-mobile mb-2">
-                                <div className="level-left">
-                                    <p className="title is-4 has-text-white has-text-weight-semibold">{formData.description}</p>
-                                </div>
-                                <div className="level-right">
-                                    {!isNew && uniqueId && (
-                                        <DeleteElement
-                                            element_id={uniqueId}
-                                            endpoint='invoice/lineitem'
-                                            elementName={`line item: ${formData.description?.substring(0, 20)}...`}
-                                            onDelete={onDelete}
-
-                                        />
-                                    )}
+                        {/* --- Row 1: Editable Description, SKU, and Delete --- */}
+                        <div className="column is-8-tablet">
+                            <div className="field">
+                                <label className="label" htmlFor={`description_${uniqueId}`}>Description</label>
+                                <div className="control">
+                                    <input
+                                        className="input"
+                                        type="text"
+                                        name="description"
+                                        id={`description_${uniqueId}`}
+                                        value={formData.description || ''}
+                                        onChange={handleChange}
+                                        onBlur={handleEdit}
+                                        onFocus={handleFocus}
+                                    />
                                 </div>
                             </div>
+                        </div>
+                        <div className="column is-3-tablet">
+                            <div className="field">
+                                <label className="label" htmlFor={`code_${uniqueId}`}>Product Code</label>
+                                <div className="control">
+                                    <input
+                                        className="input"
+                                        type="text"
+                                        name="code"
+                                        id={`code_${uniqueId}`}
+                                        value={formData.code || ''}
+                                        onChange={handleChange}
+                                        onBlur={handleEdit}
+                                        onFocus={handleFocus}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="column is-1-tablet is-flex is-align-items-flex-end is-justify-content-flex-end">
+                            {!isNew && uniqueId && (
+                                <DeleteElement
+                                    element_id={uniqueId}
+                                    endpoint='invoice/lineitem'
+                                    elementName={`line item: ${formData.description?.substring(0, 20)}...`}
+                                    onDelete={onDelete}
+                                />
+                            )}
+                        </div>
+
+                        {/* --- Row 2: Display-only guide information --- */}
+                        <div className="column is-full">
                             <div className="tags">
-                                {formData.cases &&
-                                <span className="tag is-info is-light">Cases: {formData.cases ?? 'N/A'}</span>}
-                                {formData.units &&
-                                <span className="tag is-info is-light">Units: {formData.units ?? 'N/A'}</span>}
-                                {formData.size &&
-                                <span className="tag is-dark">Size: {formData.size ?? 'N/A'}</span>}
-                                {formData.code &&
-                                <span className="tag is-dark">Code: {formData.code ?? 'N/A'}</span>}
+                                {/* If cases > 0, render the span, otherwise render null */}
+                                {(formData.cases && formData.cases > 0) ? (
+                                    <span className="tag is-info is-light">Cases: {formData.cases}</span>
+                                ) : null}
+
+                                {/* If units > 0, render the span, otherwise render null */}
+                                {(formData.units && formData.units > 0) ? (
+                                    <span className="tag is-info is-light">Units: {formData.units}</span>
+                                ) : null}
+
+                                {/* This one was already fine, but for consistency: */}
+                                {(formData.size && formData.size.length > 0) ? (
+                                    <span className="tag is-dark">Size: {formData.size}</span>
+                                ): null}
                             </div>
                         </div>
 
-                        {/* --- Row 2: Editable financial fields --- */}
+                        {/* --- Row 3: Editable financial fields --- */}
                         <div className="column is-4-tablet">
                             <div className="field">
                                 <label className="label is-small" htmlFor={`value_ex_vat_${uniqueId}`}>Value (Ex.
@@ -127,16 +163,13 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
                             </div>
                         </div>
 
-                        {/* --- Row 3: Editable matching fields --- */}
-
-
+                        {/* --- Row 4: Editable matching fields --- */}
                         <FormFieldWithPicker
                             label="Buyable Item"
                             fieldValue={formData.buyable_id}
                             onLaunch={openBuyablePicker}
                             pickerArray={PickerBuyableArray}
                         />
-
 
                         <div className="column is-4-tablet">
                             <div className="field">
@@ -160,7 +193,7 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
                             </div>
                         </div>
 
-                        {/* --- Row 4: Flags --- */}
+                        {/* --- Row 5: Flags --- */}
                         <div className="column is-full">
                             <div className="field">
                                 <div className="control">

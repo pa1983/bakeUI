@@ -28,12 +28,13 @@ const IngredientBuyablesList = ({ingredient_id}: IngredientBuyablesListProps) =>
         error,
         refetch,
     } = useDataFetcher<IIngredientBuyable>(`/ingredient/link_buyable/all?ingredient_id=${ingredient_id}`);
-
+    console.log("ingredient links pulled: ");
+    console.log(links);
     // Memoize the lists of linked and unlinked buyables for performance
     const {linkedBuyables, unlinkedBuyables} = useMemo(() => {
         if (!links) return {linkedBuyables: [], unlinkedBuyables: PickerBuyableArray};
 
-        const linkedBuyableIds = new Set(links.map(link => link.id));
+        const linkedBuyableIds = new Set(links.map(link => link.buyable_id));
 
         const linked = PickerBuyableArray.filter(buyable => linkedBuyableIds.has(buyable.id));
         const unlinked = PickerBuyableArray.filter(buyable => !linkedBuyableIds.has(buyable.id));
@@ -129,6 +130,7 @@ const IngredientBuyablesList = ({ingredient_id}: IngredientBuyablesListProps) =>
     // Use the `showBuyablePicker` state to render one view or the other.
     return (
         <div className="box p-5">
+            {/*{showBuyablePicker? "Show buyable picker": "don't show buyable picker"};*/}
             {showBuyablePicker ? (
                 <Picker
                     pickerTitle="Link a New Buyable Item"

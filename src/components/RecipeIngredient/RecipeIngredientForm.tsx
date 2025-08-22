@@ -52,7 +52,7 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
         const originalNumericValue = formData.quantity !== null && formData.quantity !== undefined
             ? parseFloat(String(formData.quantity))
             : null;
-
+        console.log(originalNumericValue);
         if (!isNaN(numericValue)) {
             setDisplayQuantity(numericValue.toString());
         } else if (originalNumericValue !== null) {
@@ -65,6 +65,8 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
 
         // Only call the expensive parent handleEdit API callback if the value has actually changed
         if (numericValue !== originalNumericValue) {
+            console.log("triggered the handleEdit callback with event data: ");
+            console.log(e);
             handleEdit(e);
         }
     };
