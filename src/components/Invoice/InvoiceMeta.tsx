@@ -30,7 +30,7 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
     }, []);
 
     // get context data for use in form and pickers
-    const {currencies, suppliers, PickerSupplierArray} = useData();
+    const {currencies, PickerSupplierArray} = useData();
 
     // now map the currency and Supplier arrays into correct shape for picker.
     // Memoize the calc'd array to avoid recalculation on every render of InvoiceMeta.
