@@ -26,7 +26,7 @@ export const useFormLogic = <
     const isNew = !formData?.[primaryKeyName] || formData[primaryKeyName] === 0;
     const focusInputRef = useRef<HTMLInputElement>(null);
     const auth = useAuth();
-    const [originalValueOnFocus, setOriginalValueOnFocus] = useState<string | null>(null);
+    const [originalValueOnFocus, setOriginalValueOnFocus] = useState<unknown>(null);
     const [pickerModalConfig, setPickerModalConfig] = useState<IPickerModalConfig>(createDefaultPickerModalConfig());
 
     // ADDED to fix issue with PATCH being fired by onEdit for every element in recipeElement viewer on reload
@@ -39,9 +39,11 @@ export const useFormLogic = <
 
     const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         // console.log(`handleFocus fired, value: ${e.target.value}`);
-        setOriginalValueOnFocus(e.target.value);
-        // console.log(originalValueOnFocus);
-    }, []);
+        const fieldName = e.target.name as keyof T;
+        const valueOnFocus = formData[fieldName];
+        console.log(`handleFocus fired for field: '${String(fieldName)}'. Value is:`, valueOnFocus);
+        setOriginalValueOnFocus(formData[fieldName]);
+    }, [formData]);
 
     // This handler is for standard DOM change events
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -59,15 +61,12 @@ export const useFormLogic = <
             value = e.target.value;
         }
 
-        // The type assertion is now much safer because we've handled the common types.
-        // This allows us to keep the strong `T[keyof T]` signature on the `onChange` prop.
         onChange(name as keyof T, value as T[keyof T]);
     }, [onChange]);
 
     const handlePickerValueChange = useCallback(<FieldName extends keyof T>(name: FieldName, value: T[FieldName]) => {
         onChange(name, value);
         const originalValue = formData?.[name];
-        // SUGGESTION: Add a check to prevent API calls if the value hasn't changed.
         if (originalValue !== value) {
             onEdit(name, value, originalValue as T[FieldName]);
         }
@@ -78,15 +77,17 @@ export const useFormLogic = <
 
         // default behaviour should be to send a patch request for the endpoint with the key-value pair
         if (originalValueOnFocus === null) {
+            console.log('stopping-original value passed in was null');
             return;
         }
         if (isNew || !auth.user?.access_token) {
+            console.log('stopping- user not logged in');
             return;
         }
 
         const { name, type } = e.target;
         console.log(`generic handleEdit fired for name: ${name}, type: ${type}`);
-        // Use the same robust parsing logic as in handleChange to get the correct new value type.
+        // Use the same parsing logic as in handleChange to get the correct new value type.
         let value: string | boolean | number | null;
         if (type === 'checkbox') {
             value = (e.target as HTMLInputElement).checked;
@@ -103,17 +104,14 @@ export const useFormLogic = <
         }
 
         // Retrieve the original value with its correct type from the formData prop.
-        const originalTypedValue = formData?.[name as keyof T];
+        const originalTypedValue = originalValueOnFocus as T[keyof T];
 
         // Call onEdit with all three required arguments.
         console.log(`calling onEdit with name: ${name}, value: ${value}, originalTypedValue: ${originalTypedValue}`);
-        onEdit(name as keyof T, value as T[keyof T], originalTypedValue as T[keyof T]);
+        onEdit(name as keyof T, value as T[keyof T], originalTypedValue as T[keyof T]);  // todo - fix this value and originaltypedvalue are boththe same?
 
     }, [isNew, auth.user, originalValueOnFocus, onEdit, formData]); //
 
-
-
-    // ... (other handlers like closePickerModal, handleSubmit, etc. remain the same) ...
     const closePickerModal = useCallback(() => {
         setPickerModalConfig(createDefaultPickerModalConfig());
     }, []);

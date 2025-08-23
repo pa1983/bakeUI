@@ -85,7 +85,14 @@ const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
                     <div className="level is-mobile mb-2">
                         <div className="level-left">
                             <div className="level-item">
-                                <p className="title is-6 has-text-weight-semibold">{SubRecipeName}</p>
+
+                                <a
+                                    className="button  is-small"
+                                    href={`/recipe/${formData.sub_recipe_id}`} target="_blank"
+                                >
+                                    <p className="title is-6 has-text-weight-semibold">{SubRecipeName}&nbsp;</p>
+                                    <i className="fa-solid fa-up-right-from-square"></i>
+                                </a>
                             </div>
                         </div>
                         <div className="level-right">
@@ -93,7 +100,7 @@ const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
                                 {!isNew && (
                                     <DeleteElement
                                         element_id={formData.id}
-                                        endpoint={`recipe_ingredient`}
+                                        endpoint={`recipe_sub_recipe`}
                                         elementName={SubRecipeName}
                                         onDelete={onDelete}
                                     />

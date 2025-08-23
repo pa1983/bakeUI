@@ -22,7 +22,7 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
 
     const uniqueId = formData.id;
     // The description is now used for the delete confirmation, not as a title
-    const taskDescription = formData.description || 'this task';
+    const taskDescription = formData.description || 'this step';
 
     const [displayLabourMinutes, setDisplayLabourMinutes] = useState('');  // local state var to handle the parsed value for display-only purposes (hides trailing zeros)
 
@@ -112,12 +112,12 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
                                 <div className="control">
                                     <input
                                         ref={focusInputRef}
-                                        id={`quantity_${uniqueId}`}
+                                        id={`labour_minutes_${uniqueId}`}
                                         className="input"
                                         type="number"
                                         step="any"
                                         placeholder="e.g., 25"
-                                        name="quantity"
+                                        name="labour_minutes"
                                         // The input is controlled by local string state to allow for parsing the actual value to display a decimal without trailing zeroes
                                         value={displayLabourMinutes}
                                         // onChange updates the LOCAL string state

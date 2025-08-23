@@ -18,7 +18,7 @@ export const createEmptyBuyable = (): IBuyable => {
         brand_id: null, // Should be updated by the user to a valid ID - restrict in front end to prevent submission of default value
         sku: '',
         item_name: '',
-        uom_id: 0, // Should be updated by the user to a valid ID - restrict in front end to prevent submission of default value
+        uom_id: 1, // Should be updated by the user to a valid ID - restrict in front end to prevent submission of default value
         quantity: '0',  // whole number, relative to the uom selected
         is_active: true, // New items are typically active by default
         notes: null,

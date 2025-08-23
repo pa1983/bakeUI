@@ -176,9 +176,15 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
                                 <label className="label is-small" htmlFor={`buyable_quantity_${uniqueId}`}>Buyable
                                     Quantity</label>
                                 <div className="control">
-                                    <input className="input is-small" type="number" step="any" name="buyable_quantity"
-                                           value={formData.buyable_quantity || ''} onChange={handleChange}
-                                           onBlur={handleEdit} onFocus={handleFocus}/>
+                                    <input
+                                        className="input is-small"
+                                           type="number"
+                                           name="buyable_quantity"
+                                           id={`buyable_quantity_${uniqueId}`}
+                                           value={formData.buyable_quantity || ''}
+                                           onChange={handleChange}
+                                           onBlur={handleEdit}
+                                           onFocus={handleFocus}/>
                                 </div>
                             </div>
                         </div>
@@ -187,7 +193,10 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
                                 <label className="label is-small" htmlFor={`unit_cost_${uniqueId}`}>Unit Cost</label>
                                 <div className="control">
                                     <input className="input is-small" type="number" step="0.01" name="unit_cost"
-                                           value={formData.unit_cost || ''} onChange={handleChange} onBlur={handleEdit}
+                                           id={`unit_cost_${uniqueId}`}
+                                           value={formData.unit_cost || ''}
+                                           onChange={handleChange}
+                                           onBlur={handleEdit}
                                            onFocus={handleFocus}/>
                                 </div>
                             </div>
@@ -199,8 +208,11 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
                                 <div className="control">
                                     <label className="checkbox">
                                         <input type="checkbox" name="is_delivery"
-                                               checked={formData.is_delivery || false} onChange={handleChange}
-                                               onBlur={handleEdit} onFocus={handleFocus}/>
+                                               id={`is_delivery_${uniqueId}`}
+                                               checked={formData.is_delivery || false}
+                                               onChange={handleChange}
+                                               onBlur={handleEdit}
+                                               onFocus={handleFocus}/>
                                         <span className="ml-2">Is Delivery Charge</span>
                                     </label>
                                 </div>

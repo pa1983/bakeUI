@@ -35,7 +35,7 @@ const cognitoAuthConfig = {
     redirect_uri: REDIRECT_URL,
     response_type: "code",
     scope: "email openid phone",
-    userStore: new WebStorageStateStore({store: window.sessionStorage})};  // currently storing tokens in sessionStore for security.  Change to localStorage for reduced security but improved convenience
+    userStore: new WebStorageStateStore({store: window.localStorage})};  // changed to local storage to avoid need to log in each time app is opened in a new tab
 
 
 // Ddedicated component to compose all providers- makes the main file cleaner and the provider setup reusable.
@@ -46,9 +46,6 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => (
                 <AuthProvider {...cognitoAuthConfig}>
                     <KeyboardShortcutProvider>
                         <UnitOfMeasureProvider>
-                            {/* Your TODO about an ingredients context is a great idea!
-                                The DataProvider is the perfect place to implement that
-                                data-loading logic. */}
                             <DataProvider>
                                 {children}
                             </DataProvider>
@@ -60,7 +57,7 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => (
     </React.StrictMode>
 );
 
-// Runtime check to ensure the root element exists.
+// Runtime check to ensure the root element exists and keep TS happy
 const rootElement = document.getElementById("root");
 if (!rootElement) {
     throw new Error("Fatal Error: The root element with ID 'root' was not found in the DOM.");

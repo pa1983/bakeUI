@@ -174,11 +174,7 @@ const ViewRecipeForm = () => {
             {(id && parseInt(id) > 0) ? (
                 <div className="field is-grouped mt-4">
 
-                    <div className="control">
-                        <button className="button recipe-sub-recipe" onClick={() => handleTogglePicker('subrecipe')}>
-                            Add Sub Recipe
-                        </button>
-                    </div>
+
                     <div className="control">
                         <button className="button recipe-ingredient" onClick={() => handleTogglePicker('ingredient')}>
                             Add Ingredient
@@ -189,6 +185,13 @@ const ViewRecipeForm = () => {
                             Add Labour
                         </button>
                     </div>
+                    <div className="control">
+                        <button className="button recipe-sub-recipe" onClick={() => handleTogglePicker('subrecipe')}>
+                            Add Sub Recipe
+                        </button>
+                    </div>
+
+
                     {/* "Hide All" button only shows when a picker is active */}
                     {activePicker !== 'none' && (
                         <div className="control">

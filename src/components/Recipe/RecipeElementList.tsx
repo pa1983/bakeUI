@@ -171,7 +171,7 @@ const RecipeElementList = ({recipe_id, refetchTrigger}: RecipeElementListProps) 
 
     return (
         <div className="box">
-            <h3 className="title is-5">Recipe Elements {recipeElements?.length}</h3>
+            <h3 className="title is-5">Recipe Elements  ({recipeElements?.length})</h3>
             {recipeElements.map(element => {
                 if (!element.data.id || element.data.id === 0) {
                     // This can happen with new, unsaved elements or bad data - skip rendering to avoid type errors

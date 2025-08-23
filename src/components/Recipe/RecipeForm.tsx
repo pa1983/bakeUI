@@ -58,7 +58,7 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
             {/* --- toggle button --- */}
             <div className="field">
                 <div className="control">
-                    <button type="button" className="button is-text is-small" onClick={toggleDetails}>
+                    <button type="button" className="button is-small is-primary" onClick={toggleDetails}>
                         <span className="icon is-small">
                            {/* Assumes you have Font Awesome loaded, which is common with Bulma */}
                             <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'}`}></i>
