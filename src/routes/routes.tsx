@@ -1,4 +1,4 @@
-import {createBrowserRouter} from "react-router-dom";
+import {createBrowserRouter, useParams} from "react-router-dom";
 import Home from '../components/Home/Home.tsx';
 import Contact from '../components/Home/Contact.tsx';
 import NotFound from '../components/Home/NotFound.tsx';
@@ -18,7 +18,20 @@ import ViewRecipeForm from "../components/Recipe/ViewRecipeForm.tsx";
 import RecipeList from "../components/Recipe/RecipeList.tsx";
 import LabourerList from "../components/Labourer/LabourerList.tsx";
 import ViewLabourerForm from "../components/Labourer/ViewLabourerForm.tsx";
+import RecipeCostAnalysis from "../components/RecipeCostAnalysis/RecipeCostAnalysis.tsx";
 
+// wrapper to extract the ID param and pass as a prop to the cost analysis component, removing need for complex logic in the component
+const RecipeCostAnalysisWrapper = () => {
+    const { id } = useParams<{ id: string }>();
+
+    // Defensive check: Ensure the ID from the URL is a valid number.
+    const recipeId = id ? parseInt(id, 10) : 0;
+    if (isNaN(recipeId) || recipeId <= 0) {
+        return <NotFound />; // Or a more specific error component
+    }
+
+    return <RecipeCostAnalysis recipe_id={recipeId} />;
+};
 
 const router = createBrowserRouter([
     {
@@ -77,13 +90,13 @@ const router = createBrowserRouter([
             {
                 path: '/buyable/brand/:id',
                 element: <ViewBrandForm
-                isModal={false}/>
+                    isModal={false}/>
             },
 
             {
                 path: '/buyable/all',
                 element: <ViewBrandForm
-                isModal={false}/>
+                    isModal={false}/>
             },
             {
                 path: '/buyable/:id',
@@ -99,6 +112,10 @@ const router = createBrowserRouter([
                 element: <ViewSupplierForm/>
             },
             {
+                path: 'recipe/:id/costanalysis',
+                element: <RecipeCostAnalysisWrapper/>
+
+            }, {
                 path: '/recipe/all',
                 element: <RecipeList/>
             },

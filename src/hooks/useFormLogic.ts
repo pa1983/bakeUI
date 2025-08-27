@@ -76,10 +76,10 @@ export const useFormLogic = <
     const handleEdit = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
 
         // default behaviour should be to send a patch request for the endpoint with the key-value pair
-        if (originalValueOnFocus === null) {
-            console.log('stopping-original value passed in was null');
-            return;
-        }
+        // if (originalValueOnFocus === null) {
+        //     console.log('stopping-original value passed in was null');
+        //     return;
+        // }
         if (isNew || !auth.user?.access_token) {
             console.log('stopping- user not logged in');
             return;

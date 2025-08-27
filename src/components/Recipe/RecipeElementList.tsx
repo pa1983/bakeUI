@@ -167,7 +167,6 @@ const RecipeElementList = ({recipe_id, refetchTrigger}: RecipeElementListProps) 
         );
     }
 
-// Inside the RecipeElementList component...
 
     return (
         <div className="box">

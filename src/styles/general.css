@@ -87,3 +87,11 @@
 .modal-card-foot {
     justify-content: flex-end
 }
+
+.clickable-chart .MuiPieArc-root {
+    cursor: pointer;
+}
+
+.MuiChartsLegend-item{
+    color: aliceblue;
+}

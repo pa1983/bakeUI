@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 import {createEmptyRecipe} from '../../models/IRecipe';
 import {fetchRecipe, postNewRecipe} from '../../services/recipeService';
@@ -28,7 +28,7 @@ const ViewRecipeForm = () => {
     const {showFlashMessage} = useFlash();
     const {refetchRecipes: refetchDataList} = useData();
     const auth = useAuth();
-
+    const navigate = useNavigate();
     // --- STATE REFACTOR ---
     // Use a single state to manage which picker is visible
     const [activePicker, setActivePicker] = useState<ActivePicker>('none');
@@ -200,10 +200,19 @@ const ViewRecipeForm = () => {
                             </button>
                         </div>
                     )}
+
+                    <div className="control">
+                        <button className="button" onClick={()=>{navigate(`/recipe/${recipeIdNumber}/costanalysis`)}}>View Cost Analysis</button>
+                            </div>
+
                 </div>
+
+
+
+
+
             ) : <p>Recipe elements can only be added once recipe details have been saved</p>
             }
-
 
             {/* Conditionally render the Sub-Recipe Picker */}
             {activePicker === 'subrecipe' && (

@@ -121,3 +121,30 @@ export async function fetchAllElements<T>(
         handleAxiosError(error, 'fetch all', friendly_name);
     }
 }
+/**
+ * For edge cases, function takes any url and passes it to the api, with a list of params, and passes back whatever it gets
+ * @param access_token
+ * @param friendly_name
+ * @param api_endpoint
+ */
+export async function fetchAllElementsWithParams<T>(
+    access_token: string,   // jwt taken from auth.user.access_token
+    friendly_name: string,  // for display in console and log messages
+    api_endpoint: string,  // note - no leading or trailing slashes
+    params?: Record<string, string>
+): Promise<ApiResponse<T[]>> {
+    const url = `${config.API_URL}/${api_endpoint}`;
+
+    console.log(`fetching from url ${url} , friendly name ${friendly_name}, api endpoint ${api_endpoint}.`);
+
+    try {
+        const response = await axios.get<ApiResponse<T[]>>(url, {
+            headers: {Authorization: `Bearer ${access_token}`},
+            params: params
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        handleAxiosError(error, 'fetch all with params', friendly_name);
+    }
+}

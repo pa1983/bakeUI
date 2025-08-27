@@ -1,5 +1,5 @@
 // display form containing all the invoice's meta data
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import useFlash from '../../contexts/FlashContext.tsx';
 import {patchField} from '../../services/commonService.ts';
 import {useAuth} from 'react-oidc-context';
@@ -31,6 +31,17 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
 
     // get context data for use in form and pickers
     const {currencies, PickerSupplierArray} = useData();
+
+
+    // This formats the full datetime string into the 'yyyy-MM-dd' format
+    // that the date input requires, without modifying the original state.
+    const formattedInvoiceDate = useMemo(() => {
+        if (!formData.invoice_date) {
+            return '';
+        }
+        // Take the first 10 characters (the 'yyyy-MM-dd' part) of the ISO string passed from the API.
+        return formData.invoice_date.slice(0, 10);
+    }, [formData.invoice_date]);
 
     // now map the currency and Supplier arrays into correct shape for picker.
     // Memoize the calc'd array to avoid recalculation on every render of InvoiceMeta.
@@ -124,10 +135,18 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
         // The 'name' from an HTML input event is always a string.
         const fieldName = name as keyof InvoiceRead;
 
-        // Prevent API call if the value hasn't actually changed.
-        const originalValue = String(initialFormDetails[fieldName] ?? '');
-        if (originalValue === value) {
-            return; // No change, no need to save.
+        // 3. Adjust the comparison logic for dates
+        let originalValue = String(initialFormDetails[fieldName] ?? '');
+        // If we are dealing with the date, compare only the date part to prevent unnecessary saves.
+        if (fieldName === 'invoice_date' && originalValue) {
+            originalValue = originalValue.slice(0, 10);
+        } else {
+
+            // Prevent API call if the value hasn't actually changed.
+            originalValue = String(initialFormDetails[fieldName] ?? '');
+            if (originalValue === value) {
+                return; // No change, no need to save.
+            }
         }
 
         // Parse the value to its correct type before saving.
@@ -170,7 +189,7 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
                                 <div className="field">
                                     <label className="label">Invoice Date</label>
                                     <div className="control"><input className="input" type="date" name="invoice_date"
-                                                                    value={formData.invoice_date || ''}
+                                                                    value={formattedInvoiceDate || ''}
                                                                     onChange={handleChange} onBlur={handleBlur}/></div>
                                 </div>
                             </div>

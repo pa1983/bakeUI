@@ -157,7 +157,7 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
                                 <label className="label is-small" htmlFor={`vat_percentage_${uniqueId}`}>VAT %</label>
                                 <div className="control">
                                     <input className="input is-small" type="number" step="0.01" name="vat_percentage"
-                                           value={formData.vat_percentage || ''} onChange={handleChange}
+                                           value={formData.vat_percentage?? ''} onChange={handleChange}
                                            onBlur={handleEdit} onFocus={handleFocus}/>
                                 </div>
                             </div>
