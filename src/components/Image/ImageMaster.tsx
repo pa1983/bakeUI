@@ -14,12 +14,9 @@ interface ImageMasterProps {
 
 const ImageMaster = ({title, getEndpoint, postEndpoint}: ImageMasterProps) => {
 
-    // CORRECTED: `useAuth` returns the auth object directly.
-    // You should not destructure a property named 'auth' from it.
     const auth = useAuth();
 
     // Guard the fetch call. Only provide the endpoint URL if the user is authenticated.
-    // This assumes `useDataFetcher` will not run if the URL is null.
     const {
         data: images,
         loading,

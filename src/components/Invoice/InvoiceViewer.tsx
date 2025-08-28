@@ -64,8 +64,6 @@ function InvoiceViewer() {
         fetchInvoice();
     }, [invoice_id, auth, showFlashMessage]);
 
-    // --- Corrected Return Block ---
-
     if (loading) {
         return (<div>
             <LoadingSpinner

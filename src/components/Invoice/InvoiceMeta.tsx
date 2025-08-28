@@ -137,7 +137,7 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
 
         // 3. Adjust the comparison logic for dates
         let originalValue = String(initialFormDetails[fieldName] ?? '');
-        // If we are dealing with the date, compare only the date part to prevent unnecessary saves.
+        // If we are dealing with the date, compare only the date part (not time, tz) to prevent unnecessary saves.
         if (fieldName === 'invoice_date' && originalValue) {
             originalValue = originalValue.slice(0, 10);
         } else {

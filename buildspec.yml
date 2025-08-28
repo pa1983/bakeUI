@@ -13,13 +13,13 @@ phases:
       - npm run build  # builds the React app to /dist
   post_build:
     commands:
-      # The S3_BUCKET and CF_DISTRIBUTION_ID are environment variables we will set in CodeBuild
+      # The S3_BUCKET and CF_DISTRIBUTION_ID are environment variables which will be set in CodeBuild
       - echo "Deploying to S3..."
       - aws s3 sync dist/ s3://bakeonomics/spa --delete  # copy in the newly built files; delete anything not in dist
       - echo "Invalidating CloudFront cache..."
-      - aws cloudfront create-invalidation --distribution-id E35MZAIKMRD12W --paths "/spa/*"
+      - aws cloudfront create-invalidation --distribution-id E35MZAIKMRD12W --paths "/*"
 
-#artifacts:
+#artifacts:  This needs to be omitted - passing in None will fail
 #  files:
 ## None - build phase has taken care of all artefact handling
 #

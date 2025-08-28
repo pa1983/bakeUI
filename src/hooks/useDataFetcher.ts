@@ -23,7 +23,7 @@ export const useDataFetcher = <T>(endpoint: string | null, params?: FetchParams)
     const [error, setError] = useState<string | null>(null);
 
     // To prevent re-fetching on every render due to a new params object instance,
-    // we serialize it for the dependency array. This is a stable way to check for changes.
+    // we serialise it for the dependency array. This is a stable way to check for changes.
     const serializedParams = JSON.stringify(params);
 
     const fetchData = useCallback(async () => {

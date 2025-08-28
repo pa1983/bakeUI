@@ -75,8 +75,6 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
     return (
         <div className="box recipe-labour p-4 mb-4">
             <div className="columns">
-
-                {/* --- LEFT COLUMN (2/3 width) --- */}
                 <div className="column is-two-thirds">
 
                     <div className="field is-horizontal">
@@ -133,8 +131,6 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
                             </div>
                         </div>
                     </div>
-
-                    {/* --- TOP LEFT: Category Dropdown (styled as title) + Delete Button --- */}
                     <div className="level is-mobile mb-2">
                         <div className="level-left">
                             <div className="level-item" style={{flexGrow: 1}}>
@@ -181,11 +177,7 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
                         </div>
                     </div>
 
-                    {/* --- BOTTOM LEFT: Labourer and Minutes side-by-side --- */}
-
                 </div>
-
-                {/* --- RIGHT COLUMN (1/3 width) --- */}
                 <div className="column is-one-third">
                     <div className="field">
                         <label className="label is-small" htmlFor={`description_${uniqueId}`}>Task Description</label>

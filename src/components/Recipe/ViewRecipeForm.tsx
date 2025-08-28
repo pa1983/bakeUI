@@ -29,7 +29,6 @@ const ViewRecipeForm = () => {
     const {refetchRecipes: refetchDataList} = useData();
     const auth = useAuth();
     const navigate = useNavigate();
-    // --- STATE REFACTOR ---
     // Use a single state to manage which picker is visible
     const [activePicker, setActivePicker] = useState<ActivePicker>('none');
 
@@ -61,10 +60,6 @@ const ViewRecipeForm = () => {
     // callback function for behaviour when a recipe element is clicked in the sub recipe picker.
 
     const onSubRecipeSelect = async (selectedId: string | number) => {
-        // --- FIX #1: Handle Flexible Input from the Picker ---
-        // The `onSelectOverride` prop from your generic list component is flexible
-        // and can provide a string or a number. We handle that here by accepting
-        // `string | number` and safely parsing it.
         const subRecipeId = Number(selectedId);
 
         if (isNaN(subRecipeId) || subRecipeId === 0) {
@@ -78,10 +73,6 @@ const ViewRecipeForm = () => {
             return;
         }
 
-        // --- FIX #2: Create the Correct Data Structure for the API ---
-        // This is the `Omit` pattern we established. It's the correct way to
-        // create an object for a *new* database entry, as it has no 'id' yet.
-        // This perfectly matches the signature of your reusable `postNewElement` factory.
         const formData: IRecipeSubRecipe = {
             id: recipeIdNumber,
             parent_recipe_id: recipeIdNumber,

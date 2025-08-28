@@ -78,10 +78,7 @@ const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
     return (
         <div className="box is-light p-4 mb-4 recipe-sub-recipe ">
             <div className="columns is-vcentered">
-
-                {/* --- LEFT COLUMN (2/3 width) --- */}
                 <div className="column is-two-thirds">
-                    {/* --- Prominent Ingredient Name + Delete Button --- */}
                     <div className="level is-mobile mb-2">
                         <div className="level-left">
                             <div className="level-item">
@@ -108,8 +105,6 @@ const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
                             </div>
                         </div>
                     </div>
-
-                    {/* --- Qty and UOM side-by-side --- */}
                     <div className="field is-horizontal">
                         <div className="field-body">
                             {/* Quantity Input */}
@@ -165,8 +160,6 @@ const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
                         </div>
                     </div>
                 </div>
-
-                {/* --- RIGHT COLUMN (1/3 width) --- */}
                 <div className="column is-one-third">
                     <div className="field">
                         <label className="label is-small" htmlFor={`notes_${uniqueId}`}>Notes</label>

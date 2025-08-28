@@ -38,8 +38,6 @@ const SupplierForm = (props: IGenericFormProps<ISupplier>) => {
             <div className="field"><label className="label" htmlFor="email_address">Email Address</label><div className="control"><input id="email_address" className="input" type="email" name="email_address" placeholder="e.g., orders@acme.com" value={formData.email_address || ''} onChange={handleChange} onBlur={handleEdit} onFocus={handleFocus} disabled={isSaving}/></div></div>
             <div className="field"><label className="label" htmlFor="address">Address</label><div className="control"><textarea id="address" className="textarea" name="address" value={formData.address || ''} onChange={handleChange} onBlur={handleEdit} onFocus={handleFocus} disabled={isSaving}/></div></div>
 
-
-            {/* Account Details - CORRECTED BLOCK */}
             <div className="field is-horizontal">
                 <div className="field-body">
                     <div className="field">

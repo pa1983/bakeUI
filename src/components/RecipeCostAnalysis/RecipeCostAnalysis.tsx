@@ -8,9 +8,6 @@ interface RecipeCostAnalysisProps  {
     date_point_prop?: string;
 }
 
-// FIX: Use React.FC for explicit and robust component typing.
-// This clearly defines `RecipeCostAnalysis` as a React Functional Component
-// and allows TypeScript to correctly infer the types of the destructured props.
 const RecipeCostAnalysis: React.FC<RecipeCostAnalysisProps> = ({recipe_id, date_point_prop}) => {
     // Set date_point to the prop value, or default to today's date.
     const date_point = date_point_prop || new Date().toISOString().slice(0, 10);

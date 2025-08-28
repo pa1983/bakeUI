@@ -123,7 +123,7 @@ export const useElementFormLogic = <
                     navigate(`/${apiEndpoint}/${response.data[primaryKeyName]}`);
                 }
             }
-        } catch (err: unknown) { // FIX: Use `unknown` for type safety
+        } catch (err: unknown) {
             const message = err instanceof Error ? err.message : 'An unknown error occurred';
             console.log(message);
             showFlashMessage( 'An error occurred', 'danger');
@@ -142,15 +142,8 @@ export const useElementFormLogic = <
             return;
         }
 
-        // console.log(`useElementFormLogic handleEdit fired for fieldName: ${fieldName}, value: ${value}`)
-        // if (element[fieldName] === value) {
-        //     return; // No change, no need to save.
-        // }
-
         setIsSaving(true);
         try {
-            // FIX: Provide both generic arguments, T and K, to match the
-            // new signature of the patchField service.
             const response = await patchField<T, K>(
                 auth.user.access_token,
                 element[primaryKeyName],

@@ -55,7 +55,6 @@ function ViewInvoicePDF({invoice_id: invoice_id_from_prop}: ViewInvoicePDFProps)
     const {showFlashMessage} = useFlash();
     const {invoice_id: invoice_id_from_params} = useParams<{ invoice_id: string }>();
 
-    // SUGGESTION: This logic is more robust for parsing the ID from either source.
     let invoice_id: number | undefined;
     if (invoice_id_from_prop) {
         invoice_id = invoice_id_from_prop;
