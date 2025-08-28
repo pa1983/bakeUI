@@ -5,25 +5,22 @@ import useFlash from '../contexts/FlashContext';
 import { patchField } from '../services/commonService';
 import type {IGenericFormProps} from "../models/IFormProps.ts";
 
-// FIX: The config is now generic over the entity `T` and its primary key's name `K`.
+// The config is generic over the entity `T` and its primary key's name `K`.
 export interface ElementFormConfig<T, K extends keyof T> {
     prop_element_id?: number | string;
     primaryKeyName: K;
     elementName: string;
     apiEndpoint: string;
     createEmptyElement: () => T;
-    // FIX: getElement can now accept a string or number for the ID.
     getElement: (id: number | string, token: string) => Promise<{ data: T | null, message?: string }>;
-    // FIX: postNewElement should include status_code for robust error handling.
-    postNewElement: (data: T, token: string) => Promise<{ data: T | null, message: string, status_code: number }>;
+    postNewElement: (data: T, token: string) => Promise<{ data: T | null, message: string}>;
     refetchDataList: () => void;
     FormComponent: React.ComponentType<IGenericFormProps<T>>;
-    // FIX: The ID type is now correctly inferred from T and K.
     onSuccess?: (id: T[K]) => void;
     isModal?: boolean;
 }
 
-// FIX: The hook is also generic over T and K, with a much stronger type constraint.
+// The hook is also generic over T and K, with a much stronger type constraint.
 // T must be an object where the property K has a value of type number or string.
 export const useElementFormLogic = <
     T extends Record<K, number | string>,
@@ -111,9 +108,9 @@ export const useElementFormLogic = <
         try {
             const response = await postNewElement(formData, auth.user.access_token);
 
-            const flashType = response.status_code >= 200 && response.status_code < 300
-                ? 'success'
-                : 'danger';
+            // previously had status_code from api response (incorrectly) and was conditionally setting the flash type
+            // from this.  Now relying on exception being thrown by errors and handled in the postNewElement function. todo - TEST
+            const flashType =  'success';
 
             showFlashMessage(response.message, flashType);
 
