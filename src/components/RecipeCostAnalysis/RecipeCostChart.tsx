@@ -35,7 +35,7 @@ const RecipeCostChart = ({ data }: { data: RecipeCostAnalysisType[] }) => {
         }, {} as Record<string, { value: number; cost_type: string }>);
 
         // Convert the aggregated object to an array and sort so outer ring position matches inner
-        let finalOuterRingData = Object.entries(outerRingAgg).map(([label, data]) => ({
+        const finalOuterRingData = Object.entries(outerRingAgg).map(([label, data]) => ({
             label,
             value: data.value,
             cost_type: data.cost_type,

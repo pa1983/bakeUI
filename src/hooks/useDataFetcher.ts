@@ -46,7 +46,12 @@ export const useDataFetcher = <T>(endpoint: string | null, params?: FetchParams)
             });
             setData(response.data.data || []);
         } catch (err: unknown) {
-            const errorMessage = err.response?.data?.detail || err.message || 'An unknown error occurred';
+            let errorMessage = 'An unknown error occurred';
+            if (axios.isAxiosError(err) && err.response) {
+                errorMessage = err.response.data?.detail || err.message;
+            } else if (err instanceof Error) {
+                errorMessage = err.message;
+            }
             console.error(`Failed to fetch from ${endpoint}:`, err);
             setError(`Failed to fetch data: ${errorMessage}`);
             setData(null); // Reset to initial state on error

@@ -44,7 +44,11 @@ function FileUploader({
 
         } catch (err: unknown) {
             console.error(err);
-            setError(err.response?.data?.message || "File upload failed");
+            if (axios.isAxiosError(err)) {
+                setError(err.response?.data?.message || "File upload failed");
+            } else {
+                setError("An unknown error occurred during file upload.");
+            }
         }
 
     }, [auth, PostUrl, onSuccess]);

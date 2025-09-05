@@ -1,5 +1,5 @@
 import type {InvoiceListResponse} from "../../models/invoice.ts";
-import StatusIcon from "./statusIcon.tsx";
+// import StatusIcon from "./statusIcon.tsx";
 import FriendlyDate from "../Utility/FriendlyDate.tsx";
 import DeleteInvoice from "./DeleteInvoice.tsx";
 
