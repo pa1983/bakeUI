@@ -1,5 +1,10 @@
 export interface IPickerElement {
-    // a single element in a picker array
+    // ID is required and should be unique for each item in the picker array.  It is typically the primary key of
+    // the related table entry.
+    // a single element in a picker array.  The title can be any string the developer wants to use to
+    // concisely describe the item.
+    // The subtitle is optional and can be used to provide additional information about the item.
+    // The imageUrl is optional and can be used to provide a thumbnail image for the item.
     id: number;
     title: string;
     subtitle: string | null;
@@ -7,17 +12,25 @@ export interface IPickerElement {
 }
 
 export interface PickerProps {
-    // The array of items to display in the picker list.
+    // The array of items to display in the picker list, conforming to the IPickerElement interface.
     pickerArray: IPickerElement[];
-    // The title displayed at the top of the modal.
+    // The title displayed at the top of the picker list.
     pickerTitle: string;
-    // Callback function executed when an item is selected from the list. Takes the ID of the selected item as an argument.
+    // Callback function executed when an item is selected from the list.
+    // Takes the ID of the selected item as an argument.
+    // Typically used to pass the selected item's ID to a parent component for entry into a form.
     pickerOnSelect: (id: number) => void;
+    // Optional callback function executed when the picker is closed.
     onClose: () => void | null;
-    // Callback function executed when the "Add New" button is clicked. IN a modal it will flip the addNewFormActive boolean, in a page view it can trigger a navigation to the new item form
+    // Callback function executed when the "Add New" button is clicked.
+    // IN a modal it is used to flip the addNewFormActive boolean to switch between picker and new entry form views
+    // In a page view it can trigger a navigation to the new item, or any other required logic
     pickerOnAddNewClicked?: () => void | null;
     pickerSubtitle?: string | null;
+    // Optional text to display on the "Add New" button - if the text is not provided, the default "Add New" will be used.
+    // should be overridden if the pickerOnAddNewClicked is not the standard behaviour of opening an add new form
     addNewButtonText?: string;
+    // Defaults to true.  If false, the search bar will not be displayed to keept the picker list clean.
     showSearch?: boolean;
 }
 

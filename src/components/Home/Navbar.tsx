@@ -79,17 +79,34 @@ const Navbar = () => {
                 {/* Navigation Links */}
                 <div className={`navbar-menu ${isMobileMenuOpen ? 'is-active' : ''}`}>
                     <div className="navbar-start">
-                        <Link to="/" className="navbar-item">Home</Link>
 
                         <NavDropdown
                             name="general"
                             title="General"
                             links={[
                                 { to: '/buyable/brand/all', label: 'Brands' },
-                                { to: '/buyable/all', label: 'Buyables' },
                                 { to: '/buyable/supplier/all', label: 'Suppliers' },
                             ]}
                         />
+                        <NavDropdown
+                            name="invoices"
+                            title="Invoices"
+                            links={[
+                                { to: '/invoice/invoices', label: 'All Invoices' },
+                                { to: '/invoice/new', label: 'New Manual Invoice' },
+                            ]}
+                        />
+
+                        <NavDropdown
+                            name="buyables"
+                            title="Buyables"
+                            links={[
+
+                                { to: '/buyable/all', label: 'Buyables' },
+                                { to: '/buyable/new', label: 'New Buyable' },
+                            ]}
+                        />
+
 
                         <NavDropdown
                             name="ingredients"
@@ -117,18 +134,15 @@ const Navbar = () => {
                                 { to: '/recipe/new', label: 'Add New' },
                             ]}
                         />
-
                         <NavDropdown
-                            name="invoices"
-                            title="Invoices"
+                            name="info"
+                            title="Info"
                             links={[
-                                { to: '/invoice/invoices', label: 'All Invoice List' },
-                                { to: '#', label: 'Add New Invoice' },
+                                { to: '/about', label: 'About' },
+                                { to: '/contact', label: 'Contact' },
                             ]}
                         />
 
-                        <Link to="/about" className="navbar-item">About</Link>
-                        <Link to="/contact" className="navbar-item">Contact</Link>
                     </div>
 
                     <div className="navbar-end">
@@ -144,7 +158,7 @@ const Navbar = () => {
                                                 <span>{auth.user?.profile.email}</span>
                                             </span>
                                         </div>
-                                        <button onClick={() => auth.removeUser()} className="button is-danger">
+                                        <button onClick={() => auth.signoutRedirect()} className="button is-danger">
                                             <span className="icon">
                                                 <i className="fas fa-sign-out-alt"></i>
                                             </span>

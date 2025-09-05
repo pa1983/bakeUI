@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useCallback, useMemo} from 'react';
+import {useNavigate} from 'react-router-dom';
 import Picker from '../Picker/Picker';
-import { useData } from '../../contexts/DataContext';
-import type { ListViewConfig } from '../../config/listViewConfig';
+import {useData} from '../../contexts/DataContext';
+import type {ListViewConfig} from '../../config/listViewConfig';
 
 // Define the props that the generated component will accept.
 interface ListViewComponentProps {
@@ -15,7 +15,7 @@ interface ListViewComponentProps {
  * The generated component can accept its own `title` and `onSelectOverride` props
  * to override the initial configuration.
  * @param {ListViewConfig} config - The default configuration for the list view.
- * @returns A React component that renders a configured Picker.
+ * @returns A React component that renders a configured Picker for use as a list view.
  */
 export function createListView(config: ListViewConfig) {
     // These are the default values from the factory configuration.
@@ -32,11 +32,12 @@ export function createListView(config: ListViewConfig) {
     // The generated component accepts its own props.
     const ListViewComponent = (props: ListViewComponentProps) => {
         // Props to be passed directly to the component at render time.
-        const { title: propTitle, onSelectOverride: propOnSelectOverride } = props;
+        const {title: propTitle, onSelectOverride: propOnSelectOverride} = props;
         const dataContext = useData();
         const navigate = useNavigate();
 
-        // Determine the data source - can optionally pass one in or pull it from context
+        // Determine the data source - can optionally pass a picker array in or pull it from context, allowing
+        // the component to be used in different contexts.
         const itemsToRender = useMemo(() => {
             if (pickerArray) return pickerArray;
             if (!dataContext) return [];
@@ -54,9 +55,7 @@ export function createListView(config: ListViewConfig) {
         // Use the onSelect from props if provided, otherwise fall back to the config onSelect.
         const finalOnSelectOverride = propOnSelectOverride || configOnSelectOverride;
 
-        // Update the callback to use the final override function.
-
-
+        // Update the callback to use the final override function
         const elementOnSelect = useCallback((id: number | string) => {
                 if (finalOnSelectOverride) {
                     console.log('using the override onSelect');
@@ -65,9 +64,11 @@ export function createListView(config: ListViewConfig) {
                     navigate(`/${endpoint}/${id}`);
                 }
             },
-            [navigate, finalOnSelectOverride] 
+            [navigate, finalOnSelectOverride]
         );
 
+        // if an onAddNewOverride is provided, use it, otherwise default behaviou is to
+        // navigate to the new endpoint, taking the user away from the list view.
         const pickerOnAddNewClicked = useCallback(() => {
             if (onAddNewOverride) {
                 onAddNewOverride();
@@ -87,7 +88,7 @@ export function createListView(config: ListViewConfig) {
             />
         );
     };
-
+    // remove whitespace from the title and add it to the component name for debugging purposes
     ListViewComponent.displayName = `${configTitle.replace(/\s/g, '')}ListView`;
 
     return ListViewComponent;

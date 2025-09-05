@@ -1,54 +1,35 @@
-# React + TypeScript + Vite
+# Installation Instructions #
+ 
+There's no need to install - the whole application is running live here:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## https://bake.ardmillan.ie ##
 
-Currently, two official plugins are available:
+Log in using the following test credentials:
+Username: user@ardmillan.ie
+Password: Bake123!
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## To install locally ##
 
-## Expanding the ESLint configuration
+For the front end to function in a meaningful way, you'll need to install the Bakeonomics backend API too.
+The backend (see the separte backend source file), but for security the .env file has been omitted from the source 
+files as it contains API keys and AWS credentials.  If you need it, please contact me directly:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+07841903012
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+pa1983@gmail.com
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+To install the Bakeonomics React front end:
+CD into the bake directory and run:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+Install requirements:
+
+`npm install`
+
+Build the React app:
+
+`npm run build`
+
+Go to
+http://localhost:5174
+

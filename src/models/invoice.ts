@@ -1,7 +1,4 @@
-/**
- * Based on the Python `ImageBase` SQLModel.
- * Represents common metadata for files stored in S3.
- */
+
 export interface ImageBase {
     file_name: string;
     file_ext: string;
@@ -15,18 +12,11 @@ export interface ImageBase {
     s3_key: string;
 }
 
-/**
- * Based on the Python `ImageInvoiceRead` Pydantic model.
- * Represents image data specifically for an invoice.
- */
+
 export interface ImageInvoiceRead extends ImageBase {
     image_id: number;
 }
 
-/**
- * Based on the Python `InvoiceStatus` SQLModel.
- * Describes the possible statuses of an invoice.
- */
 export interface InvoiceStatus {
     name: string;
     display_name: string;
@@ -34,10 +24,7 @@ export interface InvoiceStatus {
     sort_order: number;
 }
 
-/**
- * Based on the Python `ParsedInvoiceDetails` SQLModel.
- * Contains invoice-level fields extracted directly from the document.
- */
+
 export interface ParsedInvoiceDetails {
     supplier_name: string | null;
     customer_account_number: string | null;
@@ -49,15 +36,10 @@ export interface ParsedInvoiceDetails {
     delivery_cost: number | null;
     parsed_currency: string | null;
     document_type: string;
-    invoice_date: string | null; // ISO 8601 date string
+    invoice_date: string | null;
     confidence_score: number;
 }
 
-/**
- * Based on the Python `LineItemRead` SQLModel.
- * Represents a fully formed line item with database ID and linked buyable info.
- * This version correctly reflects the optional fields from the Python model.
- */
 export interface ILineItem {
     id: number | null;
     invoice_id: number | null;
@@ -71,8 +53,8 @@ export interface ILineItem {
     vat_percentage: number | null;
     is_delivery: boolean | null;
     buyable_id: number | null;
-    buyable_quantity: number | null; // JavaScript number can handle Python's Decimal for many use cases
-    unit_cost: number | null;      // Consider using a string or a library like decimal.js if precision is critical
+    buyable_quantity: number | null;
+    unit_cost: number | null;
 }
 
 export function createEmptyLineItem(): ILineItem {
@@ -94,11 +76,7 @@ export function createEmptyLineItem(): ILineItem {
     };
 }
 
-/**
- * The main interface for a full invoice DTO.
- * Based on the Python `InvoiceRead` SQLModel.
- * This version correctly types the nested `invoice_status` object.
- */
+
 export interface InvoiceRead extends ParsedInvoiceDetails {
     id: number;
     date_added: string | null;
@@ -110,20 +88,16 @@ export interface InvoiceRead extends ParsedInvoiceDetails {
     supplier_id: number | null;
     currency_code: string | null;
 
-    // --- Nested relationships ---
     invoice_status: InvoiceStatus | null;
     invoice_image: ImageInvoiceRead | null;
     line_items: ILineItem[];
 }
 
-/**
- * Based on the Python `InvoiceListResponse` model.
- * A slimmed-down model used for displaying a list of invoices, optimising payload size.
- */
+
 export interface InvoiceListResponse {
     id: number;
-    date_added: string; // ISO 8601 date string
-    date_modified: string; // ISO 8601 date string
+    date_added: string;
+    date_modified: string;
     supplier_name: string | null;
     invoice_number: string | null;
     status: InvoiceStatus;

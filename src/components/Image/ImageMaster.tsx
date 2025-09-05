@@ -40,11 +40,10 @@ const ImageMaster = ({title, getEndpoint, postEndpoint}: ImageMasterProps) => {
             })
             .catch(err => {
                 console.error(`Failed to delete image link ${imageLinkId}:`, err);
-                // TODO: You could set an error state here to show a message in the UI
+                // todo -  set an error state here to show a message in the UI
             });
     };
 
-    // First, handle the authentication loading state
     if (auth.isLoading) {
         return <p>Authenticating...</p>;
     }

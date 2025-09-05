@@ -3,7 +3,6 @@
     height: 100%;
 }
 
-/* Optional: Make the content inside the full-height column also fill the height */
 .full-height-content {
     display: flex;
     flex-direction: column;
@@ -11,46 +10,33 @@
 }
 
 .full-height-content .box {
-    flex-grow: 1; /* Makes the box fill the available vertical space */
+    flex-grow: 1;
 }
 
 
 .notification {
     position: fixed;
-    top: 50px; /* Increased top margin to clear the navbar */
+    top: 50px;
     right: 20px;
-    width: auto; /* Let the content define the width */
+    width: auto;
     min-width: 300px;
-    max-width: 500px; /* Prevent it from getting too wide */
-    z-index: 9999; /* Ensure it's on top of other content */
+    max-width: 500px;
+    z-index: 9999;
 
-    /* For animations later */
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
 }
 
 
 .image-thumbnail {
-    /* A neat border using Bulma's standard border color */
+
     border: 1px solid #dbdbdb;
-
-    /* Standard Bulma border radius for rounded corners */
     border-radius: 4px;
-
-    /* A little padding so the image doesn't touch the border */
     padding: 0.25rem;
-
-    /* A subtle shadow, similar to Bulma's 'box' or 'card' element */
     box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.02);
-
-    /* Ensures the image covers the area without being distorted */
     object-fit: cover;
-
-    /* These are important for the image to respect the parent <figure> dimensions */
     height: 100%;
     width: 100%;
-
-    /* A smooth transition for hover effects*/
     transition: transform 0.2s ease-in-out;
 }
 
@@ -94,4 +80,8 @@
 
 .MuiChartsLegend-item{
     color: aliceblue;
+}
+
+.invoice-card{
+    max-width: 850px;
 }

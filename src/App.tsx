@@ -26,7 +26,6 @@ function App() {
         return (
             <div>
                 <button onClick={() => auth.signinRedirect()}>Sign in</button>
-                {/* Use the new handler */}
                 <button onClick={handleSignOut}>Sign out</button>
             </div>
         );

@@ -3,7 +3,6 @@ import type {InvoiceListResponse, InvoiceRead} from "../models/invoice.ts";
 import config from "./api.ts";
 import type {ApiResponse} from "../models/api.ts";
 
-// fetch an invoice list and ensure it matches the InvoiceListResponse model format
 export const fetchInvoices = async (access_token: string): Promise< InvoiceListResponse[] | null> => {
     try {
         const response = await axios.get<ApiResponse<InvoiceListResponse[]>>(`${config.API_URL}/invoice/invoices`,

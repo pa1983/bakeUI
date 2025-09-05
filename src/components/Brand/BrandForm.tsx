@@ -12,7 +12,7 @@ interface BrandFormProps {
     onEdit: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
     onFocus: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
     isSaving: boolean;
-    onDelete: ()=> void;
+    onDelete: () => void;
     isModal: boolean;
 }
 
@@ -25,8 +25,8 @@ const BrandForm = ({
                        onEdit,
                        onFocus,
                        isSaving,
-                        onDelete,
-    isModal=false
+                       onDelete,
+                       isModal = false
 
                    }: BrandFormProps) => {
 
@@ -49,18 +49,17 @@ const BrandForm = ({
         onSave(formData);
     }, [formData, onSave]);
 
-    // The form's submit handler, which prevents default browser behavior.
+    // The form's submit handler, which prevents default browser behaviour.
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         handleSave();
     };
 
 
-    // Conditionally register the shortcut only when creating a new brand - don't want to trigger a handleSave event
-    // if it's a form edit rather than create new
-    if (!isModal) {
-        useShortcut('Enter', isNew ? handleSave : null, {ctrl: true});
-    }
+    // Conditionally set the shortcut's function only when creating a new brand and not inside a modal - don't want to trigger a handleSave event
+    // as hooks cannot be called condiitonally in react, the conditional logic must be inside the hook configuration, rather than in an if statement around it
+
+    useShortcut('Enter', (isNew && !isModal) ? handleSave : null, {ctrl: true});
 
     return (
         <form onSubmit={handleSubmit}>
@@ -120,7 +119,6 @@ const BrandForm = ({
                 </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="field is-grouped">
                 {isNew ? (
                     // Case for a NEW brand
@@ -142,8 +140,6 @@ const BrandForm = ({
                         </div>
                     </>
                 ) : (
-                    // Case for an EXISTING brand
-
 
                     // Case for an EXISTING brand
                     <>
@@ -155,7 +151,7 @@ const BrandForm = ({
                             element_id={formData.brand_id}
                             endpoint='buyable/brand'
                             elementName={formData.brand_name}
-                            onDelete= {onDelete}
+                            onDelete={onDelete}
                         />
                     </>
                 )}

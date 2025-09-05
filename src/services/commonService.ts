@@ -36,7 +36,6 @@ export const patchField = async <
     try {
         const response = await axios.patch<ApiResponse<T>>(
             api_url,
-            // This computed property name is the correct, modern way to build the payload
             { [field_name as string]: field_value },
             {headers: {Authorization: `Bearer ${access_token}`}}
         );

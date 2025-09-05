@@ -1,7 +1,4 @@
-/**
- * Represents a link between a Recipe and an Ingredient.
- * Corresponds to the Python SQLModel `RecipeIngredientRead`.
- */
+
 export interface IRecipeIngredient {
     id: number;
     recipe_id: number;

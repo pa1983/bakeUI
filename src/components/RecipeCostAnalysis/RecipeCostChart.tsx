@@ -3,26 +3,9 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import useFlash from "../../contexts/FlashContext.tsx";
 import type {RecipeCostAnalysis as RecipeCostAnalysisType} from "../../models/IRecipeCostAnalysis.ts";
 
-// Define clear types for our data structures
-// interface CostAnalysisItem {
-//     total_cost: string;
-//     top_level_batch_quantity: string;
-//     cost_type: 'Ingredient' | 'Labour' | string;
-//     item_name: string;
-//     top_level_recipe_name: string;
-//     unit_cost?: number; // Make unit_cost optional as it's added during parsing
-// }
-//
-// interface ChartDataItem {
-//     label: string;
-//     value: number;
-//     cost_type?: string; // Add cost_type for sorting
-// }
-
 const RecipeCostChart = ({ data }: { data: RecipeCostAnalysisType[] }) => {
     const { showFlashMessage } = useFlash();
 
-    // useMemo is perfect for this complex data transformation.
     const { innerRingData, outerRingData, totalUnitCost, topLevelRecipeName } = useMemo(() => {
         if (!data || data.length === 0) {
             return {
@@ -33,7 +16,7 @@ const RecipeCostChart = ({ data }: { data: RecipeCostAnalysisType[] }) => {
             };
         }
 
-        // 1. First, parse the raw data to calculate the correct unit cost for each item.
+        //  parse the raw data to calculate the unit cost for each item.
         const parsedData = data.map(item => {
             const totalCostForBatch = item.total_cost;
             const batchQuantity = item.top_level_batch_quantity;
@@ -41,7 +24,7 @@ const RecipeCostChart = ({ data }: { data: RecipeCostAnalysisType[] }) => {
             return { ...item, unit_cost: costPerUnit };
         }).filter(item => item.unit_cost > 0);
 
-        // 2. Aggregate the parsed data by `item_name` to create the outer ring data.
+        // aggregate by `item_name` to create the chart's outer ring data
         const outerRingAgg = parsedData.reduce((acc, item) => {
             const key = item.item_name;
             if (!acc[key]) {
@@ -51,7 +34,7 @@ const RecipeCostChart = ({ data }: { data: RecipeCostAnalysisType[] }) => {
             return acc;
         }, {} as Record<string, { value: number; cost_type: string }>);
 
-        // 3. Convert the aggregated object to an array and perform the multi-level sort.
+        // Convert the aggregated object to an array and sort so outer ring position matches inner
         let finalOuterRingData = Object.entries(outerRingAgg).map(([label, data]) => ({
             label,
             value: data.value,
@@ -61,10 +44,10 @@ const RecipeCostChart = ({ data }: { data: RecipeCostAnalysisType[] }) => {
         finalOuterRingData.sort((a, b) => {
             const costTypeComparison = a.cost_type.localeCompare(b.cost_type);
             if (costTypeComparison !== 0) return costTypeComparison;
-            return b.value - a.value; // Secondary sort by value descending
+            return b.value - a.value;
         });
 
-        // 4. Now, create the inner ring by aggregating the already-aggregated outer ring data.
+        // create the inner ring data by aggregating the outer ring data - gives the two layers of details I want for the 2-layer pie chart
         const innerRingAgg = finalOuterRingData.reduce((acc, item) => {
             const group = item.cost_type;
             acc[group] = (acc[group] || 0) + item.value;
@@ -75,10 +58,10 @@ const RecipeCostChart = ({ data }: { data: RecipeCostAnalysisType[] }) => {
             label,
             value,
         }));
-        // Also sort the inner ring to be certain of the order
+        // Sort inner ring in same order as outer ring
         finalInnerRingData.sort((a, b) => a.label.localeCompare(b.label));
 
-        // 5. Calculate the total for display.
+        // Calculate the total for display
         const totalUnitCost = finalInnerRingData.reduce((sum, item) => sum + item.value, 0);
 
         return {
@@ -107,18 +90,18 @@ const RecipeCostChart = ({ data }: { data: RecipeCostAnalysisType[] }) => {
             <div>
                 <PieChart
                     series={[
-                        // Outer Ring: A thin doughnut with a large inner radius
+                        // Outer Ring
                         {
                             data: outerRingData,
                             outerRadius: 140,
-                            innerRadius: 110, // Increase this to make the ring thinner and create a gap
+                            innerRadius: 110,
                             valueFormatter,
                         },
-                        // Inner Ring: A solid pie
+                        // Inner Ring
                         {
                             data: innerRingData,
-                            outerRadius: 90,  // Decrease this to create a larger gap from the outer ring
-                            innerRadius: 0,   // Set to 0 to make it a solid pie instead of a doughnut
+                            outerRadius: 90,
+                            innerRadius: 0,
                             valueFormatter,
                         },
                     ]}

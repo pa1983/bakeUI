@@ -90,7 +90,7 @@ const ViewBrandForm = ({prop_element_id, onSuccess, isModal=false}: ViewBrandFor
             }
         }
     }, [isNew, param_element_id, prop_element_id, auth.isLoading, auth.isAuthenticated, auth.user?.access_token]);
-    // note showFlashMessage - was removed from dependancy array as it was creating a race condition,
+    // note showFlashMessage - was removed from dependency array as it was creating a race condition,
     // triggering a pull of the old id when the deletion was being confirmed, before the invoices array was updated
 
 

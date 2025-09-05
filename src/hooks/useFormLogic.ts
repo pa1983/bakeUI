@@ -1,26 +1,28 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useAuth } from 'react-oidc-context';
-import { useShortcut } from '../contexts/KeyboardShortcutContext.tsx';
-import { createDefaultPickerModalConfig, type IPickerModalConfig } from '../models/picker.ts';
-import { type IGenericFormProps } from '../models/IFormProps.ts';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
+import {useAuth} from 'react-oidc-context';
+import {useShortcut} from '../contexts/KeyboardShortcutContext.tsx';
+import {createDefaultPickerModalConfig, type IPickerModalConfig} from '../models/picker.ts';
+import {type IGenericFormProps} from '../models/IFormProps.ts';
 
 interface UseFormLogicProps<T, K extends keyof T> extends IGenericFormProps<T> {
     primaryKeyName: K;
 }
 
-
+/*
+Use this hook to manage form logic for a generic entity of type T, overriding the default behaviour as required.
+ */
 export const useFormLogic = <
     T extends Record<K, number | string | undefined | null>,
     K extends keyof T
 >({
-                                                                     formData,
-                                                                     onSave,
-                                                                     onChange,
-                                                                     onEdit,
-                                                                     isSaving,
-                                                                     isModal,
-                                                                     primaryKeyName
-                                                                 }: UseFormLogicProps<T,K>) => {
+      formData,
+      onSave,
+      onChange,
+      onEdit,
+      isSaving,
+      isModal,
+      primaryKeyName
+  }: UseFormLogicProps<T, K>) => {
 
 
     const isNew = !formData?.[primaryKeyName] || formData[primaryKeyName] === 0;
@@ -29,13 +31,12 @@ export const useFormLogic = <
     const [originalValueOnFocus, setOriginalValueOnFocus] = useState<unknown>(null);
     const [pickerModalConfig, setPickerModalConfig] = useState<IPickerModalConfig>(createDefaultPickerModalConfig());
 
-    // ADDED to fix issue with PATCH being fired by onEdit for every element in recipeElement viewer on reload
+    // To fix issue with PATCH being fired by onEdit for every element in recipeElement viewer on reload
     // This effect runs when the component first mounts and whenever the entity
     // it represents changes (identified by its primary key) and invalidates the focus state after a list refresh.
     useEffect(() => {
         setOriginalValueOnFocus(null);
     }, [formData[primaryKeyName]]);
-
 
     const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         // console.log(`handleFocus fired, value: ${e.target.value}`);
@@ -45,9 +46,9 @@ export const useFormLogic = <
         setOriginalValueOnFocus(formData[fieldName]);
     }, [formData]);
 
-    // This handler is for standard DOM change events
+    // This handler is for standard DOM change events, i.e. in when the user types in an input field or selects an option in a dropdown etc.
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, type } = e.target;
+        const {name, type} = e.target;
 
         let value: string | boolean | number | null;
 
@@ -64,6 +65,10 @@ export const useFormLogic = <
         onChange(name as keyof T, value as T[keyof T]);
     }, [onChange]);
 
+    // This handler is for custom components that use the Picker component to effectively enter an ID into the formData.
+    // It fires when the user selects an item from the picker, updates the formData accordingly, and runs the onEdit callback.
+    // which typcially invoices making a PATCH request to the API.
+    // This is required since programmatic changes to the formData are not detected by the form as no Blur occurs.
     const handlePickerValueChange = useCallback(<FieldName extends keyof T>(name: FieldName, value: T[FieldName]) => {
         onChange(name, value);
         const originalValue = formData?.[name];
@@ -85,7 +90,7 @@ export const useFormLogic = <
             return;
         }
 
-        const { name, type } = e.target;
+        const {name, type} = e.target;
         console.log(`generic handleEdit fired for name: ${name}, type: ${type}`);
         // Use the same parsing logic as in handleChange to get the correct new value type.
         let value: string | boolean | number | null;
@@ -117,7 +122,7 @@ export const useFormLogic = <
     }, []);
 
     const toggleNewItemView = useCallback(() => {
-        setPickerModalConfig(prev => ({ ...prev, addNewFormActive: !prev.addNewFormActive }));
+        setPickerModalConfig(prev => ({...prev, addNewFormActive: !prev.addNewFormActive}));
     }, []);
 
     const handleSave = useCallback(() => {
@@ -133,7 +138,7 @@ export const useFormLogic = <
         focusInputRef.current?.focus();
     }, []);
 
-        // only assign save shortcut if is new and not in modal view
+    // only assign save shortcut if is new and not in a modal view to avoid conflict with underlying page
     useShortcut('Enter', (isNew && !isModal) ? handleSave : null);
 
     return {

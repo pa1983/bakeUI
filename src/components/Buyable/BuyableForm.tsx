@@ -13,7 +13,7 @@ import {useFormLogic} from "../../hooks/useFormLogic.ts";
 const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
         const {formData, onCancel, isSaving, onDelete} = props;
 
-        // --- 1. Call the custom hook to get all the generic logic and handlers ---
+        // Call the custom hook to get all the generic logic and handlers
         const {
             isNew,
             focusInputRef,
@@ -23,7 +23,7 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
             toggleNewItemView,
             handleFocus,
             handleChange,
-            handleValueChange,  // for programatic changes, primarily triggered by picker
+            handleValueChange,
             handleEdit,
             handleSubmit,
         } = useFormLogic({...props, primaryKeyName: 'id'});
@@ -42,11 +42,6 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
             // added guard clause - when the form is for a new element, can't PATCH the update,
             // so just save the data to the formData, it will then persist once the save form is done
             handleValueChange('brand_id', selectedBrandId);
-            // onChange('brand_id', selectedBrandId)
-            // if (!isNew) {
-            //     // if form is not for a new entry, also push the change to the db
-            //     onEdit('brand_id', selectedBrandId);  // this should push the new id to the database and update the form with the returned data
-            // };  // todo - this works, but hints that perhaps i've got some logic error in useFormLogic.
             closePickerModal();
         }
 
@@ -78,13 +73,10 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
                 },  // todo - consider correct behaviour for onClose here
                 pickerSubtitle: "Pick a brand..."
             })
-
         }
 
         return (
-
             <>
-
                 <form onSubmit={handleSubmit}>
                     {/* Item Name Input */}
                     <div className="field">
@@ -228,7 +220,6 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
                         </p>
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="field is-grouped">
                         {isNew ? (
                             <>

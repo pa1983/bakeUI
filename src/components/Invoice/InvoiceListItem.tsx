@@ -1,5 +1,5 @@
 import type {InvoiceListResponse} from "../../models/invoice.ts";
-import StatusIcon from "./statusIcon.tsx";  // model interface for invoice list item
+import StatusIcon from "./statusIcon.tsx";
 import FriendlyDate from "../Utility/FriendlyDate.tsx";
 import DeleteInvoice from "./DeleteInvoice.tsx";
 
@@ -13,45 +13,32 @@ const InvoiceListElementCard = ({invoice, onUpdate}:InvoiceListElementCardProps)
 
 
     return (
-        <div className="card">
+        <div className="card invoice-card">
             <div className="card-header">
-                <h1 className="title">Invoice {invoice.id}</h1>
+                <p className="card-header-title">Invoice {invoice.id}</p>
             </div>
 
 
             <div className="card-content">
 
-                {/*table structure start */}
-
-
                 <div className="columns">
-                    <div className="column">
-                        <div className="columns">
-
-                            <div className="column is-6">
-                                <h1 className="title is-size-4">Supplier {invoice.supplier_name ? invoice.supplier_name : "name not found"} </h1>
-                            </div>
-                            <div className="column is-6">
-                                <h1 className="title is-size-4"> Invoice
-                                    Number {invoice.invoice_number ? invoice.invoice_number : "not found"}</h1>
-                            </div>
-
-                        </div>
-                        <div className="columns is-mobile">
-                            <div className="column is-6">
-                                Added: <FriendlyDate date={invoice.date_added}
-                                                     classname="is-size-8 has-text-grey"/>
-                            </div>
-                            <div className="column is-6">
-                                Modified: <FriendlyDate date={invoice.date_modified}
-                                                        classname="is-size-8 has-text-grey"/>
-                            </div>
-
-                        </div>
+                    <div className="column is-6">
+                        <h1 className="title is-size-4">Supplier {invoice.supplier_name ?? "name not found"}</h1>
+                    </div>
+                    <div className="column is-6">
+                        <h1 className="title is-size-4">Invoice Number {invoice.invoice_number ?? "not found"}</h1>
                     </div>
                 </div>
-
-                {/*    table structure end  */}
+                <div className="columns is-mobile">
+                    <div className="column is-6">
+                        Added: <FriendlyDate date={invoice.date_added}
+                                             classname="is-size-8 has-text-grey"/>
+                    </div>
+                    <div className="column is-6">
+                        Modified: <FriendlyDate date={invoice.date_modified}
+                                                classname="is-size-8 has-text-grey"/>
+                    </div>
+                </div>
 
             </div>
 
@@ -68,13 +55,14 @@ const InvoiceListElementCard = ({invoice, onUpdate}:InvoiceListElementCardProps)
                         onUpdate={onUpdate}
                     />
                 </div>
-                <div className="card-footer-item">
-                    <i className="fa-solid fa-file-pdf fa-2x"/>
-                </div>
-                <div className="card-footer-item">
-                    <StatusIcon status={invoice.status}
-                    id={invoice.id}/>
-                </div>
+                              {/*// todo - add this back in when we have the pdf viewer working*/}
+                {/*<div className="card-footer-item">*/}
+                {/*    <i className="fa-solid fa-file-pdf fa-2x"/>*/}
+                {/*</div>*/}
+                {/*<div className="card-footer-item">*/}
+                {/*    <StatusIcon status={invoice.status}*/}
+                {/*                id={invoice.id}/>*/}
+                {/*</div>*/}
             </div>
 
         </div>

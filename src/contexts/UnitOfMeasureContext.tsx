@@ -2,9 +2,8 @@
 
 import {createContext, useState, useEffect, useContext, type ReactNode} from 'react';
 import axios from 'axios';
-import { useAuth } from 'react-oidc-context'; // Assuming you still use this for auth
+import { useAuth } from 'react-oidc-context';
 import config from '../../src/services/api.ts';
-// Define your UnitOfMeasure interface
 interface IUnitOfMeasure {
     uom_id: number;
     name: string;
@@ -14,7 +13,6 @@ interface IUnitOfMeasure {
     is_base_unit: boolean;
 }
 
-// Define the shape of your context value
 interface UnitOfMeasureContextType {
     units: IUnitOfMeasure[];
     loading: boolean;
@@ -29,7 +27,6 @@ export const UnitOfMeasureContext = createContext<UnitOfMeasureContextType>({
     error: null,
 });
 
-// Create a custom hook for easier consumption
 export const useUnitOfMeasures = () => useContext(UnitOfMeasureContext);
 
 interface UnitOfMeasureProviderProps {
@@ -41,13 +38,13 @@ export const UnitOfMeasureProvider = ({ children }: UnitOfMeasureProviderProps) 
     const [units, setUnits] = useState<IUnitOfMeasure[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const auth = useAuth(); // Access auth from within the provider
+    const auth = useAuth();
 
     useEffect(() => {
         const fetchUOMs = async () => {
             // Only fetch if authenticated and we have an access token
             if (!auth.isAuthenticated || !auth.user?.access_token) {
-                console.log("Authentication not ready for UOM fetch in context.");  // todo - should auth be in its own context provider?
+                console.log("Authentication not ready for UOM fetch in context.");
                 setLoading(true); // Still loading until auth is ready
                 return;
             }
@@ -56,7 +53,7 @@ export const UnitOfMeasureProvider = ({ children }: UnitOfMeasureProviderProps) 
                 const cachedUOMs = localStorage.getItem('unitOfMeasureOptions');
                 if (cachedUOMs) {
                     // Try to load from localStorage first to prevent re-fetching on every page load
-                    // todo - add a timebased acche invalidation here to avoid indefinite storage in localStorage
+                    // todo - add a timebased cache invalidation here to avoid indefinite storage in localStorage
                     setUnits(JSON.parse(cachedUOMs));
                     setLoading(false);
                     console.log("Loaded UOMs from localStorage.");
@@ -69,7 +66,7 @@ export const UnitOfMeasureProvider = ({ children }: UnitOfMeasureProviderProps) 
                 });
                 const fetchedUnits: IUnitOfMeasure[] = res.data;
                 setUnits(fetchedUnits);
-                localStorage.setItem('unitOfMeasureOptions', JSON.stringify(fetchedUnits)); // Store in localStorage
+                localStorage.setItem('unitOfMeasureOptions', JSON.stringify(fetchedUnits)); // Store in localStorage so it persists across sessions, including more than one session across multiple tabs
                 console.log("Fetched and stored UOMs from API.");
 
             } catch (err: unknown) {
@@ -83,7 +80,7 @@ export const UnitOfMeasureProvider = ({ children }: UnitOfMeasureProviderProps) 
         };
 
         void fetchUOMs();
-    }, [auth.isAuthenticated, auth.user?.access_token]); // Depend on auth status and token
+    }, [auth.isAuthenticated, auth.user?.access_token]);
 
     const contextValue = {
         units,

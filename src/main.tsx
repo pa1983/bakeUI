@@ -15,7 +15,7 @@ import {pdfjs} from 'react-pdf';
 import {DataProvider} from "./contexts/DataContext.tsx";
 import {KeyboardShortcutProvider} from './contexts/KeyboardShortcutContext.tsx';
 
-// Import required CSS for react-pdf pages
+// Imports required CSS for react-pdf pages
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 

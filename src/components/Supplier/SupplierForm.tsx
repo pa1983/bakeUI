@@ -5,7 +5,6 @@ import type {IGenericFormProps} from "../../models/IFormProps.ts";
 import {useFormLogic} from "../../hooks/useFormLogic.ts";
 
 const SupplierForm = (props: IGenericFormProps<ISupplier>) => {
-    // No changes needed here
     const {formData, onCancel, isSaving, onDelete} = props;
     const {
         isNew, focusInputRef, handleFocus, handleChange, handleEdit, handleSubmit,
@@ -28,15 +27,33 @@ const SupplierForm = (props: IGenericFormProps<ISupplier>) => {
                 </div>
             </div>
 
-            {/* ... Contact Info, Email, Address */}
             <div className="field is-horizontal">
                 <div className="field-body">
-                    <div className="field"><label className="label" htmlFor="contact_person">Contact Person</label><div className="control"><input id="contact_person" className="input" type="text" name="contact_person" value={formData.contact_person || ''} onChange={handleChange} onBlur={handleEdit} onFocus={handleFocus} disabled={isSaving}/></div></div>
-                    <div className="field"><label className="label" htmlFor="phone_number">Phone Number</label><div className="control"><input id="phone_number" className="input" type="tel" name="phone_number" value={formData.phone_number || ''} onChange={handleChange} onBlur={handleEdit} onFocus={handleFocus} disabled={isSaving}/></div></div>
+                    <div className="field"><label className="label" htmlFor="contact_person">Contact Person</label>
+                        <div className="control"><input id="contact_person" className="input" type="text"
+                                                        name="contact_person" value={formData.contact_person || ''}
+                                                        onChange={handleChange} onBlur={handleEdit}
+                                                        onFocus={handleFocus} disabled={isSaving}/></div>
+                    </div>
+                    <div className="field"><label className="label" htmlFor="phone_number">Phone Number</label>
+                        <div className="control"><input id="phone_number" className="input" type="tel"
+                                                        name="phone_number" value={formData.phone_number || ''}
+                                                        onChange={handleChange} onBlur={handleEdit}
+                                                        onFocus={handleFocus} disabled={isSaving}/></div>
+                    </div>
                 </div>
             </div>
-            <div className="field"><label className="label" htmlFor="email_address">Email Address</label><div className="control"><input id="email_address" className="input" type="email" name="email_address" placeholder="e.g., orders@acme.com" value={formData.email_address || ''} onChange={handleChange} onBlur={handleEdit} onFocus={handleFocus} disabled={isSaving}/></div></div>
-            <div className="field"><label className="label" htmlFor="address">Address</label><div className="control"><textarea id="address" className="textarea" name="address" value={formData.address || ''} onChange={handleChange} onBlur={handleEdit} onFocus={handleFocus} disabled={isSaving}/></div></div>
+            <div className="field"><label className="label" htmlFor="email_address">Email Address</label>
+                <div className="control"><input id="email_address" className="input" type="email" name="email_address"
+                                                placeholder="e.g., orders@acme.com" value={formData.email_address || ''}
+                                                onChange={handleChange} onBlur={handleEdit} onFocus={handleFocus}
+                                                disabled={isSaving}/></div>
+            </div>
+            <div className="field"><label className="label" htmlFor="address">Address</label>
+                <div className="control"><textarea id="address" className="textarea" name="address"
+                                                   value={formData.address || ''} onChange={handleChange}
+                                                   onBlur={handleEdit} onFocus={handleFocus} disabled={isSaving}/></div>
+            </div>
 
             <div className="field is-horizontal">
                 <div className="field-body">
@@ -61,7 +78,6 @@ const SupplierForm = (props: IGenericFormProps<ISupplier>) => {
                                         onBlur={handleEdit} onFocus={handleFocus}
                                         disabled={isSaving} required
                                     >
-                                        {/*Guard against 'undefined' to prevent crash when currencies not fully loaded. */}
                                         {(currencies || []).map((currency) => (
                                             <option key={currency.currency_code} value={currency.currency_code}>
                                                 {currency.currency_code} - {currency.currency_name}
@@ -75,10 +91,45 @@ const SupplierForm = (props: IGenericFormProps<ISupplier>) => {
                 </div>
             </div>
 
-            {/* ... Order Values, Notes, and Action Buttons are fine ... */}
-            <div className="field is-horizontal"><div className="field-body"><div className="field"><label className="label" htmlFor="minimum_order_value">Minimum Order Value</label><div className="control"><input id="minimum_order_value" className="input" type="number" step="any" name="minimum_order_value" value={formData.minimum_order_value || 0} onChange={handleChange} onBlur={handleEdit} onFocus={handleFocus} disabled={isSaving}/></div></div><div className="field"><label className="label" htmlFor="delivery_charge">Standard Delivery Charge</label><div className="control"><input id="delivery_charge" className="input" type="number" step="any" name="delivery_charge" value={formData.delivery_charge || 0} onChange={handleChange} onBlur={handleEdit} onFocus={handleFocus} disabled={isSaving}/></div></div></div></div>
-            <div className="field"><label className="label" htmlFor="notes">Notes</label><div className="control"><textarea id="notes" className="textarea" placeholder="Any relevant notes..." name="notes" value={formData.notes || ''} onChange={handleChange} onBlur={handleEdit} onFocus={handleFocus} disabled={isSaving}/></div></div>
-            <div className="field is-grouped">{isNew ? (<><div className="control"><button type="submit" className={`button is-primary ${isSaving ? 'is-loading' : ''}`} disabled={isSaving}>Create Supplier</button></div><div className="control"><button type="button" className="button is-light" onClick={onCancel} disabled={isSaving}>Cancel</button></div></>) : (<><div className="control"><p className="is-italic has-text-grey">Changes are saved automatically when you leave a field.</p></div><DeleteElement element_id={formData.supplier_id} endpoint={api_endpoint} elementName={formData.supplier_name} onDelete={onDelete}/></>)}</div>
+            <div className="field is-horizontal">
+                <div className="field-body">
+                    <div className="field"><label className="label" htmlFor="minimum_order_value">Minimum Order
+                        Value</label>
+                        <div className="control"><input id="minimum_order_value" className="input" type="number"
+                                                        step="any" name="minimum_order_value"
+                                                        value={formData.minimum_order_value || 0}
+                                                        onChange={handleChange} onBlur={handleEdit}
+                                                        onFocus={handleFocus} disabled={isSaving}/></div>
+                    </div>
+                    <div className="field"><label className="label" htmlFor="delivery_charge">Standard Delivery
+                        Charge</label>
+                        <div className="control"><input id="delivery_charge" className="input" type="number" step="any"
+                                                        name="delivery_charge" value={formData.delivery_charge || 0}
+                                                        onChange={handleChange} onBlur={handleEdit}
+                                                        onFocus={handleFocus} disabled={isSaving}/></div>
+                    </div>
+                </div>
+            </div>
+            <div className="field"><label className="label" htmlFor="notes">Notes</label>
+                <div className="control"><textarea id="notes" className="textarea" placeholder="Any relevant notes..."
+                                                   name="notes" value={formData.notes || ''} onChange={handleChange}
+                                                   onBlur={handleEdit} onFocus={handleFocus} disabled={isSaving}/></div>
+            </div>
+            <div className="field is-grouped">{isNew ? (<>
+                <div className="control">
+                    <button type="submit" className={`button is-primary ${isSaving ? 'is-loading' : ''}`}
+                            disabled={isSaving}>Create Supplier
+                    </button>
+                </div>
+                <div className="control">
+                    <button type="button" className="button is-light" onClick={onCancel} disabled={isSaving}>Cancel
+                    </button>
+                </div>
+            </>) : (<>
+                <div className="control"><p className="is-italic has-text-grey">Changes are saved automatically when you
+                    leave a field.</p></div>
+                <DeleteElement element_id={formData.supplier_id} endpoint={api_endpoint}
+                               elementName={formData.supplier_name} onDelete={onDelete}/></>)}</div>
 
         </form>
     )

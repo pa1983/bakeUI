@@ -4,7 +4,7 @@ import {useParams} from "react-router-dom";
 import {getInvoiceFull} from "../../services/InvoiceServices.ts";
 import {type InvoiceRead} from "../../models/invoice.ts";
 import InvoiceMeta from "./InvoiceMeta.tsx";
-import ViewInvoicePDF from "./viewInvoicePDF.tsx"; // Adjust the path as needed
+import ViewInvoicePDF from "./viewInvoicePDF.tsx";
 import InvoiceLineItemsList from "./InvoiceLineItemsList.tsx";
 import StatusIcon from "./statusIcon.tsx";
 import useFlash from "../../contexts/FlashContext.tsx";
@@ -22,11 +22,10 @@ function InvoiceViewer() {
         if (!rawInvoiceId) {
             return null; // Handle the case where the param is missing
         }
-        const num = parseInt(rawInvoiceId, 10); // Always use a radix (10 for decimal)
-        return isNaN(num) ? null : num; // Handle cases like /invoices/abc
+        const num = parseInt(rawInvoiceId, 10);
+        return isNaN(num) ? null : num;
     }, [rawInvoiceId]);
 
-    // Use the specific InvoiceRead type for better type safety
     const [invoice, setInvoice] = useState<InvoiceRead | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -42,7 +41,7 @@ function InvoiceViewer() {
         const fetchInvoice = async () => {
             if (!auth.user?.access_token) {
                 showFlashMessage('You must be logged in to delete an element', 'danger');
-                return; // Exit the function early.
+                return;
             }
 
 
@@ -112,20 +111,15 @@ function InvoiceViewer() {
                             </div>
 
 
-                            {/*INVOICE COLUMN:*/}
-                            {/*- This column takes up the remaining 50% of the width.*/}
-                            {/*- It contains two separate 'box' elements. As block-level elements, they will*/}
-                            {/*  stack on top of each other, creating the appearance of two rows.*/}
-                            {/*- Their height will adjust automatically to fit their content.*/}
-
                             <div className="column">
 
                                 <div className="box mb-4">
                                     Actions
                                     <StatusIcon status={invoice.invoice_status || undefined}
                                                 id={invoice.id}/>
-                                    {/*<DeleteInvoice invoice_id={invoice.id}/>*/} // todo - implement the delete
-                                    shortcut here think I have a generic delete button ready to go...
+                                    {/*<DeleteInvoice invoice_id={invoice.id}/>*/}
+                                    {/*// todo - implement the delete*/}
+                                    {/*shortcut here think I have a generic delete button ready to go...*/}
                                 </div>
 
                                 <div className="box  mb-4">

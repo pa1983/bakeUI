@@ -93,17 +93,16 @@ function Picker({
             ) : (
                 /* Responsive Grid using Bulma columns */
                 <div className="columns is-multiline">
+                    {/* map through the filtered array and render a card for each item */}
                     {filteredPickerArray.map(item => (
                         <div key={item.id} className="column is-one-third-desktop is-half-tablet">
                             <PickerListElementCard
-
                                 imageUrl={item.imageUrl}
                                 title={item.title}
                                 subtitle={item.subtitle}
                                 id={item.id}
                                 onSelect={pickerOnSelect}
                                 onClose={onClose}
-
                             />
                         </div>
                     ))}

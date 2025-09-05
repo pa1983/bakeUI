@@ -16,10 +16,10 @@ const Dashboard = () => {
                         <div className="content">
                             <h3 className="title is-5">Overview</h3>
                             <p className="subtitle is-6">
-                                Here are your key metrics and activities that need attention.
+                                These are placeholder stats for the dashboard - they're here to demonstrate the planned UI, but they've not yet been implemented
                             </p>
 
-                            {/*  stats boxes todo - consider what else needs to be here */}
+                            {/* todo - consider what else needs to be here */}
                             <div className="columns is-multiline is-centered">
                                 <div className="column is-one-third">
                                     <div className="box has-background-info-light has-text-centered">

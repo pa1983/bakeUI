@@ -5,10 +5,8 @@ type StatusIconProps = {
     id: number;
 };
 
-// Define the possible status names as a specific type.
 type StatusName = 'processing' | 'archived' | 'draft' | 'failed' | 'received_ok' | 'received_query' | 'validated' | 'default';
 
-// Use the Record utility type to create a strongly-typed map.
 const statusMap: Record<StatusName, string> = {
     'processing': "fa-solid fa-spinner",
     'archived': "fa-solid fa-box-archive",
@@ -22,13 +20,10 @@ const statusMap: Record<StatusName, string> = {
 
 const StatusIcon = ({ status, id }: StatusIconProps) => {
 
-    // Default to the 'default' icon.
     let icon_name = statusMap['default'];
 
     if (status) {
-        // Assert that status.name is one of the keys of our map.
         const statusName = status.name as StatusName;
-        // This lookup is now type-safe.
         icon_name = statusMap[statusName] || statusMap['default'];
     }
 

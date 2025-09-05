@@ -33,7 +33,6 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
     return (
 
         <form onSubmit={handleSubmit}>
-            {/* Recipe Name */}
             <div className="field">
                 <label className="label" htmlFor="recipe_name">Recipe Name</label>
                 <div className="control">
@@ -54,13 +53,11 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
                 </div>
             </div>
 
-
-            {/* --- toggle button --- */}
             <div className="field">
                 <div className="control">
                     <button type="button" className="button is-small is-primary" onClick={toggleDetails}>
                         <span className="icon is-small">
-                           {/* Assumes you have Font Awesome loaded, which is common with Bulma */}
+
                             <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'}`}></i>
                         </span>
                         <span>{isExpanded ? 'Hide Details' : 'Show Details'}</span>
@@ -68,11 +65,10 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
                 </div>
             </div>
 
-            {/* --- 3. Conditionally render the rest of the form details --- */}
+
             {isExpanded && (
                 <>
 
-                    {/* Recipe Description */}
                     <div className="field">
                         <label className="label" htmlFor="recipe_description">Description</label>
                         <div className="control">
@@ -90,7 +86,6 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
                         </div>
                     </div>
 
-                    {/* Dropdowns for Recipe Type and Product Type */}
                     <div className="field is-horizontal">
                         <div className="field-body">
                             <div className="field">
@@ -168,8 +163,6 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
                         </div>
                     </div>
 
-
-                    {/* Recipe Quantity and Yield */}
                     <div className="field is-horizontal">
                         <div className="field-body">
                             <div className="field">
@@ -239,8 +232,6 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
                         </div>
                     </div>
 
-                    {/* Version and Is Current */}
-                    {/* Notes Textarea */}
                     <div className="field is-horizontal">
                         <div className="field-body">
                             <div className="field">
@@ -319,10 +310,8 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
                     </div>
 
 
-                    {/* Version Notes Textarea */}
 
                     <div className="field is-grouped mt-5">
-                    {/* Timestamps (Read-Only) */}
                     {!isNew && (
                         <div className="field">
                             <label className="label">Timestamps</label>
@@ -333,8 +322,6 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
                             </p>
                         </div>
                     )}
-
-                    {/* Action Buttons */}
 
                         {isNew ? (
                             <>
@@ -362,7 +349,7 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
                                 <div className="control">
                                     <DeleteElement
                                         element_id={formData.recipe_id}
-                                        endpoint='recipe' // API endpoint for recipes
+                                        endpoint='recipe'
                                         elementName={formData.recipe_name}
                                         onDelete={onDelete}
                                     />

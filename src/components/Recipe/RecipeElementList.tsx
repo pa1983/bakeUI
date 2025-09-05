@@ -18,7 +18,8 @@ interface ElementDataMap {
     subrecipe: IRecipeSubRecipe;
 }
 
-// Configuration object to map an element type to its specific component and API endpoint.
+// Configuration object to map an element type to
+// its specific component and API endpoint.
 const recipeElementConfig = {
     ingredient: {
         component: RecipeIngredientForm,

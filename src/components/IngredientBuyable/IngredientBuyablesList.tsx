@@ -81,14 +81,11 @@ const IngredientBuyablesList = ({ingredient_id}: IngredientBuyablesListProps) =>
             return;
         }
 
-        // IMPROVEMENT: Find the actual ID of the link record to be deleted.
         const linkToDelete = links.find(link => link.buyable_id === buyableIdToUnlink);
         if (!linkToDelete || !linkToDelete.id) {
             showFlashMessage("Could not find the link to delete.", "danger");
             return;
         }
-
-        // It's highly recommended to wrap this in a confirmation modal.
         try {
             await deleteIngredientBuyableLink(linkToDelete.id, auth.user.access_token);
             showFlashMessage("Buyable Item Unlinked", "success");
@@ -124,7 +121,6 @@ const IngredientBuyablesList = ({ingredient_id}: IngredientBuyablesListProps) =>
     if (error) return <div className="title is-danger">{error}</div>;
 
 
-    // --- Conditional Rendering Logic ---
     // Use the `showBuyablePicker` state to render one view or the other.
     return (
         <div className="box p-5">

@@ -5,10 +5,10 @@ import RecipeCostAnalysis from "./RecipeCostAnalysis.tsx";
 const RecipeCostAnalysisWrapper = () => {
     const { id } = useParams<{ id: string }>();
 
-    // Defensive check: Ensure the ID from the URL is a valid number.
+    //  Ensure the ID from the URL is a valid number.
     const recipeId = id ? parseInt(id, 10) : 0;
     if (isNaN(recipeId) || recipeId <= 0) {
-        return <NotFound />; // Or a more specific error component
+        return <NotFound />;
     }
 
     return <RecipeCostAnalysis recipe_id={recipeId} />;

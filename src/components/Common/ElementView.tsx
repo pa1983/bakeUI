@@ -9,7 +9,10 @@ export const ElementView = <
     T extends Record<K, number | string>,
     K extends keyof T
 >({ config }: ElementViewProps<T, K>) => {
-    // pull out FormComponent so function remains the same as before adding component to the config type.  Unused params are ignored
+    // pull out FormComponent so function remains the same as before adding component to the config type.
+    // Unused params are ignored
+    // FormComponent is a reference to the actual custom form component with custom styling and layout specific
+    // to the particular element.
     const { FormComponent } = config;
 
     const {
@@ -29,7 +32,7 @@ export const ElementView = <
         return <LoadingSpinner size='is-large' text={`Loading ${config.elementName} details...`}/>;
     }
 
-    // todo = abstract the details of this error to avoid giving user too much potnentially sensative information
+    // todo = abstract the details of this error to avoid giving user too much potentially sensitive information
     if (error) {
         return <div className="h2 is-danger">{error}</div>;
     }
@@ -42,6 +45,8 @@ export const ElementView = <
         <div className="container p-4">
             <h1 className="title">{formTitle} </h1>
             <div className="box">
+                {/* The FormComponent passed in as a prop is now populated with the correct data and logic
+                and returned as a JSX element.*/}
                 <FormComponent
                     formData={element}
                     onSave={handleSave}

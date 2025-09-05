@@ -1,7 +1,3 @@
-/**
- * Represents a Labourer object, combining all possible fields
- * from the database model and its read representation.
- */
 export interface ILabourer {
     id: number;
     name: string;

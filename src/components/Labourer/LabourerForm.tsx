@@ -19,7 +19,7 @@ const LabourerForm = (props: IGenericFormProps<ILabourer>) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            {/* Labourer type Name Input */}
+
             <div className="field">
                 <label className="label" htmlFor="item_name">Labourer Type</label>
                 <div className="control">
@@ -40,7 +40,6 @@ const LabourerForm = (props: IGenericFormProps<ILabourer>) => {
                 </div>
             </div>
 
-            {/* Description Textarea */}
             <div className="field">
                 <label className="label" htmlFor="notes">Description</label>
                 <div className="control">
@@ -58,7 +57,6 @@ const LabourerForm = (props: IGenericFormProps<ILabourer>) => {
                 </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="field is-grouped">
                 {isNew ? (
                     <>
@@ -87,7 +85,7 @@ const LabourerForm = (props: IGenericFormProps<ILabourer>) => {
                         <DeleteElement
                             element_id={formData.id}
                             endpoint='labourer'
-                            elementName={formData.name}  // friendly name for the element being deleted
+                            elementName={formData.name}
                             onDelete={onDelete}
                         />
                     </>

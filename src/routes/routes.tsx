@@ -26,17 +26,12 @@ import ProtectedRoute from "../components/ProtectedRoute.tsx";
 // wrapper to extract the ID param and pass as a prop to the cost analysis component, removing need for complex logic in the component  // todo - move this out
 
 const router = createBrowserRouter([
-    // --- Group 1: Public Routes ---
-    // These are accessible to everyone and do not use the main authenticated Layout.
-    // { path: "/login", element: <Login /> },
+    //  Public Routes
     { path: "/about", element: <Home /> },
     { path: "/contact", element: <Contact /> },
     {path: "/logged-out", element: <Home />},
 
-    // --- Group 2: Protected Application Routes ---
-    // This single entry point protects all child routes. If the user is not
-    // authenticated, <ProtectedRoute> will redirect them to "/login".
-    // Otherwise, it renders the main <Layout> which handles the nested routes.
+    // Protected Routes
     {
         path: "/",
         element: (

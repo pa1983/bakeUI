@@ -7,7 +7,6 @@ interface Shortcut {
     ctrl: boolean;
 }
 
-// Define what the context will provide
 interface ShortcutContextType {
     addShortcut: (shortcut: Omit<Shortcut, 'id'>) => symbol; // shortcut.id will be created later as a unique symbol
     removeShortcut: (id: symbol) => void;
@@ -34,7 +33,7 @@ export const KeyboardShortcutProvider = ({children}: { children: ReactNode }) =>
             // Find a matching shortcut
             const shortcut = shortcuts.find(s =>
                 s.key?.toLowerCase() === event.key?.toLowerCase() &&
-                s.ctrl === (event.ctrlKey || event.metaKey) // Handle Ctrl (Win) and Cmd (Mac)
+                s.ctrl === (event.ctrlKey || event.metaKey) // Handle Ctrl & CMD for win and mac
             );
 
             if (shortcut) {
@@ -55,7 +54,6 @@ export const KeyboardShortcutProvider = ({children}: { children: ReactNode }) =>
         </KeyboardShortcutContext.Provider>
     );
 };
-//  custom hook that components will use
 export const useShortcut = (
     // Allow key and callback to be null to disable the hook
     key: string | null,
@@ -69,8 +67,6 @@ export const useShortcut = (
 
     const { addShortcut, removeShortcut } = context;
 
-    //  Use a ref to store the callback. This prevents the effect from re-running
-    //    every time the parent re-renders if the callback is an inline function.
     const savedCallback = useRef(callback);
     useEffect(() => {
         savedCallback.current = callback;
@@ -95,7 +91,7 @@ export const useShortcut = (
             ctrl: options.ctrl || false,
         });
 
-        // Cleanup function
+        // Cleanup
         return () => {
             removeShortcut(id);
         };

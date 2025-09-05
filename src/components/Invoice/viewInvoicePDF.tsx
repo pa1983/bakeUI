@@ -9,7 +9,6 @@ import {getInvoiceURL} from "../../services/InvoiceServices.ts";
 import {useAuth} from "react-oidc-context";
 import useFlash from "../../contexts/FlashContext.tsx";
 
-// --- Styled Components ---
 
 const PDFWrapper = styled.div`
     display: flex;
@@ -39,15 +38,14 @@ const PDFDocumentWrapper = styled.div`
     max-width: 900px; // Set a max-width for large screens
 
     .react-pdf__Page__canvas {
-        // Target the canvas rendered by react-pdf
         max-width: 100%;
-        height: auto !important; // Override default height to maintain aspect ratio
+        height: auto !important;
     }
 `;
 
 
 type ViewInvoicePDFProps = {
-    invoice_id?: number; // Make prop optional
+    invoice_id?: number;
 }
 
 function ViewInvoicePDF({invoice_id: invoice_id_from_prop}: ViewInvoicePDFProps) {
@@ -63,12 +61,10 @@ function ViewInvoicePDF({invoice_id: invoice_id_from_prop}: ViewInvoicePDFProps)
         invoice_id = isNaN(parsedId) ? undefined : parsedId;
     }
 
-    // State for the PDF URL and any loading/error states
     const [invoiceUrl, setInvoiceUrl] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-    // State for PDF page navigation
     const [numPages, setNumPages] = useState<number>();
     const [pageNumber, setPageNumber] = useState<number>(1);
 
@@ -87,7 +83,7 @@ function ViewInvoicePDF({invoice_id: invoice_id_from_prop}: ViewInvoicePDFProps)
                 // guard clause - check user logged in before proceeding
                 if (!auth.user?.access_token) {
                     showFlashMessage('You must be logged in to delete an element', 'danger');
-                    return; // Exit the function early.
+                    return;
                 }
                 const response = await getInvoiceURL(auth.user.access_token, invoice_id);
                 // allow for no invoice populated
@@ -103,7 +99,7 @@ function ViewInvoicePDF({invoice_id: invoice_id_from_prop}: ViewInvoicePDFProps)
         };
 
         void fetchUrl();
-    }, [invoice_id, auth, showFlashMessage]); // Dependency array
+    }, [invoice_id, auth, showFlashMessage]);
 
     function onDocumentLoadSuccess({numPages}: { numPages: number }): void {
         setNumPages(numPages);
@@ -118,7 +114,6 @@ function ViewInvoicePDF({invoice_id: invoice_id_from_prop}: ViewInvoicePDFProps)
         setPageNumber(prev => Math.min(prev + 1, numPages));
     }
 
-    // Conditional Rendering based on state
     if (loading) {
         return <div>Loading Invoice...</div>;
     }
@@ -137,16 +132,13 @@ function ViewInvoicePDF({invoice_id: invoice_id_from_prop}: ViewInvoicePDFProps)
 
     return (
         <PDFWrapper>
-            {/* Navigation Controls */}
+
             <PDFControls>
                 <button className="button" onClick={goToPrevPage} disabled={pageNumber <= 1}>Prev</button>
                 <span>Page {pageNumber} of {numPages || '--'}</span>
                 <button className="button" onClick={goToNextPage} disabled={!numPages || pageNumber >= numPages}>Next
                 </button>
             </PDFControls>
-
-            {/* PDF Document */}
-            {/*don't render if no invoice URL found */}
 
             <PDFDocumentWrapper>
                 <Document file={invoiceUrl} onLoadSuccess={onDocumentLoadSuccess}>

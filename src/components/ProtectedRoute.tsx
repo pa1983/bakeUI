@@ -2,9 +2,6 @@ import {type JSX, useEffect} from 'react';
 import { useAuth } from 'react-oidc-context';
 import LoadingSpinner from "./Utility/LoadingSpinner.tsx";
 
-// It's a good practice to have a shared loading component.
-// You can replace this with any loading indicator you prefer.
-
 /**
  * A gatekeeper component that protects routes from unauthenticated access.
  * It uses the `react-oidc-context` to automatically handle the login flow.

@@ -17,7 +17,6 @@ interface FlashState {
 const FlashContext = createContext<FlashContextType | undefined>(undefined);
 const FlashStateContext = createContext<FlashState | undefined>(undefined);
 
-// Create the provider component
 export const FlashProvider = ({children}: { children: ReactNode }) => {
     const [flashState, setFlashState] = useState<FlashState>({
         message: '',
@@ -32,12 +31,11 @@ export const FlashProvider = ({children}: { children: ReactNode }) => {
             return;
         }
 
-        // Set up the timer to hide the message after a delay.
+        // Set the timer to hide the message after a delay
         const timerId = setTimeout(() => {
             setFlashState((prevState) => ({...prevState, visible: false}));
-        }, 3000); // Message disappears after 3 seconds
+        }, 3000); // Message disappears after 3 seconds - todo - set this as variable in config
 
-        // This runs if the component unmounts or if the effect runs again.
         return () => {
             clearTimeout(timerId);
         };
@@ -52,7 +50,7 @@ export const FlashProvider = ({children}: { children: ReactNode }) => {
         setFlashState({message, type, visible: true});
     }, []);
 
-    // This ensures that the object passed to the provider is consistent across renders
+    // memoise to ensures that the object passed to the provider is consistent across renders
     const contextValue = useMemo(() => ({
         showFlashMessage
     }), [showFlashMessage]);

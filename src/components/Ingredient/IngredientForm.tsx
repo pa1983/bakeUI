@@ -129,7 +129,6 @@ const IngredientForm = (props: IGenericFormProps<IIngredient>) => {
                     </p>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="field is-grouped mt-5">
                     {isNew ? (
                         <>

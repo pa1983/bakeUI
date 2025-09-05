@@ -17,12 +17,6 @@ export interface ISupplier {
     image_id?: number | null;
 }
 
-
-/**
- * Creates and returns an "empty" Supplier object with default values.
- * for use when pre-populating values in a new Supplier form
- * @returns {ISupplierCreate} A new Supplier object with default values.
- */
 export const createEmptySupplier = (): ISupplier => {
     return {
         supplier_id: 0,

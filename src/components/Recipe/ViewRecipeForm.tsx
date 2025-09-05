@@ -19,7 +19,7 @@ import RecipeList from "./RecipeList.tsx";
 import type {IRecipeSubRecipe} from "../../models/IRecipeSubRecipe.ts";
 import {postNewRecipeSubRecipe} from "../../services/recipeSubRecipeService.ts";
 
-// Define the possible picker states
+// possible picker states
 type ActivePicker = 'subrecipe' | 'ingredient' | 'labour' | 'none';
 
 const ViewRecipeForm = () => {
@@ -29,7 +29,6 @@ const ViewRecipeForm = () => {
     const {refetchRecipes: refetchDataList} = useData();
     const auth = useAuth();
     const navigate = useNavigate();
-    // Use a single state to manage which picker is visible
     const [activePicker, setActivePicker] = useState<ActivePicker>('none');
 
     const recipeConfig = {
@@ -50,9 +49,6 @@ const ViewRecipeForm = () => {
         setRefetchElements(prev => prev + 1);
     };
 
-    // --- HANDLERS ---
-
-    // Generic handler to toggle pickers
     const handleTogglePicker = (picker: ActivePicker) => {
         setActivePicker(current => (current === picker ? 'none' : picker));
     };
@@ -83,7 +79,6 @@ const ViewRecipeForm = () => {
             sort_order: 1000
         };
 
-        // This call is now fully type-safe from end to end.
         await postNewRecipeSubRecipe(formData, auth.user.access_token);
         triggerElementRefetch();
         setActivePicker('none');
@@ -159,7 +154,6 @@ const ViewRecipeForm = () => {
 
     return (
         <>
-            {/* the recipe form */}
             <ElementView config={recipeConfig}/>
 
             {(id && parseInt(id) > 0) ? (
@@ -205,7 +199,7 @@ const ViewRecipeForm = () => {
             ) : <p>Recipe elements can only be added once recipe details have been saved</p>
             }
 
-            {/* Conditionally render the Sub-Recipe Picker */}
+            {/* Conditionally render the pickers  */}
             {activePicker === 'subrecipe' && (
                 <div className="box">
                     <RecipeList
@@ -214,7 +208,6 @@ const ViewRecipeForm = () => {
                     />
                 </div>
             )}
-            {/* Conditionally render the Ingredient Picker */}
             {activePicker === 'ingredient' && (
                 <div className="box">
                     <IngredientList
@@ -224,7 +217,6 @@ const ViewRecipeForm = () => {
                 </div>
             )}
 
-            {/* Conditionally render the Labour Picker */}
             {activePicker === 'labour' && (
                 <div className="box">
                     <LabourerList

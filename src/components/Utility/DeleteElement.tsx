@@ -12,16 +12,16 @@ interface DeleteElementProps {
 }
 
 const DeleteElement = ({element_id, endpoint, elementName = 'this item', onDelete}: DeleteElementProps) => {
-    const [isLoading, setIsLoading] = useState(false); // State to track loading
+    const [isLoading, setIsLoading] = useState(false);
     const {showFlashMessage} = useFlash();
     const auth = useAuth();
     const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = React.useState(false);
 
     const submitDeleteElement = async () => {
-        // Guard clause to ensure the user is authenticated before proceeding.
+
         if (!auth.user?.access_token) {
             showFlashMessage('You must be logged in to delete an element', 'danger');
-            return; // Exit the function early.
+            return;
         }
 
 
@@ -33,7 +33,7 @@ const DeleteElement = ({element_id, endpoint, elementName = 'this item', onDelet
             showFlashMessage('Deleted successfully', 'info');
             //close the modal
             setIsDeleteConfirmationModalOpen(false);
-            // 3. Call the success callback
+            //call the success callback
             setIsLoading(false); // Always set loading back to false
             onDelete();
             return;
@@ -49,12 +49,9 @@ const DeleteElement = ({element_id, endpoint, elementName = 'this item', onDelet
     };
 
     const handleClick = async () => {
-        // Ask for confirmation first
         setIsDeleteConfirmationModalOpen(true);
-
     };
 
-    // Use the isLoading state to provide feedback and prevent double clicks
     return (
         <>
             <button className="button is-danger" type="button"

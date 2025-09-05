@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio';
 
-// 1. Define an interface for the data structure for type safety.
+// NOTE this was experimented with, but not yet implemented in the applicaiton - leaving it here for future integration
+
 interface NutritionalInfo {
     [key: string]: string;
 }
@@ -22,30 +23,18 @@ interface ProductData {
     allergens: Allergens;
 }
 
-/**
- * Scrapes product data for a given product code from henderson-foodservice.com
- * @param productCode The product code to search for.
- * @returns A promise that resolves to the scraped product data.
- */
+
 async function scrapeProductData(productCode: string): Promise<ProductData> {
     const urlBase = 'https://www.henderson-foodservice.com/catalogsearch/result/?q=';
     const url = `${urlBase}${productCode}`;
 
     try {
-        // Fetch the HTML content
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const html = await response.text();
-
-        // Load the HTML into cheerio, which provides a jQuery-like API ($)
         const $ = cheerio.load(html);
-
-        // --- Extraction Logic ---
-
-        // Note: Cheerio selectors don't throw errors if not found, they return an empty set.
-        // We use optional chaining (?.) and the nullish coalescing operator (??) for safety.
 
         // 1. Title
         const title = $('h1.page-title span.base').text().trim() ?? null;
@@ -57,7 +46,6 @@ async function scrapeProductData(productCode: string): Promise<ProductData> {
         const description = $('div.overview_long_desc div.value').text().trim() ?? null;
 
         // 4. Ingredients
-        // Note: IDs with dots must be escaped with \\ in CSS selectors.
         const ingredientsText = $('#attributes\\.ingredients').text().trim();
         const ingredients = ingredientsText ? ingredientsText.replace(/\s\s+/g, ' ') : null;
 
@@ -112,7 +100,7 @@ async function scrapeProductData(productCode: string): Promise<ProductData> {
 
     } catch (error) {
         console.error("Failed to scrape product data:", error);
-        // On failure, return a structure with all null/empty values
+        // On failure, return all null values to indicate missing data and maintain consistency in result structure.
         return {
             title: null,
             product_code: null,
@@ -126,9 +114,7 @@ async function scrapeProductData(productCode: string): Promise<ProductData> {
     }
 }
 
-// --- Execution ---
 const productCode = '908948';
 scrapeProductData(productCode).then(data => {
-    // The equivalent of json.dumps(data, indent=4)
     console.log(JSON.stringify(data, null, 2));
 });

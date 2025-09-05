@@ -1,4 +1,3 @@
-// display form containing all the invoice's meta data
 import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import useFlash from '../../contexts/FlashContext.tsx';
 import {patchField} from '../../services/commonService.ts';
@@ -22,19 +21,18 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
     // picker controls
     const [isPickerModalActive, setIsPickerModalActive] = useState<boolean>(false);
     const [pickerArray, setPickerArray] = useState<[] | IPickerElement[]>([]);  // array to be passed to picker to make selections from
-    const [pickerTitle, setPickerTitle] = useState<string>('');  // text descriptor for the picker popup
+    const [pickerTitle, setPickerTitle] = useState<string>('');  // title for the picker popup
 
     // same function for picker close can be used by all possible instances of picker being called - other fields do need to change
     const handlePickerClose = useCallback(() => {
         setIsPickerModalActive(false);
     }, []);
 
-    // get context data for use in form and pickers
     const {currencies, PickerSupplierArray} = useData();
 
 
-    // This formats the full datetime string into the 'yyyy-MM-dd' format
-    // that the date input requires, without modifying the original state.
+    // format the full datetime string into the 'yyyy-MM-dd' format
+    // that the date input requires without modifying the original state.
     const formattedInvoiceDate = useMemo(() => {
         if (!formData.invoice_date) {
             return '';
@@ -99,7 +97,7 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
         const onSelectAdapter = (id: string | number) => {
             const numericId = Number(id);
             if (!isNaN(numericId)) {
-                void supplierPickerOnSelect(numericId);   // void - don't want to do anything with the response
+                void supplierPickerOnSelect(numericId);   // void - don't want to do anything with the response - keeps TS happy
             } else {
                 console.error("Picker returned a non-numeric ID for supplier:", id);
             }
@@ -124,20 +122,15 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
         }));
     };
 
-
-
-
-
     // Handle saving when a field loses focus
     const handleBlur = async (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const {name, value, type} = e.target;
 
-        // The 'name' from an HTML input event is always a string.
         const fieldName = name as keyof InvoiceRead;
 
-        // 3. Adjust the comparison logic for dates
+        // Adjust comparison logic for dates
         let originalValue = String(initialFormDetails[fieldName] ?? '');
-        // If we are dealing with the date, compare only the date part (not time, tz) to prevent unnecessary saves.
+        // If we are dealing with the date, compare only the date part (not time, tz) to prevent unnecessary saves (had been triggerend by time tabbed through)
         if (fieldName === 'invoice_date' && originalValue) {
             originalValue = originalValue.slice(0, 10);
         } else {
@@ -158,7 +151,6 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
         setIsSaving(true);
 
         // Explicitly provide the generic types to the handlePatchField function.
-
             await handlePatchField<typeof fieldName>(
                 fieldName,
                 parsedValue as InvoiceRead[typeof fieldName]
@@ -170,13 +162,13 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
     return (
         <div className="container">
             <form>
-                {/* Use a fieldset to easily disable the entire form while saving */}
+                {/* Use a fieldset to disable the entire form while saving */}
                 <fieldset disabled={isSaving}>
                     <div className="form-content">
                         <input type="hidden" name="id" value={formData.id || ''}/>
 
                         <div className="columns is-multiline">
-                            {/* --- Row 1: Core Details --- */}
+
                             <div className="column is-one-third">
                                 <div className="field">
                                     <label className="label">Invoice Number</label>
@@ -194,9 +186,7 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
                                 </div>
                             </div>
 
-
-                            {/* --- Row 2: Supplier and Status --- */}
-                            {/*Supplier Name, as found on the invoice, is displayed, but is not editable, beside a drop-down of possible suppliers.  User to pick the correct one  */}
+                            {/*Supplier Name, as found on the invoice, is displayed, but is not editable, beside a picker of possible suppliers.  User to pick the correct one  */}
                             <div className="column is-half">
 
                                 <FormFieldWithPicker
@@ -208,8 +198,6 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
 
                             </div>
 
-
-                            {/* --- Row 3: References --- */}
                             <div className="column is-half">
                                 <div className="field">
                                     <label className="label">Customer Account Number</label>
@@ -245,7 +233,6 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
                                 </div>
                             </div>
 
-                            {/* --- Row 4: Financials --- */}
                             <div className="column is-one-third">
                                 <div className="field">
                                     <label className="label">Invoice Total</label>
@@ -300,8 +287,6 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
 
                             </div>
 
-
-                            {/* --- Row 5: Notes --- */}
                             <div className="column is-full">
                                 <div className="field">
                                     <label className="label">Notes</label>
@@ -317,7 +302,6 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
                     </div>
                 </fieldset>
 
-                {/* --- Read-only Meta-data --- */}
                 <div className="content is-small has-text-grey mt-5 pt-4" style={{borderTop: '1px solid #dbdbdb'}}>
                     <h6 className="subtitle is-6 has-text-grey">System Information (Read-Only)</h6>
                     <div className="columns is-multiline">

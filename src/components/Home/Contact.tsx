@@ -27,7 +27,7 @@ function Contact() {
                                 <span className="icon">
                                     <i className="fab fa-linkedin" aria-hidden="true"></i>
                                 </span>
-                                <a href="https://www.linkedin.com/in/panderson83" target="_blank" rel="noopener noreferrer">
+                                <a href="https://www.linkedin.com/in/p83anderson/" target="_blank" rel="noopener noreferrer">
                                     linkedin.com/in/panderson83
                                 </a>
                             </div>

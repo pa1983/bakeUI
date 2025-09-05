@@ -1,7 +1,7 @@
 import { createListView } from '../ListView/createListView';
 import type { ListViewConfig } from '../../config/listViewConfig';
 
-// Deffine the configuration for the Brand list view to be passed to the factory function, createListView
+// Define the configuration for the Brand list view to be passed to the factory function, createListView
 const brandListConfig: ListViewConfig = {
     title: 'Brand',
     endpoint: 'buyable/brand',

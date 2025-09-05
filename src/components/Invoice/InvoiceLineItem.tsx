@@ -63,7 +63,6 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
                 <fieldset disabled={isSaving}>
                     <div className="columns is-multiline is-vcentered is-mobile">
 
-                        {/* --- Row 1: Editable Description, SKU, and Delete --- */}
                         <div className="column is-8-tablet">
                             <div className="field">
                                 <label className="label" htmlFor={`description_${uniqueId}`}>Description</label>
@@ -109,27 +108,21 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
                             )}
                         </div>
 
-                        {/* --- Row 2: Display-only guide information --- */}
                         <div className="column is-full">
                             <div className="tags">
-                                {/* If cases > 0, render the span, otherwise render null */}
                                 {(formData.cases && formData.cases > 0) ? (
                                     <span className="tag is-info is-light">Cases: {formData.cases}</span>
                                 ) : null}
 
-                                {/* If units > 0, render the span, otherwise render null */}
                                 {(formData.units && formData.units > 0) ? (
                                     <span className="tag is-info is-light">Units: {formData.units}</span>
                                 ) : null}
-
-                                {/* This one was already fine, but for consistency: */}
                                 {(formData.size && formData.size.length > 0) ? (
                                     <span className="tag is-dark">Size: {formData.size}</span>
                                 ): null}
                             </div>
                         </div>
 
-                        {/* --- Row 3: Editable financial fields --- */}
                         <div className="column is-4-tablet">
                             <div className="field">
                                 <label className="label is-small" htmlFor={`value_ex_vat_${uniqueId}`}>Value (Ex.
@@ -163,7 +156,6 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
                             </div>
                         </div>
 
-                        {/* --- Row 4: Editable matching fields --- */}
                         <FormFieldWithPicker
                             label="Buyable Item"
                             fieldValue={formData.buyable_id}
@@ -202,7 +194,7 @@ const InvoiceLineItem = (props: IGenericFormProps<ILineItem>) => {
                             </div>
                         </div>
 
-                        {/* --- Row 5: Flags --- */}
+
                         <div className="column is-full">
                             <div className="field">
                                 <div className="control">

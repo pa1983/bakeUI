@@ -7,8 +7,7 @@ import {patchField} from "../../services/commonService.ts";
 import {useAuth} from "react-oidc-context";
 import useFlash from "../../contexts/FlashContext.tsx";
 import InvoiceLineItem from './InvoiceLineItem.tsx';
-import {createNewLineItem} from "../../services/invoiceLineItemService.ts"; // This will be our new "dumb" component
-
+import {createNewLineItem} from "../../services/invoiceLineItemService.ts";
 interface InvoiceLineItemsProps {
     invoice_id: number;
 }
@@ -24,7 +23,6 @@ function InvoiceLineItemsList({invoice_id}: InvoiceLineItemsProps) {
         refetch,
     } = useDataFetcher<ILineItem>(`/invoice/lineitem/all?invoice_id=${invoice_id}`);
 
-    // Use the specific type for state
     const [lineItems, setLineItems] = useState<ILineItem[]>([]);
 
     useEffect(() => {
@@ -47,7 +45,6 @@ function InvoiceLineItemsList({invoice_id}: InvoiceLineItemsProps) {
         []
     );
 
-
     // Persist changes to the database
     const handleEdit = useCallback(
         async <K extends keyof ILineItem>(id: number | null, fieldName: K, value: ILineItem[K]) => {
@@ -65,7 +62,7 @@ function InvoiceLineItemsList({invoice_id}: InvoiceLineItemsProps) {
                 showFlashMessage('Saved!', 'success');
             } catch (err) {
                 showFlashMessage(err instanceof Error ? err.message : 'Failed to save changes', 'danger');
-                refetch(); // Revert optimistic UI on failure
+                refetch(); // Revert optimistic update to UI on failure
             }
         },
         [fetchedLineItems, auth.user, showFlashMessage, refetch]
@@ -87,8 +84,6 @@ function InvoiceLineItemsList({invoice_id}: InvoiceLineItemsProps) {
     }, [])
 
 
-
-
     const handleDelete = useCallback(async (id: number | null) => {
         // The actual delete logic is in the DeleteElement component.
         // We just need to refetch the list after a successful deletion.
@@ -104,8 +99,6 @@ function InvoiceLineItemsList({invoice_id}: InvoiceLineItemsProps) {
     if (error) {
         return <div className="notification is-danger">Error loading line items: {error}</div>;
     }
-
-
 
 
     return (

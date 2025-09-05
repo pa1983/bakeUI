@@ -1,7 +1,6 @@
 // contexts/DataContext.tsx
 
 import {createContext, useContext, useMemo, type ReactNode} from 'react';
-
 import {type ICurrency} from "../models/ICurrency.ts";
 import {type ISupplier} from "../models/ISupplier.ts";
 import type {IBrand} from "../models/IBrand.ts";
@@ -9,14 +8,14 @@ import type {IBuyable} from "../models/IBuyable.ts";
 import type {IPickerElement} from "../models/picker.ts";
 import {useDataFetcher} from '../hooks/useDataFetcher';
 import type {IIngredient} from "../models/IIngredient.ts";
-import type {IRecipeStatus} from "../models/IRecipeStatus.ts"; // Import the new hook
+import type {IRecipeStatus} from "../models/IRecipeStatus.ts";
 import type {IProductType} from "../models/IProductType.ts";
 import type {IRecipeType} from "../models/IRecipeType.ts";
 import type {IRecipe} from "../models/IRecipe.ts";
 import type {ILabourer} from "../models/ILabourer.ts";
 import type {ILabourCategory} from "../models/ILabourCategory.tsx";
 
-// Granular loading/error states and refetch functions
+//  loading/error states and refetch functions
 export interface DataContextType {
     currencies: ICurrency[];
     suppliers: ISupplier[];
@@ -166,7 +165,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
     } = useDataFetcher<ILabourCategory>('/labourer/labour_category/all');
 
 
-    // --- Memoized Picker Arrays - all allow for empty source arrays gracefully ---
+    //  Memoized Picker Arrays
     const PickerSupplierArray = useMemo((): IPickerElement[] => {
         return (suppliers || []).map((supplier): IPickerElement => ({
             id: supplier.supplier_id,
@@ -251,7 +250,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         refetchLabourCategories();
     };
 
-    // --- Assemble the context value ---
+    // --- Assemble the context value array ---
     const contextValue: DataContextType = {
         currencies: currencies || [],
         suppliers: suppliers || [],

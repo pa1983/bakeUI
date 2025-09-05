@@ -19,7 +19,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, title, on
     // The main container gets the 'is-active' class to be visible.
     return (
         <div className={`modal ${isOpen ? 'is-active' : ''}`}>
-            {/* The semi-transparent backdrop. Clicking it will close the modal. */}
+            {/* The semi-transparent background; clicking it will close the modal. */}
             <div className="modal-background" onClick={onClose}></div>
 
             {/* The modal dialog box, using the modal-card structure */}

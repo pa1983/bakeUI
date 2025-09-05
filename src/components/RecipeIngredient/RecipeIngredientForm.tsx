@@ -44,12 +44,12 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
         setDisplayQuantity(e.target.value);
     };
 
-// 4. Use onBlur to commit the change to the parent state
     const handleBlurAndCommit = (e: React.FocusEvent<HTMLInputElement>) => {
         // Before calling the parent's handleEdit callback, parse the local state
         const numericValue = parseFloat(displayQuantity);
 
-        // Also parse the original value to ensure a correct comparison to check if change has occurred and needs to be persisted to DB
+        // ... the original value to ensure a correct comparison to check if change has occurred and needs to be persisted to DB. Without parse,
+        // comparison of differnt types will cause unnecessary patch calls
         const originalNumericValue = formData.quantity !== null && formData.quantity !== undefined
             ? parseFloat(String(formData.quantity))
             : null;
@@ -60,7 +60,6 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
             // If the user entered invalid text, revert to the original value
             setDisplayQuantity(originalNumericValue.toString());
         }
-
         // Check the event target's value matches the final numeric value before passing it to the parent handler.
         e.target.value = isNaN(numericValue) ? '' : String(numericValue);
 
@@ -98,10 +97,9 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
                         </div>
                     </div>
 
-                    {/* --- Qty and UOM side-by-side --- */}
                     <div className="field is-horizontal">
                         <div className="field-body">
-                            {/* Quantity Input */}
+
                             <div className="field">
                                 <label className="label is-small" htmlFor={`quantity_${uniqueId}`}>Quantity</label>
                                 <div className="control">
@@ -125,7 +123,6 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
                                     />
                                 </div>
                             </div>
-                            {/* Unit of Measure Dropdown */}
                             <div className="field" style={{ flexGrow: 2 }}>
                                 <label className="label is-small" htmlFor={`uom_id_${uniqueId}`}>Unit</label>
                                 <div className="control">
@@ -168,7 +165,7 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
                                 onFocus={handleFocus}
                                 disabled={isSaving}
                                 placeholder="Optional notes..."
-                                rows={3} // Adjusted rows to better fit the column height
+                                rows={3}
                             />
                         </div>
                     </div>

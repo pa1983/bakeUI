@@ -20,7 +20,7 @@ export interface ElementFormConfig<T, K extends keyof T> {
     isModal?: boolean;
 }
 
-// The hook is also generic over T and K, with a much stronger type constraint.
+// The hook is generic over T and K
 // T must be an object where the property K has a value of type number or string.
 export const useElementFormLogic = <
     T extends Record<K, number | string>,
@@ -52,9 +52,9 @@ export const useElementFormLogic = <
     const formTitle = isNew ? `Create New ${elementName}` : `Edit ${elementName}`;
 
     useEffect(() => {
+        // guard clause to prevent an attempted API call before auth is ready.
         if (auth.isLoading) return;
 
-        // This function can now safely accept a string or number for the ID.
         const loadElement = async (id: number | string) => {
             if (!auth.user?.access_token) {
                 setError("You must be logged in.");
@@ -82,10 +82,12 @@ export const useElementFormLogic = <
         };
 
         if (isNew) {
+            // If this is a new element, create an empty element using the definition from props,  and stop loading.
             setElement(createEmptyElement());
             setIsLoading(false);
         } else {
-            // This logic is now much simpler and safer.
+            // If prop_element_id is provided, use it. Otherwise, use the param_element_id.
+            // If neither is provided, set an error and stop loading.
             const idToFetch = prop_element_id ?? param_element_id;
             if (idToFetch) {
                 loadElement(idToFetch);
@@ -95,7 +97,9 @@ export const useElementFormLogic = <
             }
         }
     }, [isNew, param_element_id, prop_element_id, auth.isLoading, auth.user, getElement]);
-
+    // default handleSave behaviour - make an API call to post the new element
+    // with the form data.  Only ever used for a NEW element - not for editing. Editing is handled by handleEdit
+    // and patches changes field-by-field, as they're made for a better user experience.
     const handleSave = async (formData: T|null) => {
         if(!formData){
             return;
@@ -128,15 +132,19 @@ export const useElementFormLogic = <
             console.log(message);
             showFlashMessage( 'An error occurred', 'danger');
         } finally {
+            // set the state to false after the save operation is complete.
             setIsSaving(false);
         }
     };
-
+    // default handleChange behaviour - just update the state with the new value.
+    // This is essential in react forms- without it the form will not let the user edit the content of the input
+    // since the input value is tied to the value held in state.
     const handleChange = useCallback((fieldName: keyof T, value: T[keyof T]) => {
         setElement(prev => (prev ? { ...prev, [fieldName]: value } : null));
     }, []);
 
-
+    // default handleEdit behaviour - make an API call to patch the edited field
+    // with the new value.
     const handleEdit = useCallback(async (fieldName: keyof T, value: T[keyof T]) => {
         if (isNew || !element || !auth.user?.access_token) {
             return;
@@ -144,6 +152,8 @@ export const useElementFormLogic = <
 
         setIsSaving(true);
         try {
+            // patch field accepts the Type and Key of the element being edited, with parameters for
+            // the auth access token, the primary key name of the element, the field name, the new value, and the api endpoint.
             const response = await patchField<T, K>(
                 auth.user.access_token,
                 element[primaryKeyName],
@@ -165,7 +175,9 @@ export const useElementFormLogic = <
         }
     }, [isNew, element, auth.user, primaryKeyName, apiEndpoint, showFlashMessage]);
 
+    // default cancel callback behaviour - just go back to the list view
     const handleCancel = () => navigate(`/${apiEndpoint}/all`);
+    //default delete callback behaviour - just go back to the list view
     const handleDelete = () => {
         refetchDataList();
         navigate(`/${apiEndpoint}/all`);

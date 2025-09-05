@@ -26,7 +26,6 @@ const RecipeCostAnalysis: React.FC<RecipeCostAnalysisProps> = ({recipe_id, date_
         error,
     } = useDataFetcher<RecipeCostAnalysisType>(endpointToFetch, params);
 
-    // 1. Handle the loading state with a Bulma loader
     if (loading) {
         return (
             <section className="section">
@@ -38,18 +37,16 @@ const RecipeCostAnalysis: React.FC<RecipeCostAnalysisProps> = ({recipe_id, date_
         );
     }
 
-    // 2. Handle any potential errors
     if (error) {
         return <div className="notification is-danger">{error}</div>;
     }
 
-    // 3. Handle no data state
     if (!analysisData || analysisData.length === 0) {
         return <div className="notification is-warning">No analysis data found.</div>
     }
 
 
-    // 4. Render the chart once data is available
+    // Render chart once data is available
     return (
         <div className="container">
             <section className="section">
@@ -58,7 +55,6 @@ const RecipeCostAnalysis: React.FC<RecipeCostAnalysisProps> = ({recipe_id, date_
                 </h1>
                 <RecipeCostChart data={analysisData} />
             </section>
-            {/* CODE QUALITY: Removed the temporary debug output */}
         </div>
     );
 }

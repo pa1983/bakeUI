@@ -17,11 +17,8 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
 
     } = useFormLogic({...props, primaryKeyName: 'id'});
 
-    // Assumes your DataContext provides these lists
     const {labourers, labourCategories} = useData();
-
     const uniqueId = formData.id;
-    // The description is now used for the delete confirmation, not as a title
     const taskDescription = formData.description || 'this step';
 
     const [displayLabourMinutes, setDisplayLabourMinutes] = useState('');  // local state var to handle the parsed value for display-only purposes (hides trailing zeros)
@@ -34,7 +31,7 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
             const formatted = parseFloat(String(value)).toString();
             setDisplayLabourMinutes(formatted);
         } else {
-            // Handle null or undefined cases
+            // Handle null / undefined cases
             setDisplayLabourMinutes('');
         }
     }, [formData.labour_minutes]);
@@ -79,7 +76,6 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
 
                     <div className="field is-horizontal">
                         <div className="field-body">
-                            {/* Labourer Dropdown */}
                             <div className="field" style={{flexGrow: 2}}>
                                 <label className="label is-small" htmlFor={`labourer_id_${uniqueId}`}>Labourer</label>
                                 <div className="control">
@@ -104,7 +100,6 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
                                     </div>
                                 </div>
                             </div>
-                            {/* Labour Minutes Input */}
                             <div className="field">
                                 <label className="label is-small" htmlFor={`labour_minutes_${uniqueId}`}>Minutes</label>
                                 <div className="control">
@@ -116,11 +111,8 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
                                         step="any"
                                         placeholder="e.g., 25"
                                         name="labour_minutes"
-                                        // The input is controlled by local string state to allow for parsing the actual value to display a decimal without trailing zeroes
                                         value={displayLabourMinutes}
-                                        // onChange updates the LOCAL string state
                                         onChange={handleLocalChange}
-                                        // onBlur commits the actual numeric value to the parent state
                                         onBlur={handleBlurAndCommit}
                                         onFocus={handleFocus}
                                         disabled={isSaving}

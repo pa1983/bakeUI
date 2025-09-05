@@ -75,23 +75,25 @@ function InvoiceList() {
 
     return (
         <>
-            <UploadInvoice></UploadInvoice>
+            <div className="container is-fluid m-20 p-20">
+                <UploadInvoice></UploadInvoice>
+            </div>
 
-            <div className="container is-fluid">
+            <div className="container is-fluid m-20">
 
-                <h1 className="title">Invoices</h1>
-                <a onClick={createNewInvoice} className="button is-primary">Add New</a>
+                <h1 className="title">All Invoices</h1>
+                {/*<a onClick={createNewInvoice} className="button is-primary">Add New</a>*/}
 
-                <div className="columns is-multiline pd-5">
+                {/*<div className="columns is-multiline pd-5">*/}
                     {invoices.map(invoice => (
                         <InvoiceListElementCard
                             invoice={invoice}
                             key={invoice.id}
-                            onUpdate={triggerInvoiceReload}  // increment the RefreshContextData state to trigger a reload of the invoice list from the API
+                            onUpdate={triggerInvoiceReload}  // increment the RefreshContextData state value to trigger a reload of the invoice list from the API
                         />
 
                     ))}
-                </div>
+                {/*</div>*/}
 
             </div>
         </>

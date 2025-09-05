@@ -25,8 +25,6 @@ function FileUploader({
             setError("Authentication token not available. Please log in.");
             return;
         }
-
-        // Reset error on new upload attempt
         setError(null);
         console.log(`uploading ${file.name} to ${PostUrl} ...`);
 
@@ -34,7 +32,6 @@ function FileUploader({
         formData.append('file', file);
 
         try {
-            // BEST PRACTICE: Let Axios set the 'Content-Type' with the correct boundary for FormData.
             const headers = {
                 Authorization: `Bearer ${auth.user.access_token}`,
             };
@@ -45,13 +42,12 @@ function FileUploader({
             onSuccess();
             return res;
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
-            // Provide more specific feedback if the server sends an error message
             setError(err.response?.data?.message || "File upload failed");
         }
 
-    }, [auth, PostUrl, onSuccess]); // Added dependencies
+    }, [auth, PostUrl, onSuccess]);
 
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -72,10 +68,6 @@ function FileUploader({
                         </span>
                         <div {...getRootProps()}>
                             <input {...getInputProps()} />
-                            {/* This div prevents the layout shift.
-                              By setting a min-height and using flexbox to center the content,
-                              the container's size remains constant when the text inside changes.
-                            */}
                             <div className="dropzone">
                                 {isDragActive ?
                                     "Drop to upload!" :
@@ -86,7 +78,6 @@ function FileUploader({
                     </span>
                 </label>
             </div>
-            {/* Display any upload error to the user */}
             {error && <p className="help is-danger mt-2">{error}</p>}
         </>
     )

@@ -15,7 +15,8 @@ interface ViewBuyableFormProps {
     isModal?: boolean;
 }
 
-const ViewBuyableForm = ({ prop_element_id, onSuccess, isModal = false }: ViewBuyableFormProps) => {
+const ViewBuyableForm = (
+    { prop_element_id, onSuccess, isModal = false }: ViewBuyableFormProps) => {
     const { id: param_id } = useParams<{ id: string }>();
     const { refetchBuyables : refetchDataList } = useData();
 

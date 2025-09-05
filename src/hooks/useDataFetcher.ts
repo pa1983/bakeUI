@@ -5,10 +5,7 @@ import { useAuth } from 'react-oidc-context';
 import config from '../services/api.ts';
 const API_BASE_URL = config.API_URL;
 
-// Define a type for the params for better type safety.
 type FetchParams = Record<string, string | number | boolean | null | undefined>;
-
-
 /**
  * A generic hook to fetch data from an API endpoint.
  * It manages its own loading, error, and data states.
@@ -22,25 +19,23 @@ export const useDataFetcher = <T>(endpoint: string | null, params?: FetchParams)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // To prevent re-fetching on every render due to a new params object instance,
-    // we serialise it for the dependency array. This is a stable way to check for changes.
+    // To prevent re-fetching on every render due to a new params object instance, serialize the params object
     const serializedParams = JSON.stringify(params);
 
     const fetchData = useCallback(async () => {
-        //  Don't fetch if auth isn't ready.
         if (auth.isLoading || !auth.user?.access_token) {
             console.log(`UseDataFetcher: auth not ready for fetchData.`);
             setLoading(false);
             return;
         }
-        // If the endpoint is null, don't do anything.
         if (!endpoint) {
             console.log(`UseDataFetcher: endpoint is null.`);
-            setLoading(false); // No longer loading
-            setData(null); // Ensure data is cleared
+            setLoading(false);
+            setData(null);
             return;
         }
-        console.log(`fetchingData within DataFetcher hook for endpoint: ${endpoint} with params: ${serializedParams}`);
+        // keep this for debugging in future
+        // console.log(`fetchingData within DataFetcher hook for endpoint: ${endpoint} with params: ${serializedParams}`);
         setLoading(true);
         setError(null);
         try {
@@ -50,7 +45,7 @@ export const useDataFetcher = <T>(endpoint: string | null, params?: FetchParams)
                 params: params,
             });
             setData(response.data.data || []);
-        } catch (err: any) {
+        } catch (err: unknown) {
             const errorMessage = err.response?.data?.detail || err.message || 'An unknown error occurred';
             console.error(`Failed to fetch from ${endpoint}:`, err);
             setError(`Failed to fetch data: ${errorMessage}`);
@@ -58,12 +53,14 @@ export const useDataFetcher = <T>(endpoint: string | null, params?: FetchParams)
         } finally {
             setLoading(false);
         }
-    }, [endpoint, auth.isLoading, auth.user?.access_token, serializedParams]); // Use serializedParams here
+    }, [endpoint, auth.isLoading, auth.user?.access_token, serializedParams]);
 
+    // callback refetch function - usage triggers fetchData to refresh data
     const refetch = useCallback(() => {
         fetchData();
     }, [fetchData]);
 
+    // useEffect to fetch data on mount and when the fetchData callback changes
     useEffect(() => {
         fetchData();
     }, [fetchData]);
