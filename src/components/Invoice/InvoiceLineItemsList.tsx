@@ -28,6 +28,7 @@ function InvoiceLineItemsList({invoice_id}: InvoiceLineItemsProps) {
     useEffect(() => {
         if (fetchedLineItems) {
             setLineItems(fetchedLineItems);
+            console.log(fetchedLineItems);
         }
     }, [fetchedLineItems]);
 
