@@ -24,7 +24,9 @@ function UploadInvoice() {
                 Authorization: `Bearer ${auth.user.access_token}`,
                 'Content-Type': 'multipart/form-data',
             };
-            const res: AxiosResponse = await axios.post(`${config.API_URL}/invoice`, formData, {headers});
+            const url = `${config.API_URL}/invoice`;
+            console.log(`posting invoice to ${url}`);
+            const res: AxiosResponse = await axios.post(url, formData, {headers});
             console.log(res.data);
             return res;
 
