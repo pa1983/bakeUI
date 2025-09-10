@@ -4,11 +4,14 @@ import axios, {type AxiosResponse} from "axios";
 import {useAuth} from "react-oidc-context";
 import config from '../../../src/services/api.ts';
 import useFlash from '../../contexts/FlashContext.tsx';
+import {useNavigate} from "react-router-dom";
+
 // todo - move this to services.invoice to keep the component tidy
 // todo - refactor UploadInvoice to use the generic FIleUploader function - just need to refactor callbacks and titles
 function UploadInvoice() {
     const auth = useAuth();
-    const { showFlashMessage } = useFlash();
+    const {showFlashMessage} = useFlash();
+    const navigate = useNavigate();
     const uploadInvoiceFile = useCallback(async (file: File) => {
 
         if (!auth.user?.access_token) {
@@ -46,8 +49,21 @@ function UploadInvoice() {
             // axios post file - same logic as ingredient image uploader
             uploadInvoiceFile(acceptedFiles[0])
                 .then((response) => {
-                    console.log(response);  // todo - handle the response and use to flash a success message etc
-                })
+                        console.log(response);  // todo - handle the response and use to flash a success message etc
+                    // todo - validate the response against the invoice model
+                        if (response) {
+                            const invoice_id: number = response.data.data.id;
+                            console.log(`invoice id ${invoice_id} created `);
+                            showFlashMessage('Invoice uploaded successfully', 'info');
+                            navigate(`/invoice/${invoice_id}`);
+                        } else {
+                            showFlashMessage('Invoice upload failed', 'danger');
+                        }
+                    }
+                ).catch(error => {
+                console.error("Upload promise rejected:", error);
+                showFlashMessage('Invoice upload failed', 'danger');
+            });
             ;  // acceptedFiles returns a list - only uploading the first.  todo - set restrictions in invoice upload for file type, qty and size
         }
 

@@ -15,6 +15,15 @@ export const fetchInvoices = async (access_token: string): Promise< InvoiceListR
     }
 }
 
+export const createInvoice = async (access_token: string) => {
+    console.log(`attempting tocreate new invoice`);
+    const response = await axios.get<ApiResponse<InvoiceRead>>(`${config.API_URL}/invoice/new`,
+        {headers: {Authorization: `Bearer ${access_token}`}});
+    console.log(response.data.data);
+    // should return an empty invoice with a new invoice id number to use to open the new invoice form
+    return response.data.data;
+}
+
 export const getInvoiceURL = async (access_token: string, invoice_id: number) => {
     console.log(`attempting to retrieve doc url for invoice_id: ${invoice_id}`);
     const response = await axios.get(`${config.API_URL}/invoice/${invoice_id}/file_url`,
