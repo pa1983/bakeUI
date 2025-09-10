@@ -83,6 +83,7 @@ const RecipeCostChart = ({ data }: { data: RecipeCostAnalysisType[] }) => {
     return (
         <div className="box">
             <div className="has-text-centered mb-4">
+
                 <h2 className="title is-4">{`${topLevelRecipeName} Unit Cost Breakdown`}</h2>
                 <p className="subtitle is-5">Total Unit Cost: £{totalUnitCost.toFixed(2)}</p>
             </div>

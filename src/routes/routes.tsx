@@ -22,15 +22,18 @@ import RecipeCostAnalysisWrapper from "../components/RecipeCostAnalysis/RecipeCo
 import ProtectedRoute from "../components/ProtectedRoute.tsx";
 
 
-
-// wrapper to extract the ID param and pass as a prop to the cost analysis component, removing need for complex logic in the component  // todo - move this out
-
 const router = createBrowserRouter([
     //  Public Routes
-    { path: "/about", element: <Home /> },
-    { path: "/contact", element: <Contact /> },
-    {path: "/logged-out", element: <Home />},
+    {path: "/",
+        element: (<Layout />),
+        children: [
+            {path: "/", element: <Home/>},
+    {path: "/about", element: <Home/>},
+    {path: "/contact", element: <Contact/>},
+    {path: "/logged-out", element: <Home/>},
+]
 
+},
     // Protected Routes
     {
         path: "/",

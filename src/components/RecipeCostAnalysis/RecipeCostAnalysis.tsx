@@ -1,19 +1,19 @@
-import React from 'react';
 import { useDataFetcher } from "../../hooks/useDataFetcher.ts";
 import type { RecipeCostAnalysis as RecipeCostAnalysisType } from "../../models/IRecipeCostAnalysis.ts";
 import RecipeCostChart from './RecipeCostChart';
 
 interface RecipeCostAnalysisProps  {
-    recipe_id: number;
+    recipeId: number;
+    title: string;
     date_point_prop?: string;
 }
 
-const RecipeCostAnalysis: React.FC<RecipeCostAnalysisProps> = ({recipe_id, date_point_prop}) => {
+const RecipeCostAnalysis = ({ recipeId, title, date_point_prop }: RecipeCostAnalysisProps) => {
     // Set date_point to the prop value, or default to today's date.
     const date_point = date_point_prop || new Date().toISOString().slice(0, 10);
 
-    const endpointToFetch = (recipe_id && recipe_id > 0)
-        ? `/recipe/${recipe_id}/cost-analysis`
+    const endpointToFetch = (recipeId && recipeId > 0)
+        ? `/recipe/${recipeId}/cost-analysis`
         : null;
 
     const params = {
@@ -51,7 +51,7 @@ const RecipeCostAnalysis: React.FC<RecipeCostAnalysisProps> = ({recipe_id, date_
         <div className="container">
             <section className="section">
                 <h1 className="title is-2 has-text-centered mb-5">
-                    Recipe Cost Analysis
+                    {title}
                 </h1>
                 <RecipeCostChart data={analysisData} />
             </section>
