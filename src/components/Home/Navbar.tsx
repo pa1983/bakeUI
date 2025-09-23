@@ -10,6 +10,12 @@ const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
     const navRef = useRef<HTMLElement>(null);
 
+    // Close all menus
+    const closeMenus = () => {
+        setOpenDropdown(null);
+        setIsMobileMenuOpen(false);
+    };
+
     // Handler to toggle a specific dropdown
     const handleDropdownToggle = (dropdownName: string) => {
         setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
@@ -24,8 +30,7 @@ const Navbar = () => {
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (navRef.current && !navRef.current.contains(event.target as Node)) {
-                setOpenDropdown(null);
-                setIsMobileMenuOpen(false);
+                closeMenus();
             }
         };
 
@@ -44,7 +49,7 @@ const Navbar = () => {
             </a>
             <div className="navbar-dropdown">
                 {links.map(link => (
-                    <Link key={link.to} to={link.to} className="navbar-item" onClick={() => setOpenDropdown(null)}>
+                    <Link key={link.to} to={link.to} className="navbar-item" onClick={closeMenus}>
                         {link.label}
                     </Link>
                 ))}
@@ -57,7 +62,7 @@ const Navbar = () => {
             <div className="container">
                 <div className="navbar-brand">
                     {/* Logo/Brand Name */}
-                    <Link to="/" className="navbar-item has-text-weight-bold is-size-4">
+                    <Link to="/" className="navbar-item has-text-weight-bold is-size-4" onClick={closeMenus}>
                         Bake
                     </Link>
 
@@ -93,7 +98,7 @@ const Navbar = () => {
                             title="Invoices"
                             links={[
                                 { to: '/invoice/invoices', label: 'All Invoices' },
-                                { to: '/invoice/new', label: 'New Manual Invoice' },
+                                { to: '/invoice/new', label: 'New Invoice' },
                             ]}
                         />
 
@@ -158,7 +163,10 @@ const Navbar = () => {
                                                 <span>{auth.user?.profile.email}</span>
                                             </span>
                                         </div>
-                                        <button onClick={() => auth.signoutRedirect()} className="button is-danger">
+                                        <button onClick={() => {
+                                            closeMenus();
+                                            auth.signoutRedirect();
+                                        }} className="button is-danger">
                                             <span className="icon">
                                                 <i className="fas fa-sign-out-alt"></i>
                                             </span>
@@ -166,7 +174,10 @@ const Navbar = () => {
                                         </button>
                                     </>
                                 ) : (
-                                    <button onClick={() => auth.signinRedirect()} className="button is-success">
+                                    <button onClick={() => {
+                                        closeMenus();
+                                        auth.signinRedirect();
+                                    }} className="button is-success">
                                         <span className="icon">
                                             <i className="fas fa-sign-in-alt"></i>
                                         </span>

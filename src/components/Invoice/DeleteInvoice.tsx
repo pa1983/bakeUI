@@ -1,7 +1,7 @@
 import {deleteInvoice} from "../../services/InvoiceServices.ts";
 import {useAuth} from "react-oidc-context";
 import ConfirmationModal from "../Utility/ConfirmationModal.tsx";
-import React from "react";
+import {useState} from "react";
 import useFlash from "../../contexts/FlashContext.tsx";
 
 interface DeleteInvoiceProps {
@@ -11,7 +11,7 @@ interface DeleteInvoiceProps {
 
 const DeleteInvoice = ({invoice_id, onUpdate}: DeleteInvoiceProps) => {
     const auth = useAuth();
-    const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = React.useState(false);
+    const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = useState(false);
     const {showFlashMessage} = useFlash();
     // callback function to be passed to the delete invoice confirmation modal - called when confirmation is clicked
     const handleConfirmDelete = async () => {

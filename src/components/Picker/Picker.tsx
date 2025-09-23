@@ -42,7 +42,7 @@ function Picker({
 
     return (
         <div className="section">
-            <h1 className="title is-3 has-text-grey-light">{pickerTitle}</h1>
+            <h1 className="title is-1 has-text-grey-light">{pickerTitle}</h1>
              {/*conditionally render optional prop pickersubtitle*/}
             {pickerSubtitle &&
                 <h3 className="subtitle is-6 has-text-grey-light pt-2">{pickerSubtitle}</h3>

@@ -1,16 +1,19 @@
-import {useCallback} from 'react'
+import {useCallback, useState} from 'react'
 import {useDropzone} from 'react-dropzone'
 import axios, {type AxiosResponse} from "axios";
 import {useAuth} from "react-oidc-context";
 import config from '../../../src/services/api.ts';
 import useFlash from '../../contexts/FlashContext.tsx';
 import {useNavigate} from "react-router-dom";
+import ViewLoader from "../Invoice/ViewLoader.tsx";
+
 
 // todo - move this to services.invoice to keep the component tidy
 // todo - refactor UploadInvoice to use the generic FIleUploader function - just need to refactor callbacks and titles
 function UploadInvoice() {
     const auth = useAuth();
     const {showFlashMessage} = useFlash();
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const uploadInvoiceFile = useCallback(async (file: File) => {
 
@@ -47,20 +50,26 @@ function UploadInvoice() {
 
         if (acceptedFiles.length > 0) {
             // axios post file - same logic as ingredient image uploader
+            setIsLoading(true);
             uploadInvoiceFile(acceptedFiles[0])
                 .then((response) => {
                         console.log(response);  // todo - handle the response and use to flash a success message etc
-                    // todo - validate the response against the invoice model
+                        // todo - validate the response against the invoice model
+
                         if (response) {
                             const invoice_id: number = response.data.data.id;
                             console.log(`invoice id ${invoice_id} created `);
                             showFlashMessage('Invoice uploaded successfully', 'info');
+                            setIsLoading(false);
                             navigate(`/invoice/${invoice_id}`);
                         } else {
+                            setIsLoading(false);
                             showFlashMessage('Invoice upload failed', 'danger');
+
                         }
                     }
                 ).catch(error => {
+                    setIsLoading(false);
                 console.error("Upload promise rejected:", error);
                 showFlashMessage('Invoice upload failed', 'danger');
             });
@@ -71,6 +80,7 @@ function UploadInvoice() {
 
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 
+    if (!isLoading) {
     return (
 
         <div className="file is-boxed">
@@ -92,7 +102,12 @@ function UploadInvoice() {
             </label>
         </div>
 
-    )
+    )} else {
+        return (<div>
+                <ViewLoader/>
+            </div>
+        )
+    }
 }
 
 export default UploadInvoice;

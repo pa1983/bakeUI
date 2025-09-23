@@ -199,7 +199,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         const safeBrands = brands || [];
         return (buyables || []).map((buyable: IBuyable): IPickerElement => ({
             id: buyable.id,
-            title: `${buyable.sku} - ${safeBrands.find(brand => brand.brand_id === buyable.brand_id)?.brand_name || '      \n\n'}  -  ${buyable.item_name}`,
+            title: `${buyable.sku} ¬ ${safeBrands.find(brand => brand.brand_id === buyable.brand_id)?.brand_name || '      \n\n'}  ¬  ${buyable.item_name}`,
             subtitle: buyable.notes,
             imageUrl: null
         }))

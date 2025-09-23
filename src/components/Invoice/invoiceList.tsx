@@ -1,5 +1,4 @@
 import {useEffect, useState, useCallback} from 'react';
-import UploadInvoice from '../Utility/invoice_uploader.tsx';
 import {fetchInvoices} from "../../services/InvoiceServices.ts";
 import type {InvoiceListResponse} from "../../models/invoice.ts";
 import {useAuth} from "react-oidc-context";
@@ -12,37 +11,6 @@ function InvoiceList() {
     // const {showFlashMessage} = useFlash();
     // const navigate = useNavigate();
 
-
-    // const createNewInvoice = async () => {
-    //     // guard clause - check user logged in before proceeding
-    //     if (!auth.user?.access_token) {
-    //         showFlashMessage('You must be logged in to create an invoice', 'danger');
-    //         return; // Exit the function early.
-    //     }
-    //
-    //     try {
-    //         const response = await axios.get<ApiResponse<InvoiceRead>>(`${config.API_URL}/invoice/new`, {
-    //             headers: {
-    //                 'Authorization': `Bearer ${auth.user?.access_token}`
-    //             }
-    //         });
-    //
-    //         console.log(response);
-    //
-    //         if (!response.data.data) {
-    //          // no invoice was created
-    //             showFlashMessage('Failed to create new invoice', 'danger');
-    //             return;
-    //         } else {
-    //             // navigate to the new blank invoice so user can populate manually
-    //             navigate(`/invoice/${response.data.data.id}`)
-    //
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    //
-    // }
 
     useEffect(() => {
 
@@ -70,16 +38,11 @@ function InvoiceList() {
 
     return (
         <>
-            <div className="container is-fluid m-20 p-20">
-                <UploadInvoice></UploadInvoice>
-            </div>
-
             <div className="container is-fluid m-20">
 
                 <h1 className="title">All Invoices</h1>
                 {/*<a onClick={createNewInvoice} className="button is-primary">Add New</a>*/}
 
-                {/*<div className="columns is-multiline pd-5">*/}
                     {invoices.map(invoice => (
                         <InvoiceListElementCard
                             invoice={invoice}

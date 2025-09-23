@@ -102,4 +102,8 @@ export interface InvoiceListResponse {
     invoice_number: string | null;
     status: InvoiceStatus;
     image: ImageInvoiceRead;
+    calculated_total: string | null;
+    invoice_total: string | null;
+    line_items_count: number;
+    currency_code: string | null;
 }

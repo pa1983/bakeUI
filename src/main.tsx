@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {type ReactNode} from 'react'
 import ReactDOM from 'react-dom/client'
 import {WebStorageStateStore} from 'oidc-client-ts'
 import './index.css'
@@ -21,7 +21,9 @@ import 'react-pdf/dist/Page/TextLayer.css';
 
 const COGNITO_AUTHORITY = import.meta.env.VITE_COGNITO_AUTHORITY;
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-const REDIRECT_URL = import.meta.env.VITE_REDIRECT_URL;
+// const REDIRECT_URL = import.meta.env.VITE_REDIRECT_URL;
+// const REDIRECT_URL = import.meta.env.VITE_REDIRECT_URL;
+const LOGOUT_URL = import.meta.env.VITE_LOGOUT_URL;
 
 // Set the worker source path for pdf viewer
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -32,14 +34,15 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 const cognitoAuthConfig = {
     authority: COGNITO_AUTHORITY,
     client_id: CLIENT_ID,
-    redirect_uri: REDIRECT_URL,
+    redirect_uri: LOGOUT_URL,  // was redirect URL   - whicj should it be?
+    // redirect_uri: window.location.origin,
     response_type: "code",
     scope: "email openid phone",
     userStore: new WebStorageStateStore({store: window.localStorage})};  // changed to local storage to avoid need to log in each time app is opened in a new tab
 
 
 // Ddedicated component to compose all providers- makes the main file cleaner and the provider setup reusable.
-const AppProviders = ({ children }: { children: React.ReactNode }) => (
+const AppProviders = ({ children }: { children: ReactNode }) => (
     <React.StrictMode>
         <FlashProvider>
             <CustomAlertProvider>

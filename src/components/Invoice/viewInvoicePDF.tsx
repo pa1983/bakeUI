@@ -138,6 +138,7 @@ function ViewInvoicePDF({invoice_id: invoice_id_from_prop}: ViewInvoicePDFProps)
                 <span>Page {pageNumber} of {numPages || '--'}</span>
                 <button className="button" onClick={goToNextPage} disabled={!numPages || pageNumber >= numPages}>Next
                 </button>
+            {/*    todo - add OPEN IN NEW TAB button, download file button */}
             </PDFControls>
 
             <PDFDocumentWrapper>

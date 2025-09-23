@@ -9,7 +9,7 @@ interface InvoiceListElementCardProps {
     onUpdate: () => void;
 }
 
-const InvoiceListElementCard = ({invoice, onUpdate}:InvoiceListElementCardProps) => {
+const InvoiceListElementCard = ({invoice, onUpdate}: InvoiceListElementCardProps) => {
 
 
     return (
@@ -23,10 +23,29 @@ const InvoiceListElementCard = ({invoice, onUpdate}:InvoiceListElementCardProps)
 
                 <div className="columns">
                     <div className="column is-6">
-                        <h1 className="title is-size-4">Supplier {invoice.supplier_name ?? "name not found"}</h1>
+                        <h1 className="title is-size-4">{invoice.supplier_name ?? "Supplier name not found"}</h1>
                     </div>
                     <div className="column is-6">
-                        <h1 className="title is-size-4">Invoice Number {invoice.invoice_number ?? "not found"}</h1>
+                        <h1 className="title is-size-4">{invoice.invoice_number ?? "Invoice number not found"}</h1>
+                    </div>
+                </div>
+                <div className="columns">
+                    <div className="column is-6">
+
+                        <h2 className="subtitle is-size-6">
+                            {invoice.invoice_total
+                                ?`${invoice.invoice_total} ${invoice.currency_code}`:
+                                "Total not found"
+                            }
+                        </h2>
+                    </div>
+                    <div className="column is-6">
+                        <h2 className="subtitle is-size-6">
+                            {invoice.line_items_count
+                                ? `${invoice.line_items_count} items`
+                                : "No items found"
+                            }
+                        </h2>
                     </div>
                 </div>
                 <div className="columns is-mobile">
@@ -55,7 +74,7 @@ const InvoiceListElementCard = ({invoice, onUpdate}:InvoiceListElementCardProps)
                         onUpdate={onUpdate}
                     />
                 </div>
-                              {/*// todo - add this back in when we have the pdf viewer working*/}
+                {/*// todo - add this back in when we have the pdf viewer working*/}
                 {/*<div className="card-footer-item">*/}
                 {/*    <i className="fa-solid fa-file-pdf fa-2x"/>*/}
                 {/*</div>*/}

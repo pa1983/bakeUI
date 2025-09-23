@@ -11,6 +11,9 @@ import type {IRecipeElement} from "../../models/IRecipeElement.ts";
 import type {IRecipeIngredient} from "../../models/IRecipeIngredient.ts";
 import type {IRecipeLabour} from "../../models/IRecipeLabour.ts";
 import type {IRecipeSubRecipe} from "../../models/IRecipeSubRecipe.ts";
+// import {DndContext, useDroppable, useDraggable} from "@dnd-kit/core";
+import {DndContext} from "@dnd-kit/core";
+
 
 interface ElementDataMap {
     ingredient: IRecipeIngredient;
@@ -168,8 +171,21 @@ const RecipeElementList = ({recipe_id, refetchTrigger}: RecipeElementListProps) 
         );
     }
 
+    // DRAG AND DROP FUNCTIONS
+    // function Droppable(props) {
+    //     const {isOver, setNodeRef} = useDroppable({
+    //         id: 'droppable',
+    //     });
+    //     const style = {
+    //         color: isOver? 'green' : undefined,
+    //     }
+    // }
+
+
 
     return (
+        <DndContext>
+
         <div className="box">
             <h3 className="title is-5">Recipe Elements  ({recipeElements?.length})</h3>
             {recipeElements.map(element => {
@@ -238,6 +254,7 @@ const RecipeElementList = ({recipe_id, refetchTrigger}: RecipeElementListProps) 
                 }
             })}
         </div>
+        </DndContext>
     );
 };
 
