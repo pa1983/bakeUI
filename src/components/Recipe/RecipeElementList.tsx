@@ -65,6 +65,7 @@ const RecipeElementList = ({recipe_id, refetchTrigger}: RecipeElementListProps) 
         refetch,
     } = useDataFetcher<IRecipeElement[]>(endpointToFetch);
 
+
     // State and fetcher for AI Analysis data, now managed entirely by the hook.
     const {
         data: aiAnalysis,
