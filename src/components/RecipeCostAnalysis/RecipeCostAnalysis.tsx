@@ -24,7 +24,7 @@ const RecipeCostAnalysis = ({ recipeId, title, date_point_prop }: RecipeCostAnal
         data: analysisData,
         loading,
         error,
-    } = useDataFetcher<RecipeCostAnalysisType>(endpointToFetch, params);
+    } = useDataFetcher<RecipeCostAnalysisType[]>(endpointToFetch, params);
 
     if (loading) {
         return (

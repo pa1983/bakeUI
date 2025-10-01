@@ -13,7 +13,7 @@ export const ElementView = <
     // Unused params are ignored
     // FormComponent is a reference to the actual custom form component with custom styling and layout specific
     // to the particular element.
-    const { FormComponent } = config;
+    const { FormComponent, aiAnalysis } = config;
 
     const {
         element,
@@ -56,8 +56,19 @@ export const ElementView = <
                     isSaving={isSaving}
                     onDelete={handleDelete}
                     isModal={!!config.prop_element_id} // concise way to determine if it's a modal
+                    aiAnalysis={aiAnalysis}
                 />
             </div>
+            {aiAnalysis && aiAnalysis.items_for_review && aiAnalysis.items_for_review.length > 0 && (
+                <div className="box mt-4">
+                    <h2 className="subtitle">AI Analysis: Items to Review</h2>
+                    <ul>
+                        {aiAnalysis.items_for_review.map((element, index) => (
+                            <li key={index}>{element.comment}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
     );
 };

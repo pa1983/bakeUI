@@ -70,3 +70,9 @@ button:focus-visible {
 .no-dots {
   list-style-type: none;
 }
+
+.recipe-elements-list {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}

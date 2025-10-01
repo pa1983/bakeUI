@@ -10,7 +10,7 @@ import router from './routes/routes.tsx'
 import {UnitOfMeasureProvider} from "./contexts/UnitOfMeasureContext.tsx";
 
 import {FlashProvider} from "./contexts/FlashContext.tsx";
-import {CustomAlertProvider} from "./contexts/CustomAlertContext.tsx";
+import {AlertProvider} from "./contexts/CustomAlertContext.tsx";
 import {pdfjs} from 'react-pdf';
 import {DataProvider} from "./contexts/DataContext.tsx";
 import {KeyboardShortcutProvider} from './contexts/KeyboardShortcutContext.tsx';
@@ -45,7 +45,7 @@ const cognitoAuthConfig = {
 const AppProviders = ({ children }: { children: ReactNode }) => (
     <React.StrictMode>
         <FlashProvider>
-            <CustomAlertProvider>
+            <AlertProvider>
                 <AuthProvider {...cognitoAuthConfig}>
                     <KeyboardShortcutProvider>
                         <UnitOfMeasureProvider>
@@ -55,7 +55,7 @@ const AppProviders = ({ children }: { children: ReactNode }) => (
                         </UnitOfMeasureProvider>
                     </KeyboardShortcutProvider>
                 </AuthProvider>
-            </CustomAlertProvider>
+            </AlertProvider>
         </FlashProvider>
     </React.StrictMode>
 );

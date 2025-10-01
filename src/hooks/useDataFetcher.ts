@@ -6,17 +6,26 @@ import config from '../services/api.ts';
 const API_BASE_URL = config.API_URL;
 
 type FetchParams = Record<string, string | number | boolean | null | undefined>;
+
+interface FetcherOptions {
+    lazy?: boolean;
+}
+
 /**
  * A generic hook to fetch data from an API endpoint.
  * It manages its own loading, error, and data states.
  * @param endpoint The API path to fetch data from (e.g., '/common/currency'). Can be null to prevent fetching.
  * @param params Optional object of key-value pairs to be sent as URL query parameters.
+ * @param options Optional configuration object. Set `lazy: true` to prevent fetching on mount.
  * @returns An object containing the fetched data, loading state, error state, and a refetch function.
  */
-export const useDataFetcher = <T>(endpoint: string | null, params?: FetchParams) => {
+export const useDataFetcher = <T>(endpoint: string | null, params?: FetchParams, options: FetcherOptions = {}) => {
     const auth = useAuth();
-    const [data, setData] = useState<T[] | null>(null);
-    const [loading, setLoading] = useState(true);
+    const { lazy = false } = options;
+
+    // Initialize data as T | null, not T[] | null, for more flexibility.
+    const [data, setData] = useState<T | null>(null);
+    const [loading, setLoading] = useState(!lazy); // Don't set loading on mount if lazy
     const [error, setError] = useState<string | null>(null);
 
     // To prevent re-fetching on every render due to a new params object instance, serialize the params object
@@ -24,7 +33,7 @@ export const useDataFetcher = <T>(endpoint: string | null, params?: FetchParams)
 
     const fetchData = useCallback(async () => {
         if (auth.isLoading || !auth.user?.access_token) {
-            console.log(`UseDataFetcher: auth not ready for fetchData.`);
+            // console.log(`UseDataFetcher: auth not ready for fetchData.`);
             setLoading(false);
             return;
         }
@@ -44,7 +53,12 @@ export const useDataFetcher = <T>(endpoint: string | null, params?: FetchParams)
                 // Pass the params object to axios. It will be converted to a query string.
                 params: params,
             });
-            setData(response.data.data || []);
+            // Handle both { data: [...] } and direct data responses
+            const responseData = response.data.data !== undefined ? response.data.data : response.data;
+            setData(responseData);
+            // Return data for manual refetches
+            return responseData as T;
+
         } catch (err: unknown) {
             let errorMessage = 'An unknown error occurred';
             if (axios.isAxiosError(err) && err.response) {
@@ -55,20 +69,25 @@ export const useDataFetcher = <T>(endpoint: string | null, params?: FetchParams)
             console.error(`Failed to fetch from ${endpoint}:`, err);
             setError(`Failed to fetch data: ${errorMessage}`);
             setData(null); // Reset to initial state on error
+            // Re-throw for async/await error handling
+            throw err;
         } finally {
             setLoading(false);
         }
-    }, [endpoint, auth.isLoading, auth.user?.access_token, serializedParams]);
+    }, [endpoint, auth.isLoading, auth.user?.access_token, serializedParams]); // `params` is included via `serializedParams`
 
-    // callback refetch function - usage triggers fetchData to refresh data
+    // The refetch function now returns a promise with the fetched data
     const refetch = useCallback(() => {
-        fetchData();
+        return fetchData();
     }, [fetchData]);
 
     // useEffect to fetch data on mount and when the fetchData callback changes
     useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        // Only fetch on mount if not lazy
+        if (!lazy) {
+            fetchData();
+        }
+    }, [fetchData, lazy]);
 
 
     return { data, loading, error, refetch };

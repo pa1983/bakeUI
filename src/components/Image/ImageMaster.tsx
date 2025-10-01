@@ -22,7 +22,7 @@ const ImageMaster = ({title, getEndpoint, postEndpoint}: ImageMasterProps) => {
         loading,
         error,
         refetch,
-    } = useDataFetcher<IIngredientImage>(auth.isAuthenticated ? getEndpoint : null);
+    } = useDataFetcher<IIngredientImage[]>(auth.isAuthenticated ? getEndpoint : null);
 
     // It's good practice to define the delete handler outside the JSX.
     // This function will call the service and then refetch the data on success.

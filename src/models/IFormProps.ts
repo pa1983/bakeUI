@@ -1,3 +1,5 @@
+import type {AIRecipeAnalysis} from './../models/RecipeAIAnalysis.ts';
+
 export interface IGenericFormProps<T> {
     // the data that will be displayed in the form, of type T
     formData: T;
@@ -13,4 +15,5 @@ export interface IGenericFormProps<T> {
     onCancel: () => void;
     isSaving: boolean;
     isModal: boolean;
+    aiAnalysis?: AIRecipeAnalysis | null;
 }

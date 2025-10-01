@@ -4,10 +4,11 @@ import {useFormLogic} from "../../hooks/useFormLogic";
 import DeleteElement from '../Utility/DeleteElement.tsx';
 import {useUnitOfMeasures} from "../../contexts/UnitOfMeasureContext.tsx";
 import {useData} from "../../contexts/DataContext.tsx";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
+import ReviewItemCard from "../Recipe/ReviewItemCard.tsx";
 
 const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
-    const {formData, isSaving, onDelete} = props;
+    const {formData, isSaving, onDelete, aiAnalysis} = props;
 
     const {
         isNew,
@@ -27,6 +28,17 @@ const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
 
     // following copied verbatim from recipeIngredient to handle friendly display of decimals in the quantity form
     const [displayQuantity, setDisplayQuantity] = useState('');  // local state var to handle the parsed value for display-only purposes (hides trailing zeros)
+
+    // Find the relevant AI analysis for this specific sub-recipe - note the ID referenced differs to that when the item is an ingredient or labour element
+    const relevantAnalysis = useMemo(() => {
+        if (!aiAnalysis || !aiAnalysis.items_for_review) {
+            return null;
+        }
+        return aiAnalysis.items_for_review.find(item =>
+            item.cost_type.toLowerCase().replace("-", "") === 'subrecipe' && item.item_id === formData.id
+        );
+    }, [aiAnalysis, formData.id]);
+
 
     // Sync the prop value to the local display state when it changes
     useEffect(() => {
@@ -166,6 +178,13 @@ const RecipeSubRecipeForm = (props: IGenericFormProps<IRecipeSubRecipe>) => {
                     </div>
                 </div>
             </div>
+
+            {relevantAnalysis && (
+                <div>
+                    <ReviewItemCard
+                        itemForReview={relevantAnalysis}/>
+                </div>
+            )}
         </div>
     );
 };

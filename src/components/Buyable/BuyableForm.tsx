@@ -8,6 +8,8 @@ import PickerModal from "../Picker/PickerModal.tsx";
 import ViewBrandForm from "../Brand/ViewBrandForm.tsx";
 import {type IGenericFormProps} from "../../models/IFormProps.ts";
 import {useFormLogic} from "../../hooks/useFormLogic.ts";
+import MoreInfo from "../Home/MoreInfo.tsx";
+import {BuyableUOMInfo} from "./BuyableUOMInfo.tsx";
 
 
 const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
@@ -30,12 +32,12 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
 
         // DEFINE NON-STANDARD FORM ELEMENTS, e.g. pickerConfig, data sources
 
-        // Define data souorces - these are pulled from contexts
+        // Define data sources - these are pulled from contexts
         const {PickerBrandArray} = useData();
         const {units} = useUnitOfMeasures();
 
         const brandPickerOnSelect = (selectedBrandId: number ) => {
-            // persist the new brand id to the database.  This isn't part of the useFormLogic hook as it deviates from
+            // persist the new brand id to the database.  This isn't part of the useFormLogic hook as it deviates
             // from the standard handling of change to a form field.
             // It IS common to all pickers
             console.log(`brandPickerOnSelect called with value ${selectedBrandId}`);
@@ -57,16 +59,16 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
                 addNewFormActive: false,
                 pickerOnAddNewClicked: () => {
                     // Behaviour of the Add New button in the picker.  As this is a modal view, want to simply flip
-                    // the addNewFormActive boolean to switch between the picker and the add new form.
+                    // the addNewFormActive boolean to switch between the picker and the 'add new' form.
                     toggleNewItemView()
                 },
                 addNewComponent: (
-                    //     passing in JSX that can be rendered within the child element.  By passing element_id == new
+                    //     passing in JSX that can be rendered within the child element.  By passing element_id == new,
                     // a blank form will be presented to populate a new item
                     <ViewBrandForm
                         prop_element_id='new'
                         onSuccess={brandPickerOnSelect}  // expected to be passed the ID of the newly created item
-                        isModal={true}  // deactivates shortcuts when form is displaed as a modal
+                        isModal={true}  // deactivates shortcuts when the form is displayed as a modal
                     />
                 ), onClose(): void | null {
                     return undefined;
@@ -130,7 +132,8 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
                     <div className="field is-horizontal">
                         <div className="field-body">
                             <div className="field">
-                                <label className="label" htmlFor="uom_id">Unit of Measure</label>
+                                <label className="label" htmlFor="uom_id">Unit of Measure    <MoreInfo message={BuyableUOMInfo}/></label>
+
                                 <div className="control">
                                     <div className="select is-fullwidth">
                                         <select
@@ -232,7 +235,7 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
 
                                         Create Item (CTRL+Enter)
                                     </button>
-                                    {/*    if being displayed in modal view, can't use shortcut as may interfere with shortcut declared in calling form  - conditionally disable? */}
+                                    {/*    if being displayed in the modal view, can't use shortcut as may interfere with the shortcut declared in calling form - conditionally disable? */}
                                 </div>
                                 <div className="control">
                                     <button type="button" className="button is-light" onClick={onCancel}

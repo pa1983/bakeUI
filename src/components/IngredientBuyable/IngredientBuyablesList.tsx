@@ -27,7 +27,7 @@ const IngredientBuyablesList = ({ingredient_id}: IngredientBuyablesListProps) =>
         loading,
         error,
         refetch,
-    } = useDataFetcher<IIngredientBuyable>(`/ingredient/link_buyable/all?ingredient_id=${ingredient_id}`);
+    } = useDataFetcher<IIngredientBuyable[]>(`/ingredient/link_buyable/all?ingredient_id=${ingredient_id}`);
     console.log("ingredient links pulled: ");
     console.log(links);
     // Memoize the lists of linked and unlinked buyables for performance

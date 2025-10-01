@@ -102,67 +102,67 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         loading: loadingCurrencies,
         error: errorCurrencies,
         refetch: refetchCurrencies
-    } = useDataFetcher<ICurrency>('/common/currency');
+    } = useDataFetcher<ICurrency[]>('/common/currency');
     const {
         data: suppliers,
         loading: loadingSuppliers,
         error: errorSuppliers,
         refetch: refetchSuppliers
-    } = useDataFetcher<ISupplier>('/buyable/supplier/all');
+    } = useDataFetcher<ISupplier[]>('/buyable/supplier/all');
     const {
         data: brands,
         loading: loadingBrands,
         error: errorBrands,
         refetch: refetchBrands
-    } = useDataFetcher<IBrand>('/buyable/brand/all');
+    } = useDataFetcher<IBrand[]>('/buyable/brand/all');
     const {
         data: buyables,
         loading: loadingBuyables,
         error: errorBuyables,
         refetch: refetchBuyables
-    } = useDataFetcher<IBuyable>('/buyable/all');
+    } = useDataFetcher<IBuyable[]>('/buyable/all');
     const {
         data: ingredients,
         loading: loadingIngredients,
         error: errorIngredients,
         refetch: refetchIngredients
-    } = useDataFetcher<IIngredient>('/ingredient/all');  // ?own_organisation=False <- do I need to pass this or set as a default?
+    } = useDataFetcher<IIngredient[]>('/ingredient/all');  // ?own_organisation=False <- do I need to pass this or set as a default?
     const {
         data: recipeStatuses,
         loading: loadingRecipeStatuses,
         error: errorRecipeStatuses,
         refetch: refetchRecipeStatuses
-    } = useDataFetcher<IRecipeStatus>('/common/recipe_status');
+    } = useDataFetcher<IRecipeStatus[]>('/common/recipe_status');
     const {
         data: productTypes,
         loading: loadingProductTypes,
         error: errorProductTypes,
         refetch: refetchProductTypes
-    } = useDataFetcher<IProductType>('/common/product_type');
+    } = useDataFetcher<IProductType[]>('/common/product_type');
     const {
         data: recipeTypes,
         loading: loadingRecipeTypes,
         error: errorRecipeTypes,
         refetch: refetchRecipeTypes
-    } = useDataFetcher<IRecipeType>('/common/recipe_type');
+    } = useDataFetcher<IRecipeType[]>('/common/recipe_type');
     const {
         data: recipes,
         loading: loadingRecipes,
         error: errorRecipes,
         refetch: refetchRecipes
-    } = useDataFetcher<IRecipe>('/recipe/all');
+    } = useDataFetcher<IRecipe[]>('/recipe/all');
     const {
         data: labourers,
         loading: loadingLabourers,
         error: errorLabourers,
         refetch: refetchLabourers
-    } = useDataFetcher<ILabourer>('/labourer/all');
+    } = useDataFetcher<ILabourer[]>('/labourer/all');
     const {
         data: labourCategories,
         loading: loadingLabourCategories,
         error: errorLabourCategories,
         refetch: refetchLabourCategories
-    } = useDataFetcher<ILabourCategory>('/labourer/labour_category/all');
+    } = useDataFetcher<ILabourCategory[]>('/labourer/labour_category/all');
 
 
     //  Memoized Picker Arrays
@@ -199,7 +199,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         const safeBrands = brands || [];
         return (buyables || []).map((buyable: IBuyable): IPickerElement => ({
             id: buyable.id,
-            title: `${buyable.sku} ¬ ${safeBrands.find(brand => brand.brand_id === buyable.brand_id)?.brand_name || '      \n\n'}  ¬  ${buyable.item_name}`,
+            title: `${buyable.sku}  ${safeBrands.find(brand => brand.brand_id === buyable.brand_id)?.brand_name || '      \n\n'}    ${buyable.item_name}`,
             subtitle: buyable.notes,
             imageUrl: null
         }))

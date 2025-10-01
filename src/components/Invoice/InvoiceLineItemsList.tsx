@@ -21,7 +21,7 @@ function InvoiceLineItemsList({invoice_id}: InvoiceLineItemsProps) {
         loading,
         error,
         refetch,
-    } = useDataFetcher<ILineItem>(`/invoice/lineitem/all?invoice_id=${invoice_id}`);
+    } = useDataFetcher<ILineItem[]>(`/invoice/lineitem/all?invoice_id=${invoice_id}`);
 
     const [lineItems, setLineItems] = useState<ILineItem[]>([]);
 

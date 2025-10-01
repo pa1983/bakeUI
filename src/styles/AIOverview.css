@@ -1,0 +1,40 @@
+.image-box {
+    position: relative; /* 1. Establishes a stacking context for pseudo-elements */
+    overflow: hidden;   /* 2. Prevents pseudo-elements from spilling out */
+    isolation: isolate; /* 3. Prevents z-index:-1 from hiding behind parent's parent */
+}
+
+/* Create the semi-transparent overlay */
+.image-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    /* Your background image */
+    background-image: url('../../public/dark_ai.png'); /* Path relative to the 'public' directory */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    z-index: -2; /* Pushed to the very back */
+}
+
+/* Use ::after for the semi-transparent OVERLAY */
+/*.image-box::after {*/
+/*    content: '';*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    right: 0;*/
+/*    bottom: 0;*/
+/*    z-index: -1; !* Sits on top of the image, but behind the content *!*/
+/*}*/
+
+/* Optional: Make the text stand out more */
+.image-box .title,
+.image-box p {
+    color: white; /* Or any light color that contrasts with your overlay */
+}

@@ -121,7 +121,7 @@ const ViewRecipeForm = () => {
     };
 
     // Callback function, drilled down to the picker element, for action to take when a picker element is clicked to add a new labour item to the recipe
-    const onLabourSelect = async (selectedId: string |number) => {
+    const onLabourSelect = async (selectedId: string | number) => {
         const labourerId = Number(selectedId);
 
         if (!labourerId || auth.isLoading || !auth.user?.access_token) {
@@ -157,51 +157,54 @@ const ViewRecipeForm = () => {
             <ElementView config={recipeConfig}/>
 
             {(id && parseInt(id) > 0) ? (
-                <div className="field is-grouped mt-4">
+                <div className="container recipe-elements-list">
+                    <div className="field is-grouped mt-4">
 
 
-                    <div className="control">
-                        <button className="button recipe-ingredient" onClick={() => handleTogglePicker('ingredient')}>
-                            Add Ingredient
-                        </button>
-                    </div>
-                    <div className="control">
-                        <button className="button recipe-labour" onClick={() => handleTogglePicker('labour')}>
-                            Add Labour
-                        </button>
-                    </div>
-                    <div className="control">
-                        <button className="button recipe-sub-recipe" onClick={() => handleTogglePicker('subrecipe')}>
-                            Add Sub Recipe
-                        </button>
-                    </div>
-
-
-                    {/* "Hide All" button only shows when a picker is active */}
-                    {activePicker !== 'none' && (
                         <div className="control">
-                            <button className="button is-primary" onClick={() => setActivePicker('none')}>
-                                Hide All
+                            <button className="button recipe-ingredient"
+                                    onClick={() => handleTogglePicker('ingredient')}>
+                                Add Ingredient
                             </button>
                         </div>
-                    )}
+                        <div className="control">
+                            <button className="button recipe-labour" onClick={() => handleTogglePicker('labour')}>
+                                Add Labour
+                            </button>
+                        </div>
+                        <div className="control">
+                            <button className="button recipe-sub-recipe"
+                                    onClick={() => handleTogglePicker('subrecipe')}>
+                                Add Sub Recipe
+                            </button>
+                        </div>
 
-                    <div className="control">
-                        <button className="button" onClick={()=>{navigate(`/recipe/${recipeIdNumber}/costanalysis`)}}>View Cost Analysis</button>
+
+                        {/* "Hide All" button only shows when a picker is active */}
+                        {activePicker !== 'none' && (
+                            <div className="control">
+                                <button className="button is-primary" onClick={() => setActivePicker('none')}>
+                                    Hide All
+                                </button>
                             </div>
+                        )}
 
+                        <div className="control">
+                            <button className="button" onClick={() => {
+                                navigate(`/recipe/${recipeIdNumber}/costanalysis`)
+                            }}>View Cost Analysis
+                            </button>
+                        </div>
+
+                    </div>
                 </div>
-
-
-
-
 
             ) : <p>Recipe elements can only be added once recipe details have been saved</p>
             }
 
             {/* Conditionally render the pickers  */}
             {activePicker === 'subrecipe' && (
-                <div className="box">
+                <div className="box recipe-elements-list mt-4">
                     <RecipeList
                         onSelectOverride={onSubRecipeSelect}
                         title="Select Sub-Recipe to Add"
@@ -209,7 +212,7 @@ const ViewRecipeForm = () => {
                 </div>
             )}
             {activePicker === 'ingredient' && (
-                <div className="box">
+                <div className="box recipe-elements-list mt-4">
                     <IngredientList
                         onSelectOverride={onIngredientSelect}
                         title="Select Ingredient to Add"
@@ -218,7 +221,7 @@ const ViewRecipeForm = () => {
             )}
 
             {activePicker === 'labour' && (
-                <div className="box">
+                <div className="box recipe-elements-list mt-4">
                     <LabourerList
                         onSelectOverride={onLabourSelect}
                         title="Select Labour Type to Add"

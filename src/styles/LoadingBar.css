@@ -1,0 +1,35 @@
+/* src/styles/LoadingBar.css */
+.loading-bar-container {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    height: 8px; /* Height of is-small progress */
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.loading-bar-container.show {
+    opacity: 1;
+}
+
+/* Override Bulma's progress bar styling for dynamic color */
+/* This targets the filled part of the progress bar */
+progress.progress::-webkit-progress-value {
+    background-color: var(--progress-color, #209CEE); /* Fallback to Bulma primary blue */
+    transition: background-color 0.1s linear; /* Smooth color transition */
+}
+
+progress.progress::-moz-progress-bar {
+    background-color: var(--progress-color, #209CEE);
+    transition: background-color 0.1s linear;
+}
+
+/* For standard progress bars (e.g., Edge, fallback) */
+progress.progress {
+    accent-color: var(--progress-color, #209CEE);
+    transition: accent-color 0.1s linear;
+}
+
+/* You might need to adjust the height of the progress bar, as Bulma's `is-small` sets it */
+.progress.is-small {
+    height: 0.5rem; /* 8px */
+}

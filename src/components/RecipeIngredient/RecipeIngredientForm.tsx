@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import { type IRecipeIngredient } from '../../models/IRecipeIngredient';
 import { type IGenericFormProps } from "../../models/IFormProps";
 import { useFormLogic } from "../../hooks/useFormLogic";
 import DeleteElement from '../Utility/DeleteElement.tsx';
 import { useUnitOfMeasures } from "../../contexts/UnitOfMeasureContext.tsx";
 import { useData } from "../../contexts/DataContext.tsx";
+import ReviewItemCard from "../Recipe/ReviewItemCard.tsx";
 
 const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
-    const { formData, isSaving, onDelete } = props;
+    const { formData, isSaving, onDelete, aiAnalysis } = props;
 
     const {
         isNew,
@@ -24,6 +25,19 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
     const uniqueId = formData.id;
 
     const [displayQuantity, setDisplayQuantity] = useState('');  // local state var to handle the parsed value for display-only purposes (hides trailing zeros)
+
+
+    // Find the relevant AI analysis for this specific ingredient
+    const relevantAnalysis = useMemo(() => {
+        if (!aiAnalysis || !aiAnalysis.items_for_review) {
+            return null;
+        }
+        //aiAnalysis?.items_for_review?.[0].comment}
+        return aiAnalysis.items_for_review.find(item =>
+            item.cost_type.toLowerCase().replace("-", "") === 'ingredient' && item.item_id === formData.id
+
+        );
+    }, [aiAnalysis, formData.id]);
 
     // Sync the prop value to the local display state when it changes
     useEffect(() => {
@@ -171,6 +185,12 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
                     </div>
                 </div>
             </div>
+            {relevantAnalysis && (
+                <div>
+                    <ReviewItemCard
+                        itemForReview={relevantAnalysis}/>
+                </div>
+            )}
         </div>
     );
 };

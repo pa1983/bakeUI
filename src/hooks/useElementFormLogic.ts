@@ -4,6 +4,7 @@ import { useAuth } from 'react-oidc-context';
 import useFlash from '../contexts/FlashContext';
 import { patchField } from '../services/commonService';
 import type {IGenericFormProps} from "../models/IFormProps.ts";
+import type {AIRecipeAnalysis} from "../models/RecipeAIAnalysis.ts";
 
 // The config is generic over the entity `T` and its primary key's name `K`.
 export interface ElementFormConfig<T, K extends keyof T> {
@@ -18,6 +19,7 @@ export interface ElementFormConfig<T, K extends keyof T> {
     FormComponent: React.ComponentType<IGenericFormProps<T>>;
     onSuccess?: (id: T[K]) => void;
     isModal?: boolean;
+    aiAnalysis?: AIRecipeAnalysis;
 }
 
 // The hook is generic over T and K
