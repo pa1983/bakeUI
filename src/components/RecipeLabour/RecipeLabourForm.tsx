@@ -32,7 +32,6 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
         //aiAnalysis?.items_for_review?.[0].comment}
         return aiAnalysis.items_for_review.find(item =>
             item.cost_type.toLowerCase().replace("-", "") === 'labour' && item.item_id === formData.id
-
         );
     }, [aiAnalysis, formData.id]);
 
@@ -91,7 +90,18 @@ const RecipeLabourForm = (props: IGenericFormProps<IRecipeLabour>) => {
                     <div className="field is-horizontal">
                         <div className="field-body">
                             <div className="field" style={{flexGrow: 2}}>
-                                <label className="label is-small" htmlFor={`labourer_id_${uniqueId}`}>Labourer</label>
+                                <label className="label is-small" htmlFor={`labourer_id_${uniqueId}`}>
+
+                                    <a
+                                        className="button  is-small"
+                                        href={`/labourer/${formData.labourer_id}`} target="_blank"
+                                    >
+                                        <p className="title is-6 has-text-weight-semibold">Labourer&nbsp;</p>
+                                        <i className="fa-solid fa-up-right-from-square"></i>
+                                    </a>
+                                </label>
+
+
                                 <div className="control">
                                     <div className="select is-fullwidth">
                                         <select

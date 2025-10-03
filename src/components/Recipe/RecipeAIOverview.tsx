@@ -47,7 +47,7 @@ const RecipeAIOverview = ({aiAnalysis}: ReviewItemCardProps) => {
     return (
 
         <div
-            className="card mb-3 is-shadowless has-text-light image-box"> {/* Removed default shadow for line item usage */}
+            className="card mb-3 ml-5 is-shadowless has-text-light image-box"> {/* Removed default shadow for line item usage */}
             <header className="card-header is-clickable" onClick={() => setIsOpen(!isOpen)}>
                 <p className="card-header-title is-size-5 py-2"> {/* Smaller title for compactness */}
                     <span className={`icon is-medium mr-2 ${severityDisplay.colorClass}`}>

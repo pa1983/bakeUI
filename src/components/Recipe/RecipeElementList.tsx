@@ -264,16 +264,6 @@ const RecipeElementList = ({recipe_id, refetchTrigger}: RecipeElementListProps) 
                             max_duration={95}
                         />
 
-                        {/*/!*todo - move this into a component  to format ai analysis in a standard format*!/*/}
-                        {/*<div>*/}
-                        {/*    {aiAnalysis && aiAnalysis.overall_opinion && (*/}
-                        {/*    <div className=" is-info is-light">*/}
-                        {/*        <h4 className="title is-6">AI Opinion</h4>*/}
-                        {/*        <p>{aiAnalysis.overall_opinion.summary}</p>*/}
-                        {/*    </div>*/}
-
-                        {/*)}*/}
-                        {/*</div>*/}
 
                         <RecipeAIOverview aiAnalysis={aiAnalysis}/>
 

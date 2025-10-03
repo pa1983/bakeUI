@@ -1,14 +1,14 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import { type IRecipeIngredient } from '../../models/IRecipeIngredient';
-import { type IGenericFormProps } from "../../models/IFormProps";
-import { useFormLogic } from "../../hooks/useFormLogic";
+import {type IRecipeIngredient} from '../../models/IRecipeIngredient';
+import {type IGenericFormProps} from "../../models/IFormProps";
+import {useFormLogic} from "../../hooks/useFormLogic";
 import DeleteElement from '../Utility/DeleteElement.tsx';
-import { useUnitOfMeasures } from "../../contexts/UnitOfMeasureContext.tsx";
-import { useData } from "../../contexts/DataContext.tsx";
+import {useUnitOfMeasures} from "../../contexts/UnitOfMeasureContext.tsx";
+import {useData} from "../../contexts/DataContext.tsx";
 import ReviewItemCard from "../Recipe/ReviewItemCard.tsx";
 
 const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
-    const { formData, isSaving, onDelete, aiAnalysis } = props;
+    const {formData, isSaving, onDelete, aiAnalysis} = props;
 
     const {
         isNew,
@@ -16,11 +16,11 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
         handleFocus,
         handleChange,
         handleEdit,
-    } = useFormLogic({ ...props, primaryKeyName: 'id' });
+    } = useFormLogic({...props, primaryKeyName: 'id'});
 
 
-    const { ingredients } = useData();
-    const { units } = useUnitOfMeasures();
+    const {ingredients} = useData();
+    const {units} = useUnitOfMeasures();
     const ingredientName = (ingredients || []).find(ing => ing.ingredient_id === formData.ingredient_id)?.ingredient_name || 'Loading...';
     const uniqueId = formData.id;
 
@@ -35,7 +35,6 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
         //aiAnalysis?.items_for_review?.[0].comment}
         return aiAnalysis.items_for_review.find(item =>
             item.cost_type.toLowerCase().replace("-", "") === 'ingredient' && item.item_id === formData.id
-
         );
     }, [aiAnalysis, formData.id]);
 
@@ -94,7 +93,15 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
                     <div className="level is-mobile mb-2">
                         <div className="level-left">
                             <div className="level-item">
-                                <p className="title is-6 has-text-weight-semibold">{ingredientName}</p>
+                                <a
+                                    className="button  is-small"
+                                    href={`/ingredient/${formData.ingredient_id}`} target="_blank"
+                                >
+                                    <p className="title is-6 has-text-weight-semibold">{ingredientName}&nbsp;</p>
+                                    <i className="fa-solid fa-up-right-from-square"></i>
+                                </a>
+
+
                             </div>
                         </div>
                         <div className="level-right">
@@ -137,7 +144,7 @@ const RecipeIngredientForm = (props: IGenericFormProps<IRecipeIngredient>) => {
                                     />
                                 </div>
                             </div>
-                            <div className="field" style={{ flexGrow: 2 }}>
+                            <div className="field" style={{flexGrow: 2}}>
                                 <label className="label is-small" htmlFor={`uom_id_${uniqueId}`}>Unit</label>
                                 <div className="control">
                                     <div className="select is-fullwidth">

@@ -60,11 +60,15 @@ const ReviewItemCard = ({ itemForReview }:ReviewItemCardProps) => {
             </header>
             <div className={`card-content p-3 ${isOpen ? '' : 'is-hidden'}`}> {/* Smaller padding for content */}
                 <div className="content is-size-6"> {/* Smaller font for content */}
-                    <p className="mb-2">
+                    <p className="mb-2" title={`Item ID: ${itemForReview.item_id}`}>
                         <strong>Comment:</strong> {itemForReview.comment}
                     </p>
+                    { itemForReview.total_cost === 0 &&
+                    <p>
+                        Item cost recorded as zero - check a suitable value has been entered
+                    </p>
+                    }
                     <div className="is-flex is-justify-content-space-between is-align-items-center mt-3">
-                        <span><strong>Item ID:</strong> {itemForReview.item_id}</span>
                         <span><strong>Total Cost:</strong> £{itemForReview.total_cost.toFixed(2)}</span>
                     </div>
                 </div>
