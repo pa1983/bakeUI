@@ -1,3 +1,14 @@
+@media (prefers-color-scheme: light) {
+    :root {
+        /* Update CSS variables */
+    }
+}
+
+[data-theme=dark],
+.theme-dark {
+    /* Update CSS variables */
+}
+
 
 .hero-body > .container > .columns {
     width: 100%;
