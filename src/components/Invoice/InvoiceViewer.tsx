@@ -123,9 +123,9 @@ function InvoiceViewer() {
                             {invoice.invoice_image && (
                                 <div className="column is-half full-height-content is-sticky-desktop" >
                                     <div className="box">
-                                        <h1 className="title is-4 has-text-grey-light">Invoice Viewer
+                                        <h1 className="title is-4">Invoice Viewer
                                             for {invoice.id}</h1>
-                                        <p className="subtitle is-6 has-text-grey">
+                                        <p className="subtitle is-6 bake-subtitle-subtle">
                                             {invoice.invoice_image.file_name}.{invoice.invoice_image.file_ext}
                                         </p>
                                         <div className="content">
@@ -158,7 +158,7 @@ function InvoiceViewer() {
                                 </div>
 
                                 <div className="box  mb-4">
-                                    <h2 className="title is-5 has-text-grey-light">Details <MoreInfo
+                                    <h2 className="title is-5 ">Details <MoreInfo
                                         message="check the details below match the invoice, correct as necessary. No need to save."/>
                                     </h2>
 
@@ -170,7 +170,7 @@ function InvoiceViewer() {
 
 
                                 <div className="box ">
-                                    <h2 className="title is-5 has-text-grey-light">Line Items <MoreInfo
+                                    <h2 className="title is-5 ">Line Items <MoreInfo
                                         message="Check content of each line item matches invoice. Correct as required. Make sure each line item matches a buyable item."/>
                                     </h2>
                                     <div className="content">

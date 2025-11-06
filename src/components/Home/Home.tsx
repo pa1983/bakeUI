@@ -18,7 +18,7 @@ function Home() {
                                 Bringing efficiency to artisan bakers
                             </h2>
 
-                            <p className="is-size-5 has-text-grey-light mb-5" style={{ lineHeight: 1.6 }}>
+                            <p className="is-size-5 sub-title mb-5" style={{ lineHeight: 1.6 }}>
                                 Bake helps artisanal bakers improve operational efficiency by tracking costs at every stage of the production process.
                                 It helps owners keep all production data in one place, logging invoices, ingredients, recipes and menu items.
                             </p>

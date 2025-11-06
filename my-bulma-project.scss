@@ -20,43 +20,60 @@ $input-shadow: 2px;
   --brown: #757763;
   --beige-light: #d0d1cd;
   --beige-lighter: #eff0eb;
+
+  // Theme colors from index.css
   --white: #ffffff;
+  --light-bg: #ffffff;
+  --light-text: #213547;
+  --dark-bg: #242424;
+  --dark-text: rgba(255, 255, 255, 0.87);
+
   --black-ter: #222222;
   --grey-darker: #3a3c30;
+
+  // Let the browser know we have a light and dark theme
+  color-scheme: light dark;
 }
 
 /* 4. Define LIGHT MODE theme (the default) */
 :root {
   --bulma-primary: var(--purple);
   --bulma-link: var(--pink);
-  --bulma-body-background-color: var(--beige-lighter);
-  --bulma-text: var(--brown);
+  --bulma-body-background-color: var(--light-bg);
+  --bulma-text: var(--light-text);
   --bulma-box-background-color: var(--white);
   --bulma-card-background-color: var(--white);
   --bulma-input-background-color: var(--white);
   --bulma-input-color: var(--brown);
   --bulma-input-border-color: var(--beige-light);
-
+  --bake-title-color: var(--purple);
+  --bake-subtitle-color: var(--brown);
+  --bake-label-color: var(--bulma-grey);
+  --bake-subtitle-subtle: var(--bulma-grey);
   // Define ALL grey steps for light mode
   --bulma-grey-darker: var(--grey-darker);
   --bulma-grey-dark: var(--brown);
   --bulma-grey: var(--brown); // Or another mid-tone
   --bulma-grey-light: var(--beige-light);
   --bulma-grey-lighter: var(--beige-lighter);
+
 }
 
 /* 5. DEFINE the dark mode mixin FIRST */
 @mixin dark-mode-vars {
   --bulma-primary: var(--pink);
   --bulma-link: var(--pink);
-  --bulma-body-background-color: var(--brown);
-  --bulma-text: var(--beige-lighter);
+  --bulma-body-background-color: var(--dark-bg);
+  --bulma-text: var(--dark-text);
   --bulma-box-background-color: var(--grey-darker);
   --bulma-card-background-color: var(--grey-darker);
   --bulma-input-background-color: var(--grey-darker);
   --bulma-input-color: var(--beige-lighter);
   --bulma-input-border-color: var(--beige-light);
-
+  --bake-title-color: var(--purple);
+  --bake-subtitle-color: var(--pink);
+  --bake-label-color: var(--bulma-grey);
+  --bake-subtitle-subtle: var(--bulma-grey-light);
   // Define ALL grey steps for dark mode (inverted)
   --bulma-grey-darker: var(--beige-lighter);
   --bulma-grey-dark: var(--beige-light);
@@ -89,6 +106,4 @@ $input-shadow: 2px;
 .has-text-grey {
   color: var(--bulma-pink) !important;
 }
-.has-text-grey-light {
-  color: var(--bulma-grey-light) !important;
-}
+

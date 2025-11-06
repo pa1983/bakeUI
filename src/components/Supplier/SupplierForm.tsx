@@ -126,7 +126,7 @@ const SupplierForm = (props: IGenericFormProps<ISupplier>) => {
                     </button>
                 </div>
             </>) : (<>
-                <div className="control"><p className="is-italic has-text-grey">Changes are saved automatically when you
+                <div className="control"><p className="is-italic bake-subtitle-subtle">Changes are saved automatically when you
                     leave a field.</p></div>
                 <DeleteElement element_id={formData.supplier_id} endpoint={api_endpoint}
                                elementName={formData.supplier_name} onDelete={onDelete}/></>)}</div>

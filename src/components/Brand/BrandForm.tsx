@@ -144,7 +144,7 @@ const BrandForm = ({
                     // Case for an EXISTING brand
                     <>
                         <div className="control">
-                            <p className="is-italic has-text-grey">Changes are saved automatically.</p>
+                            <p className="is-italic bake-subtitle-subtle">Changes are saved automatically.</p>
                         </div>
 
                         <DeleteElement

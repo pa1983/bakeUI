@@ -247,7 +247,7 @@ const BuyableForm = (props: IGenericFormProps<IBuyable>) => {
                         ) : (
                             <>
                                 <div className="control">
-                                    <p className="is-italic has-text-grey">Changes are saved automatically.</p>
+                                    <p className="is-italic bake-subtitle-subtle">Changes are saved automatically.</p>
                                 </div>
                                 <DeleteElement
                                     element_id={formData.id}

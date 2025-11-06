@@ -37,7 +37,7 @@ const FormFieldWithPicker = ({
                 {pickerArray && pickerArray.length > 0 ? (
                     <strong className="mr-3">{displayValue}</strong>
                 ) : (
-                    <p className="mr-3 has-text-grey">Loading...</p>
+                    <p className="mr-3 bake-subtitle-subtle">Loading...</p>
                 )}
 
                 <span className="icon is-clickable ml-2" onClick={onLaunch} title={`Select ${label}`}>

@@ -51,11 +51,11 @@ const InvoiceListElementCard = ({invoice, onUpdate}: InvoiceListElementCardProps
                 <div className="columns is-mobile">
                     <div className="column is-6">
                         Added: <FriendlyDate date={invoice.date_added}
-                                             classname="is-size-8 has-text-grey"/>
+                                             classname="is-size-8 bake-subtitle-subtle"/>
                     </div>
                     <div className="column is-6">
                         Modified: <FriendlyDate date={invoice.date_modified}
-                                                classname="is-size-8 has-text-grey"/>
+                                                classname="is-size-8 bake-subtitle-subtle"/>
                     </div>
                 </div>
 

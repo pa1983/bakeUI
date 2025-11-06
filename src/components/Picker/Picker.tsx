@@ -42,10 +42,10 @@ function Picker({
 
     return (
         <div className="section">
-            <h1 className="title is-1 has-text-grey-light">{pickerTitle}</h1>
+            <h1 className="title is-1">{pickerTitle}</h1>
              {/*conditionally render optional prop pickersubtitle*/}
             {pickerSubtitle &&
-                <h3 className="subtitle is-6 has-text-grey-light pt-2">{pickerSubtitle}</h3>
+                <h3 className="subtitle is-6 pt-2">{pickerSubtitle}</h3>
     }
             {/* Controls Section using Bulma's columns for responsive layout */}
 
@@ -87,9 +87,9 @@ function Picker({
 
 
             {filteredPickerArray.length === 0 && searchTerm === '' ? (
-                <p className="is-size-5 has-text-grey">Nothing found in picker list</p>
+                <p className="is-size-5 bake-subtitle-subtle">Nothing found in picker list</p>
             ) : filteredPickerArray.length === 0 && searchTerm !== '' ? (
-                <p className="is-size-5 has-text-grey">No matches for your search ("{searchTerm})".</p>
+                <p className="is-size-5 bake-subtitle-subtle">No matches for your search ("{searchTerm})".</p>
             ) : (
                 /* Responsive Grid using Bulma columns */
                 <div className="columns is-multiline">

@@ -302,8 +302,8 @@ function InvoiceMeta({initialFormDetails}: { initialFormDetails: InvoiceRead }) 
                     </div>
                 </fieldset>
 
-                <div className="content is-small has-text-grey mt-5 pt-4" style={{borderTop: '1px solid #dbdbdb'}}>
-                    <h6 className="subtitle is-6 has-text-grey">System Information (Read-Only)</h6>
+                <div className="content is-small bake-subtitle-subtle mt-5 pt-4" style={{borderTop: '1px solid #dbdbdb'}}>
+                    <h6 className="subtitle is-6 bake-subtitle-subtle">System Information (Read-Only)</h6>
                     <div className="columns is-multiline">
                         <div className="column is-half">
                             <p className="mb-1"><strong>Calculated Total:</strong> {formData.calculated_total}</p>

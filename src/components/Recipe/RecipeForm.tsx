@@ -315,7 +315,7 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
                     {!isNew && (
                         <div className="field">
                             <label className="label">Timestamps</label>
-                            <p className="is-size-7 has-text-grey">
+                            <p className="is-size-7 bake-subtitle-subtle">
                                 Created: {formData.created_timestamp ? new Date(formData.created_timestamp).toLocaleString() : 'N/A'}
                                 <br/>
                                 Modified: {formData.modified_timestamp ? new Date(formData.modified_timestamp).toLocaleString() : 'N/A'}
@@ -344,7 +344,7 @@ const RecipeForm = (props: IGenericFormProps<IRecipe>) => {
                         ) : (
                             <>
                                 <div className="control">
-                                    <p className="is-italic has-text-grey">Changes are saved automatically.</p>
+                                    <p className="is-italic bake-subtitle-subtle">Changes are saved automatically.</p>
                                 </div>
                                 <div className="control">
                                     <DeleteElement

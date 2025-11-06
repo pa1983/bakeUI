@@ -6,7 +6,7 @@ function Contact() {
                     <div className="column is-half has-text-centered">
 
                         <h1 className="title is-4">Paul Anderson</h1>
-                        <h2 className="subtitle is-6 has-text-grey">Contact Information</h2>
+                        <h2 className="subtitle is-6 bake-subtitle-subtle">Contact Information</h2>
 
                         <div className="mt-5">
                             <div className="icon-text mb-3 is-justify-content-center">

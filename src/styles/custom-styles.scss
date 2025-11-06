@@ -1,20 +1,9 @@
-/*
-  This file is for creating your own reusable, semantic classes
-  that use the CSS theme variables defined in my-bulma-project.scss.
-*/
-
-.text-subtle {
-  color: var(--bulma-grey-light);
+.no-dots {
+  list-style-type: none;
 }
 
-.text-main {
-  color: var(--bulma-text);
-}
-
-.text-strong {
-  color: var(--bulma-grey-dark);
-}
-
-.text-title {
-  color: var(--bulma-grey-darker);
+.recipe-elements-list {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }

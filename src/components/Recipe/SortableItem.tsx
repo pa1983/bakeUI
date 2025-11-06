@@ -26,7 +26,7 @@ function SortableItem(props: SortableProps ) {
             <div className="is-flex is-align-items-center">
                 {/* Drag Handle: Listeners are applied here only */}
                 <span {...listeners} className="p-2" style={{ cursor: 'grab', touchAction: 'none' }}>
-                    <i className="fas fa-grip-vertical has-text-grey-light"></i>
+                    <i className="fas fa-grip-vertical"></i>
                 </span>
                 {/* The content, which now allows interaction */}
                 <div className="is-flex-grow-1">

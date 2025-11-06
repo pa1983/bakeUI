@@ -13,7 +13,7 @@ const LoadingSpinner = ({ size = 'is-large', text = 'Loading...' }: LoadingSpinn
         <div className="section is-flex is-justify-content-center is-align-items-center loading-spinner">
             <div className="has-text-centered">
                 <div className={`loader is-loading ${size}`}></div>
-                {text && <p className="is-size-5 has-text-grey mt-4">{text}</p>}
+                {text && <p className="is-size-5 bake-subtitle-subtle mt-4">{text}</p>}
             </div>
         </div>
     );
