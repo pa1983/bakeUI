@@ -1,11 +1,10 @@
-import React, {type ReactNode} from 'react'
-import ReactDOM from 'react-dom/client'
-import {WebStorageStateStore} from 'oidc-client-ts'
-import './index.css'
-import '../src/styles/general.css'
+import React, {type ReactNode} from 'react';
+import ReactDOM from 'react-dom/client';
+import {WebStorageStateStore} from 'oidc-client-ts';
+import './index.css';
+import '../my-bulma-project.scss';
 import {AuthProvider} from "react-oidc-context";  // auth context provided by 3rd party function
 import {RouterProvider} from 'react-router-dom';
-import "../styles.css"
 import router from './routes/routes.tsx'
 import {UnitOfMeasureProvider} from "./contexts/UnitOfMeasureContext.tsx";
 
@@ -41,7 +40,7 @@ const cognitoAuthConfig = {
     userStore: new WebStorageStateStore({store: window.localStorage})};  // changed to local storage to avoid need to log in each time app is opened in a new tab
 
 
-// Ddedicated component to compose all providers- makes the main file cleaner and the provider setup reusable.
+// Dedicated component to compose all providers- makes the main file cleaner and the provider setup reusable.
 const AppProviders = ({ children }: { children: ReactNode }) => (
     <React.StrictMode>
         <FlashProvider>

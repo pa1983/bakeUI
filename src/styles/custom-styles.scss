@@ -1,0 +1,20 @@
+/*
+  This file is for creating your own reusable, semantic classes
+  that use the CSS theme variables defined in my-bulma-project.scss.
+*/
+
+.text-subtle {
+  color: var(--bulma-grey-light);
+}
+
+.text-main {
+  color: var(--bulma-text);
+}
+
+.text-strong {
+  color: var(--bulma-grey-dark);
+}
+
+.text-title {
+  color: var(--bulma-grey-darker);
+}

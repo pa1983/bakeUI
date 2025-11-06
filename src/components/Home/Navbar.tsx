@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from 'react-oidc-context';
 import styles from '../../styles/Navbar.module.css';
+import {ThemeToggle} from "../ThemeToggle.tsx";
 
 // Navbar Component styled with Bulma
 const Navbar = () => {
@@ -147,6 +148,7 @@ const Navbar = () => {
                                 { to: '/contact', label: 'Contact' },
                             ]}
                         />
+                        <ThemeToggle/>
 
                     </div>
 

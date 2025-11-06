@@ -13,7 +13,8 @@ import type {IProductType} from "../models/IProductType.ts";
 import type {IRecipeType} from "../models/IRecipeType.ts";
 import type {IRecipe} from "../models/IRecipe.ts";
 import type {ILabourer} from "../models/ILabourer.ts";
-import type {ILabourCategory} from "../models/ILabourCategory.tsx";
+import type {ILabourCategory} from "../models/ILabourCategory.ts";
+import type {IProductionType} from "../models/IProductionType.ts";
 
 //  loading/error states and refetch functions
 export interface DataContextType {
@@ -28,6 +29,7 @@ export interface DataContextType {
     recipes: IRecipe[];
     labourers: ILabourer[];
     labourCategories: ILabourCategory[];
+    productionTypes: IProductionType[];
 
 
     PickerSupplierArray: IPickerElement[],
@@ -52,6 +54,7 @@ export interface DataContextType {
         recipes: boolean;
         labourers: boolean;
         labourCategories: boolean;
+        productionTypes: boolean;
     };
 
     error: {
@@ -66,6 +69,7 @@ export interface DataContextType {
         recipes: string | null;
         labourers: string | null;
         labourCategories: string | null;
+        productionTypes: string | null;
     };
 
 
@@ -80,6 +84,7 @@ export interface DataContextType {
     refetchRecipes: () => void;
     refetchLabourers: () => void;
     refetchLabourCategories: () => void;
+    refetchProductionTypes: () => void;
 
     refetchAllData: () => void;
 
@@ -164,6 +169,12 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         refetch: refetchLabourCategories
     } = useDataFetcher<ILabourCategory[]>('/labourer/labour_category/all');
 
+    const {
+        data: productionTypes,
+        loading: loadingProductionTypes,
+        error: errorProductionTypes,
+        refetch: refetchProductionTypes
+    } = useDataFetcher<IProductionType[]>( '/production/type/all');
 
     //  Memoized Picker Arrays
     const PickerSupplierArray = useMemo((): IPickerElement[] => {
@@ -263,6 +274,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         recipes: recipes || [],
         labourers: labourers || [],
         labourCategories: labourCategories || [],
+        productionTypes: productionTypes || [],
 
         PickerSupplierArray,
         PickerBrandArray,
@@ -284,6 +296,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
             recipes: loadingRecipes,
             labourers: loadingLabourers,
             labourCategories: loadingLabourCategories,
+            productionTypes: loadingProductionTypes,
         },
         error: {
             currencies: errorCurrencies,
@@ -297,6 +310,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
             recipes: errorRecipes,
             labourers: errorLabourers,
             labourCategories: errorLabourCategories,
+            productionTypes: errorProductionTypes,
         },
         refetchAllData,
         refetchCurrencies,
@@ -310,6 +324,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
         refetchRecipes,
         refetchLabourers,
         refetchLabourCategories,
+        refetchProductionTypes,
         PickerLabourCategoryArray: []
     };
 

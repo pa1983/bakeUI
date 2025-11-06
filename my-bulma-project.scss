@@ -1,0 +1,94 @@
+// 1. Define your overrides FIRST.
+// (Note: I've also fixed the quotes on your font family)
+$family-primary: "Archivo", sans-serif;
+$control-border-width: 2px;
+$input-shadow: 2px;
+
+// 2. NOW import or @use Bulma.
+// It will see your variables above and use them.
+@use "bulma/bulma";
+// 8. Import your own custom semantic styles - moved up because it must be included before any other rules
+@use "./src/styles/custom-styles.scss" as custom;
+/* 2. Now, import your font */
+@import url("https://fonts.googleapis.com/css?family=Archivo:400,700");
+
+/* 3. Define your color palette as CSS variables */
+:root {
+  // Your brand colors
+  --purple: #8a4d76;
+  --pink: #fa7c91;
+  --brown: #757763;
+  --beige-light: #d0d1cd;
+  --beige-lighter: #eff0eb;
+  --white: #ffffff;
+  --black-ter: #222222;
+  --grey-darker: #3a3c30;
+}
+
+/* 4. Define LIGHT MODE theme (the default) */
+:root {
+  --bulma-primary: var(--purple);
+  --bulma-link: var(--pink);
+  --bulma-body-background-color: var(--beige-lighter);
+  --bulma-text: var(--brown);
+  --bulma-box-background-color: var(--white);
+  --bulma-card-background-color: var(--white);
+  --bulma-input-background-color: var(--white);
+  --bulma-input-color: var(--brown);
+  --bulma-input-border-color: var(--beige-light);
+
+  // Define ALL grey steps for light mode
+  --bulma-grey-darker: var(--grey-darker);
+  --bulma-grey-dark: var(--brown);
+  --bulma-grey: var(--brown); // Or another mid-tone
+  --bulma-grey-light: var(--beige-light);
+  --bulma-grey-lighter: var(--beige-lighter);
+}
+
+/* 5. DEFINE the dark mode mixin FIRST */
+@mixin dark-mode-vars {
+  --bulma-primary: var(--pink);
+  --bulma-link: var(--pink);
+  --bulma-body-background-color: var(--brown);
+  --bulma-text: var(--beige-lighter);
+  --bulma-box-background-color: var(--grey-darker);
+  --bulma-card-background-color: var(--grey-darker);
+  --bulma-input-background-color: var(--grey-darker);
+  --bulma-input-color: var(--beige-lighter);
+  --bulma-input-border-color: var(--beige-light);
+
+  // Define ALL grey steps for dark mode (inverted)
+  --bulma-grey-darker: var(--beige-lighter);
+  --bulma-grey-dark: var(--beige-light);
+  --bulma-grey: var(--beige-light);
+  --bulma-grey-light: var(--brown);
+  --bulma-grey-lighter: var(--grey-darker);
+}
+
+/* * 6. NOW you can @include the mixin
+ */
+@media (prefers-color-scheme: dark) {
+  // Apply dark mode if OS prefers it AND user hasn't manually chosen light
+  :root:not([data-theme="light"]) {
+    @include dark-mode-vars;
+  }
+}
+
+// Apply dark mode if user manually chooses it
+:root[data-theme="dark"] {
+  @include dark-mode-vars;
+}
+
+/* 7. Make Bulma's Grey Helper Classes Theme-Aware */
+/*
+  This is the fix. We are overriding Bulma's static grey helpers
+  to use our dynamic CSS theme variables instead.
+*/
+
+
+.has-text-grey {
+  color: var(--bulma-pink) !important;
+}
+.has-text-grey-light {
+  color: var(--bulma-grey-light) !important;
+}
