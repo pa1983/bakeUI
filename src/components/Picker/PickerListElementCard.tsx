@@ -7,7 +7,8 @@ import type {IPickerElement} from "../../models/picker.ts";  // todo - replace t
 // and on-close functions when the card is clicked on
 export interface PickerElementProp extends IPickerElement {
     onSelect: (id: number) => void,
-    onClose: () => void
+    onClose: () => void,
+    body?: React.ReactNode;  // optional body content
 }
 
 /**
@@ -19,9 +20,10 @@ export interface PickerElementProp extends IPickerElement {
  * @param id
  * @param onSelect
  * @param onClose
+ * @param body
  * @constructor
  */
-const PickerListElementCard = ({imageUrl, title, subtitle, id, onSelect, onClose}: PickerElementProp) => {
+const PickerListElementCard = ({imageUrl, title, subtitle, id, onSelect, onClose, body}: PickerElementProp) => {
 
     const handleClick = useCallback(() => {
             onSelect(id);  // usually used to apply the id value to the grandparent's formdata for the field, or trigger a navigate redirect to the edit form
@@ -29,7 +31,8 @@ const PickerListElementCard = ({imageUrl, title, subtitle, id, onSelect, onClose
         }, [id, onClose, onSelect]
     )
 
-    const imageSource = imageUrl || imageNotFound  // defaults in a placeholder image if no image is present; helps preserve formatting and makes it clear to user that image has not been uploaded
+    const imageSource = imageUrl || imageNotFound;  // defaults in a placeholder image if no image is present; helps preserve formatting and makes it clear to user that image has not been uploaded
+
     return (
         <div className="box mb-6" onClick={handleClick}>
             <div className="columns is-vcentered">
@@ -65,6 +68,8 @@ const PickerListElementCard = ({imageUrl, title, subtitle, id, onSelect, onClose
                     )}
                 </div>
             </div>
+            {/* conditionally render the body ReactNode object here: */}
+            {body && body}
         </div>
     );
 };

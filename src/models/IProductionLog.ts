@@ -4,13 +4,14 @@
  */
 export interface IProductionLog {
     id: number;
-    recipe_id: number;
+    recipe_id: number | null;
     production_type_id: number;
     number_of_batches: number;
     quantity: string; // Using string is safest for Decimal types from Python
     uom_id: number;
-    created_at: string; // ISO 8601 datetime string
-    updated_at: string; // ISO 8601 datetime string
+    created_at: string | null; // ISO 8601 datetime string
+    updated_at: string | null; // ISO 8601 datetime string
+    notes: string | null
 }
 
 /**
@@ -24,7 +25,14 @@ export interface IProductionLogUpdate {
     number_of_batches?: number;
     quantity?: string;
     uom_id?: number;
+    notes?: string;
 }
+
+/**
+ * Represents the editable fields of a production log entry, including the ID.
+ * This is used for forms where the ID is present but created_at/updated_at are not editable.
+ */
+export type IProductionLogEditable = Omit<IProductionLog, 'created_at' | 'updated_at'>;
 
 /**
  * Creates and returns an empty IProductionLog object.
@@ -37,9 +45,11 @@ export const createEmptyProductionLog = (): IProductionLog => {
         recipe_id: 0,
         production_type_id: 0,
         number_of_batches: 1,
-        quantity: '0',
+        quantity: '',
         uom_id: 9,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
+        notes: ''
+
     };
 };

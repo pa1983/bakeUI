@@ -21,7 +21,8 @@ import ViewLabourerForm from "../components/Labourer/ViewLabourerForm.tsx";
 import RecipeCostAnalysisWrapper from "../components/RecipeCostAnalysis/RecipeCostAnalysisWrapper.tsx";
 import ProtectedRoute from "../components/ProtectedRoute.tsx";
 import InvoiceNew from "../components/Invoice/InvoiceNew.tsx";
-
+import ViewProductionForm from "../components/Production/ViewProductionForm.tsx";
+import ProductionListWrapper from "../components/Production/ProductionListWrapper.tsx";
 
 const router = createBrowserRouter([
     //  Public Routes
@@ -73,6 +74,11 @@ const router = createBrowserRouter([
             { path: "invoice/invoices", element: <InvoiceList /> },
             { path: "invoice/:invoice_id", element: <InvoiceViewer /> },
             { path: "invoice/new", element: <InvoiceNew/>},
+
+
+            // Production
+            {path: "production/all", element: <ProductionListWrapper />},
+            {path: "production/:id", element: <ViewProductionForm />}
 
 
         ],

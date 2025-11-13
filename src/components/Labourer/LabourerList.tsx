@@ -6,7 +6,6 @@ const LabourerListConfig: ListViewConfig = {
     endpoint: 'labourer',
     pickerArraySelector: (data) => data.PickerLabourerArray,
 };
-console.log(LabourerListConfig);
 // Create the component by calling the factory
 const LabourerList = createListView(LabourerListConfig);
 

@@ -16,6 +16,7 @@ import type {ILabourer} from "../models/ILabourer.ts";
 import type {ILabourCategory} from "../models/ILabourCategory.ts";
 import type {IProductionType} from "../models/IProductionType.ts";
 
+
 //  loading/error states and refetch functions
 export interface DataContextType {
     currencies: ICurrency[];
@@ -30,6 +31,7 @@ export interface DataContextType {
     labourers: ILabourer[];
     labourCategories: ILabourCategory[];
     productionTypes: IProductionType[];
+
 
 
     PickerSupplierArray: IPickerElement[],
@@ -55,6 +57,7 @@ export interface DataContextType {
         labourers: boolean;
         labourCategories: boolean;
         productionTypes: boolean;
+
     };
 
     error: {
@@ -70,6 +73,7 @@ export interface DataContextType {
         labourers: string | null;
         labourCategories: string | null;
         productionTypes: string | null;
+
     };
 
 
@@ -85,6 +89,7 @@ export interface DataContextType {
     refetchLabourers: () => void;
     refetchLabourCategories: () => void;
     refetchProductionTypes: () => void;
+
 
     refetchAllData: () => void;
 
@@ -171,7 +176,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
 
     const {
         data: productionTypes,
-        loading: loadingProductionTypes,
+        loading:    loadingProductionTypes,
         error: errorProductionTypes,
         refetch: refetchProductionTypes
     } = useDataFetcher<IProductionType[]>( '/production/type/all');
@@ -214,7 +219,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
             subtitle: buyable.notes,
             imageUrl: null
         }))
-    }, [buyables]);
+    }, [buyables, brands]);
 
     const PickerIngredientArray = useMemo((): IPickerElement[] => {
         return (ingredients || []).map((ingredient: IIngredient): IPickerElement => ({
@@ -297,6 +302,7 @@ export const DataProvider = ({children}: { children: ReactNode }) => {
             labourers: loadingLabourers,
             labourCategories: loadingLabourCategories,
             productionTypes: loadingProductionTypes,
+
         },
         error: {
             currencies: errorCurrencies,

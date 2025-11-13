@@ -11,7 +11,7 @@ function Picker({
                     pickerOnAddNewClicked,  // callback for the preferred method of triggering an 'add new' form to load.
                     addNewButtonText = 'Add New',
                     showSearch = true,  // optionally turn off the search bar for tidiness when a list isn't going to be long enough to need filtering
-                    pickerSubtitle = null
+                    pickerSubtitle = null,
                 }: PickerProps) {
 
     const [searchTerm, setSearchTerm] = useState('');  // search variable

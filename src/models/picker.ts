@@ -1,3 +1,5 @@
+import type {ReactNode} from "react";
+
 export interface IPickerElement {
     // ID is required and should be unique for each item in the picker array.  It is typically the primary key of
     // the related table entry.
@@ -5,10 +7,13 @@ export interface IPickerElement {
     // concisely describe the item.
     // The subtitle is optional and can be used to provide additional information about the item.
     // The imageUrl is optional and can be used to provide a thumbnail image for the item.
+    // optionally allow a body attribute to be passed in so as to render a complex element if required, e.g. when displaying an invoice etc
     id: number;
     title: string;
     subtitle: string | null;
+
     imageUrl: string | null;
+    body?: ReactNode;
 }
 
 export interface PickerProps {

@@ -141,6 +141,14 @@ const Navbar = () => {
                             ]}
                         />
                         <NavDropdown
+                            name="production"
+                            title="Production"
+                            links={[
+                                { to: '/production/all', label: 'Production' },
+                                { to: '/production/new', label: 'Add New' },
+                            ]}
+                        />
+                        <NavDropdown
                             name="info"
                             title="Info"
                             links={[

@@ -1,4 +1,5 @@
-import type {AIRecipeAnalysis} from './../models/RecipeAIAnalysis.ts';
+import type {AIRecipeAnalysis} from './RecipeAIAnalysis.ts';
+
 
 export interface IGenericFormProps<T> {
     // the data that will be displayed in the form, of type T
