@@ -1,0 +1,26 @@
+// src/styles/Picker.scss
+
+// Use the new theme file to get access to variables
+// theme contains only the required elements, not the entire framework.  should be easier for IDE to interpret.
+@use 'theme';
+
+// Custom styles for the Picker components
+.picker-card-body {
+  font-size: 1.1rem;
+
+  margin-top: 0.75rem;
+}
+
+.production-Product {
+  color: var(--black-ter);
+  background-color: var(--bake-positive-color);
+}
+.production-Waste {
+  color: var(--black-ter);
+  background-color: var(--red-light);
+}
+
+.production-Samples {
+  color: var(--black-ter);
+  background-color: var(--yellow-light);
+}

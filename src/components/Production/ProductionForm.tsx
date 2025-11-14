@@ -9,7 +9,7 @@ import PickerModal from "../Picker/PickerModal.tsx";
 import {useUnitOfMeasures} from "../../contexts/UnitOfMeasureContext.tsx";
 import ViewProductionForm from "./ViewProductionForm.tsx";
 import MoreInfo from "../Home/MoreInfo.tsx";
-import {BuyableUOMInfo} from "../Buyable/BuyableUOMInfo.tsx";
+// import {BuyableUOMInfo} from "../Buyable/BuyableUOMInfo.tsx";
 import ProductionTypeSelector from "./ProductionTypeSelector.tsx";
 
 const ProductionForm = (props: IGenericFormProps<IProductionLog>) => {
@@ -91,32 +91,33 @@ const ProductionForm = (props: IGenericFormProps<IProductionLog>) => {
         <div>
             <form onSubmit={handleSubmit}>
 
-                {/*    Recipe Picker */}
-
-                <div className="column is-half">
-
-                    <FormFieldWithPicker
-                        label="Recipe"
-                        fieldValue={formData.recipe_id}
-                        onLaunch={openRecipePicker}
-                        pickerArray={PickerRecipeArray}
-                    />
-
+                {/*    Recipe Picker and Production Type */}
+                <div className="field is-horizontal">
+                    <div className="field-body">
+                        <div className="field">
+                            <FormFieldWithPicker
+                                label="Recipe"
+                                fieldValue={formData.recipe_id}
+                                onLaunch={openRecipePicker}
+                                pickerArray={PickerRecipeArray}
+                            />
+                        </div>
+                        <div className="field">
+                            <div className="label">Production Type <MoreInfo message={"The default value is 'Product' for saleable items.  \n\n" +
+                                "Select 'Samples' for batches produced during testing that will not be sold. \n\n" +
+                                "Select 'Waste' for batches that will be disposed of. " +
+                                "Accurate accounting is essential in order to calculate accurate ingredient utilisation."}/></div>
+                            <ProductionTypeSelector
+                                value={formData.production_type_id || 1}
+                                onChange={productionTypeOnChange}/>
+                        </div>
+                    </div>
                 </div>
-
-                {/* Production Type */}
-                <div className="field">
-                    <ProductionTypeSelector
-                        value={formData.production_type_id || 1}
-                        onChange={productionTypeOnChange}/>
-                </div>
-
                 {/* UOM and Quantity */}
                 <div className="field is-horizontal">
                     <div className="field-body">
                         <div className="field">
-                            <label className="label" htmlFor="uom_id">Unit of Measure <MoreInfo
-                                message={BuyableUOMInfo}/></label>
+                            <label className="label" htmlFor="uom_id">Unit of Measure</label>
 
                             <div className="control">
                                 <div className="select is-fullwidth">
@@ -215,7 +216,8 @@ const ProductionForm = (props: IGenericFormProps<IProductionLog>) => {
                     ) : (
                         <>
                             <div className="control">
-                                <p className="is-italic bake-subtitle-subtle">Changes are saved automatically.</p>
+                                <p className="is-italic bake-subtitle-subtle">Changes are saved
+                                    automatically.</p>
                             </div>
                             <DeleteElement
                                 element_id={formData.id}

@@ -11,6 +11,7 @@ type KeysOfType<T, U> = { [K in keyof T]: T[K] extends U ? K : never }[keyof T];
 export type PickerArrayName = KeysOfType<DataContextType, IPickerElement[]>;
 export interface ListViewConfig {
     title: string;
+    subtitle?: string;
     endpoint: string;
     pickerArray?: IPickerElement[]; // Optionally pass the array directly, prefilled in logic outside the context
     pickerArrayName?: PickerArrayName;   // OR - Optionally pass the name of the array in the context

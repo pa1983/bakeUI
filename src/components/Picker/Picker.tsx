@@ -1,6 +1,7 @@
 import PickerListElementCard from "./PickerListElementCard.tsx";
 import React, {useEffect, useRef, useState} from "react";
 import type {PickerProps} from "../../models/picker.ts";
+import '../../styles/Picker.scss';
 
 
 function Picker({
@@ -103,6 +104,7 @@ function Picker({
                                 id={item.id}
                                 onSelect={pickerOnSelect}
                                 onClose={onClose}
+                                body={item.body}
                             />
                         </div>
                     ))}

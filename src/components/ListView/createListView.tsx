@@ -7,6 +7,7 @@ import type {ListViewConfig} from '../../config/listViewConfig';
 // Define the props that the generated component will accept.
 interface ListViewComponentProps {
     title?: string;
+    subtitle?: string;
     onSelectOverride?: (id: number | string) => void;
 }
 
@@ -21,6 +22,7 @@ export function createListView(config: ListViewConfig) {
     // These are the default values from the factory configuration.
     const {
         title: configTitle,
+        subtitle: configSubtitle,
         endpoint,
         pickerArray,
         pickerArrayName,
@@ -32,7 +34,7 @@ export function createListView(config: ListViewConfig) {
     // The generated component accepts its own props.
     const ListViewComponent = (props: ListViewComponentProps) => {
         // Props to be passed directly to the component at render time.
-        const {title: propTitle, onSelectOverride: propOnSelectOverride} = props;
+        const {title: propTitle, subtitle: propSubtitle, onSelectOverride: propOnSelectOverride} = props;
         const dataContext = useData();
         const navigate = useNavigate();
 
@@ -51,6 +53,7 @@ export function createListView(config: ListViewConfig) {
         // Determine the final values, giving precedence to props.
         // Use the title from props if provided, otherwise fall back to the config title.
         const finalTitle = propTitle || configTitle;
+        const finalSubtitle = propSubtitle || configSubtitle;
 
         // Use the onSelect from props if provided, otherwise fall back to the config onSelect.
         const finalOnSelectOverride = propOnSelectOverride || configOnSelectOverride;
@@ -81,6 +84,7 @@ export function createListView(config: ListViewConfig) {
             <Picker
                 pickerArray={itemsToRender}
                 pickerTitle={finalTitle}
+                pickerSubtitle={finalSubtitle}
                 pickerOnSelect={elementOnSelect}
                 onClose={() => {
                 }}

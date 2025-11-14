@@ -6,7 +6,7 @@ import 'react-day-picker/dist/style.css';
 interface DateRangePickerProps {
     range: DateRange | undefined;
     onRangeSelect: (range: DateRange | undefined) => void;
-    onShortcutSelect: (range: DateRange) => void;
+    onShortcutSelect: (range: DateRange, label: string) => void;
     month?: Date; // New optional prop
 }
 
@@ -94,12 +94,13 @@ export function DateRangePicker({
     month // Destructure new prop
 }: DateRangePickerProps) {
 
-    const handleShortcutClick = (getRange: () => DateRange) => {
+    // This handler is for the shortcut buttons. It calls the onShortcutSelect prop with the new range and label.
+    const handleShortcutClick = (getRange: () => DateRange, label: string) => {
         const newRange = getRange();
         // Create new Date objects to ensure state updates correctly
         // using the non-null assertion (!) here as the function is only ever called by the range of pre-defined
         // shortcuts, so we can be certain that null values will bever be returned.
-        onShortcutSelect({ from: new Date(newRange.from!), to: new Date(newRange.to!) });
+        onShortcutSelect({ from: new Date(newRange.from!), to: new Date(newRange.to!) }, label);
     };
 
     return (
@@ -109,7 +110,7 @@ export function DateRangePicker({
                     <button
                         key={label}
                         className="button is-small is-fullwidth"
-                        onClick={() => handleShortcutClick(getRange)}
+                        onClick={() => handleShortcutClick(getRange, label)}
                     >
                         {label}
                     </button>
